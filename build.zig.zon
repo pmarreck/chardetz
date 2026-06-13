@@ -10,6 +10,6 @@
         "tests",
         "tools",
     },
-    // ASCII "chardet!" — stable per-project id (any nonzero, non-reserved u64).
-    .fingerprint = 0x6368617264657421,
+    // Zig-computed per-package fingerprint (low bits hash the package name).
+    .fingerprint = 0xc27e58ace7e24623,
 }
