@@ -1,0 +1,15 @@
+.{
+    .name = .chardetz,
+    .version = "0.1.0",
+    .minimum_zig_version = "0.16.0",
+    .dependencies = .{},
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "tests",
+        "tools",
+    },
+    // ASCII "chardet!" — stable per-project id (any nonzero, non-reserved u64).
+    .fingerprint = 0x6368617264657421,
+}

@@ -1,0 +1,43 @@
+# Zig build artifacts
+.zig-cache/
+zig-out/
+zig-cache/
+
+# Nix
+.direnv/
+result
+result-*
+.oracle
+.oracle-*
+
+# Side-effect of `zig build --fetch=all`
+zig-pkg/
+# Pre-upgrade lock backups
+flake.lock.bak_*
+
+# Editor files
+*.swp
+*~
+
+# Build artifacts
+*.o
+*.a
+
+# macOS
+.DS_Store
+
+# Semantic search / tooling indexes
+.codescan/
+.serena/
+
+# Local dev-aid symlinks (point into Peter's vault/dotfiles; broken for other clones)
+AGENTS.md
+CLAUDE.md
+jj_cheatsheet.md
+ZIG_RECENT_API_CHANGES.md
+
+# Inter-project LLM messages
+inbox/
+
+# Worktrees
+.worktrees/

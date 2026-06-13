@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Build chardetz via nix (sandboxed, deterministic — avoids host-OS libSystem
+# stub issues that break native `zig build` on newer macOS). ReleaseFast default.
+set -u
+cd "$(dirname "$0")" || exit 1
+
+echo "Building chardetz (nix build, ReleaseFast)..." >&2
+if nix build .#default -L "$@"; then
+	echo "Built. Static library artifact in ./result (nix store)." >&2
+	exit 0
+else
+	echo "BUILD FAILED" >&2
+	exit 1
+fi

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Master test runner. Accumulates sub-suite failures into the exit code so a
+# single red sub-suite does not mask the others. NEVER use `set -e`/`set -o
+# pipefail` here — tests that verify error paths legitimately return nonzero.
+set -u
+cd "$(dirname "$0")" || exit 1
+
+sys="$(nix eval --impure --raw --expr 'builtins.currentSystem')"
+rc=0
+
+echo "== Zig unit + generator tests (hermetic nix check) ==" >&2
+if ! nix build ".#checks.${sys}.test" -L; then
+	echo "FAIL: zig tests" >&2
+	rc=1
+fi
+
+# Subsequent milestones append here (kept in run-order, each updating rc):
+#   - ./scripts/check-blessed-hashes              (MFIC control-file gate, Phase 6)
+#   - nix develop -c zig build test -Dwith-oracle (in-harness differential, Phase 8)
+#   - ./tests/cli/parity.sh                       (CLI-vs-CLI parity, Phase 9)
+
+if [ "$rc" -eq 0 ]; then
+	echo "ALL TESTS PASSED" >&2
+else
+	echo "TEST SUITE FAILED (rc=$rc)" >&2
+fi
+exit "$rc"
