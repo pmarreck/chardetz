@@ -1,6 +1,10 @@
 # Dirtree: Stateful directory trees in the CLI for humans and LLMs. https://github.com/pmarreck/dirtree
 ver=1.2
 annotate=[
+	COPYING = Verbatim tri-license (MPL1.1/GPL2/LGPL2.1) copied from uchardetz
+	PROVENANCE.md = Lineage Mozilla→BYVoid→uchardetz@abacfc1f + license rationale
+	README.md = Public README incl. license + provenance sections
+	THIRD_PARTY_LICENSES = Third-party attributions (Mozilla/Netscape, BYVoid, uchardetz)
 	build = Nix-based build wrapper (ReleaseFast)
 	build.zig = Build: ReleaseFast default; chardetz module + static lib + test step
 	build.zig.zon = Package manifest: name=chardetz, no deps yet (uchardetz added Phase 8)
@@ -8,4 +12,5 @@ annotate=[
 	src/chardetz.zig = Core module root (pure, no I/O); re-exports struct defs + tables as they land
 	test = Master test runner; accumulates sub-suite failures into exit code
 	tests/all.zig = Test aggregator; append _ = @import(...) per test module
+	tools/gen_tables/emit.zig = Generator: LICENSE_HEADER + writeHeader provenance for generated tables
 ]

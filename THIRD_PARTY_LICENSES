@@ -1,0 +1,40 @@
+chardetz — Third-Party Licenses and Attributions
+=================================================
+
+chardetz is a derivative work. Its detection logic and data tables are a
+C++→Zig translation of uchardet, which is a port of Mozilla's universalchardet.
+The full license text for all of the below is in the file `COPYING`.
+
+-------------------------------------------------------------------------------
+1. Mozilla universalchardet  (Original Code)
+-------------------------------------------------------------------------------
+  The Original Code is Mozilla Universal charset detector code.
+  Initial Developer: Netscape Communications Corporation.
+  Portions created by the Initial Developer are Copyright (C) 2001
+  the Initial Developer. All Rights Reserved.
+
+  Tri-licensed: Mozilla Public License 1.1 / GNU GPL 2.0-or-later /
+  GNU LGPL 2.1-or-later. See COPYING.
+
+-------------------------------------------------------------------------------
+2. uchardet  (upstream C/C++ implementation)
+-------------------------------------------------------------------------------
+  https://github.com/BYVoid/uchardet
+  Contributor: BYVoid <byvoid.kcp@gmail.com> and the uchardet contributors.
+  Same tri-license as above (inherited from Mozilla).
+
+-------------------------------------------------------------------------------
+3. uchardetz  (Zig-build fork; the pinned translation source + test oracle)
+-------------------------------------------------------------------------------
+  https://github.com/pmarreck/uchardetz
+  Pinned commit: abacfc1fc86ef7618547d7dce7cc7501e756fa31
+  Same tri-license. uchardetz is used at test time as a differential oracle;
+  it is NOT a runtime dependency of chardetz.
+
+-------------------------------------------------------------------------------
+chardetz's own contribution
+-------------------------------------------------------------------------------
+  The translation itself, the build system, the table generator, and the test
+  harness are new work by the chardetz authors. For licensing simplicity the
+  entire repository is distributed under the same tri-license as upstream
+  (MPL 1.1 / GPL 2.0-or-later / LGPL 2.1-or-later). See COPYING and PROVENANCE.md.
