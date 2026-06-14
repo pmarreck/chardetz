@@ -68,14 +68,20 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
   (reads adjacent `.rodata`). This MAY be intentional upstream rather than a bug
   (unclear) — flagged to revisit. chardetz keeps a memory-safe bounds-guard
   (`order < table_size AND order < array.len`), treating those rare CNS plane-2
-  orders as not-frequent. **Decision (Peter): do NOT pad and do NOT fence** — note
-  it, keep the gates strict. The differential FUZZ once flagged a divergence here,
-  but it **does NOT reproduce** after the SMState illegal-enum-value UB fix
-  (verified: 36,000 inputs across 6 seeds incl. the CI default + seed 42 → 0
-  disagreements) — very likely that "divergence" was an artifact of the SMState
-  UB. `expected_divergences.json` stays EMPTY (strict). If EUC-TW ever diverges
-  in fuzz, FAIL loudly + investigate (it'd be a real finding). Revisit upstream
-  intent of the 8102-vs-5376 discrepancy when convenient.
+  orders as not-frequent. **Resolution (Peter, commit f04e432c): PADDED the
+  generated EUC-TW table to `table_size` (8102)** with a frequent (`<512`)
+  sentinel → deterministically matches uchardet's de-facto behavior and removes
+  the OOB/UB by construction (`order < table_size` ⟹ in-bounds; "physics over
+  policy"). chardetz also keeps the bounds-guard as belt-and-suspenders. NOTE:
+  this makes the EUC-TW generated table a *documented, intentional deviation* from
+  its `.tab` source — the one table where `generated != .tab` (the padding).
+  The differential FUZZ is now strict-green at any seed (the padding resolved the
+  once-flagged divergence; verified 36k inputs / 6 seeds incl. CI default + 42).
+  `expected_divergences.json` stays EMPTY (nothing to fence). The fuzz retains a
+  ledger-consult mechanism (currently dormant) to honor any future documented
+  divergence. **PECULIARITY to revisit:** confirm whether the 8102-vs-5376
+  `.tab` discrepancy is intentional upstream; if it was a deliberate "treat the
+  overflow region as frequent," the padding faithfully matches that.
 - **M3 EUCTW prober bounds — RESOLVED 2026-06-14:** EUCTW `GetOrder` max ≈ 5545
   exceeds its ~5378-entry `char_to_freq_order` array (table_size define is 8102).
   `CharDistributionAnalysis.handleOneChar` now guards
