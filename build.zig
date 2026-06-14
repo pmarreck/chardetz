@@ -10,7 +10,10 @@ pub fn build(b: *std.Build) void {
     ) orelse .ReleaseFast;
 
     // ── Core module (pure Zig, no I/O) — exposed to downstream Zig consumers ──
-    _ = b.addModule("chardetz", .{
+    // Also imported by the test aggregator under the name "chardetz" (Zig 0.16
+    // forbids `@import("../src/..")` across module roots, so tests reach the
+    // core via this named import, never relative paths).
+    const core_mod = b.addModule("chardetz", .{
         .root_source_file = b.path("src/chardetz.zig"),
         .target = target,
         .optimize = optimize,
@@ -34,6 +37,9 @@ pub fn build(b: *std.Build) void {
             .root_source_file = b.path("tests/all.zig"),
             .target = target,
             .optimize = optimize,
+            .imports = &.{
+                .{ .name = "chardetz", .module = core_mod },
+            },
         }),
     });
     // Zig 0.16 self-hosted backend can SEGV compiling tests on x86_64 Debug; force LLVM.
