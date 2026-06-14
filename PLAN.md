@@ -61,17 +61,21 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
 - Bring the in-harness differential gate into Garnix CI (C++-in-sandbox via
   zigDeps) by M2 if M1 keeps it local-only.
 - `include/uchardet.h` drop-in header — DONE (C FFI + C CLI shipped).
-- **EUC-TW differential divergence — PENDING PETER'S DECISION (not blocking CI):**
-  the EUCTW bounds-guard (above) is *semantically* correct (orders beyond the
-  freq table = not-frequent) but DIVERGES from uchardet's upstream OOB read
-  (which lands on `<512` garbage → counts those rare chars as frequent). Fuzz
-  **seed 42** surfaces it (chardetz=UTF-8 vs uchardet=EUC-TW on plane-2-heavy
-  input); default-seed fuzz is green. Resolve via either: (a) pad the EUC-TW
-  generated table to `table_size` with a `<512` sentinel → matches the oracle
-  deterministically, kills the UB, fuzz green at any seed (breaks the
-  "generated==.tab" invariant for this one table — documented); or (b) keep the
-  guard and record the divergence in `expected_divergences.json` (blessed-hash
-  control). Recommendation: (a).
+- **EUC-TW table_size-vs-array PECULIARITY — NOTED (Peter, 2026-06-14), revisit:**
+  EUC-TW's `EUCTW_TABLE_SIZE` define (8102) exceeds its compiled
+  `EUCTWCharToFreqOrder` array (5376 entries). uchardet's prober guards only
+  `order < table_size`, so for orders in [5376, ~5545] it indexes PAST the array
+  (reads adjacent `.rodata`). This MAY be intentional upstream rather than a bug
+  (unclear) — flagged to revisit. chardetz keeps a memory-safe bounds-guard
+  (`order < table_size AND order < array.len`), treating those rare CNS plane-2
+  orders as not-frequent. **Decision (Peter): do NOT pad and do NOT fence** — note
+  it, keep the gates strict. The differential FUZZ once flagged a divergence here,
+  but it **does NOT reproduce** after the SMState illegal-enum-value UB fix
+  (verified: 36,000 inputs across 6 seeds incl. the CI default + seed 42 → 0
+  disagreements) — very likely that "divergence" was an artifact of the SMState
+  UB. `expected_divergences.json` stays EMPTY (strict). If EUC-TW ever diverges
+  in fuzz, FAIL loudly + investigate (it'd be a real finding). Revisit upstream
+  intent of the 8102-vs-5376 discrepancy when convenient.
 - **M3 EUCTW prober bounds — RESOLVED 2026-06-14:** EUCTW `GetOrder` max ≈ 5545
   exceeds its ~5378-entry `char_to_freq_order` array (table_size define is 8102).
   `CharDistributionAnalysis.handleOneChar` now guards
