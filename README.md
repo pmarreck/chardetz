@@ -1,5 +1,7 @@
 # chardetz
 
+[![Garnix](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fgarnix.io%2Fapi%2Fbadges%2Fpmarreck%2Fchardetz%3Fbranch%3Dyolo)](https://garnix.io/repo/pmarreck/chardetz)
+
 A pure-[Zig](https://ziglang.org) character-encoding detector — a faithful
 translation of [uchardet](https://github.com/BYVoid/uchardet) (the Mozilla
 universalchardet-lineage detector) with **no C/C++ runtime dependency**,
@@ -8,9 +10,12 @@ cross-compilable to every Zig target, and **WASM-able**.
 chardetz mirrors uchardet's C ABI, so it is a **drop-in** replacement for
 existing uchardet consumers.
 
-> **Status:** early development. Milestone 1 (project infrastructure, data-table
-> generation, and the differential-oracle test harness) is in progress; no
-> detection probers are wired yet. See `PLAN.md`.
+> **Status:** the full detection engine is complete and verified at **oracle
+> parity** — chardetz matches uchardet exactly across the entire test corpus
+> (every charset uchardet supports: UTF-8/16/32, the CJK multibyte set, all
+> single-byte language models, Hebrew, Latin-1, and the ISO-2022/HZ escape
+> sets), backed by a differential fuzz harness. A drop-in `uchardet_*` C ABI and
+> a C CLI are included. See `PLAN.md`.
 
 ## Why
 

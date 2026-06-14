@@ -60,7 +60,18 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
 ## Tripwires / deferred
 - Bring the in-harness differential gate into Garnix CI (C++-in-sandbox via
   zigDeps) by M2 if M1 keeps it local-only.
-- `include/uchardet.h` drop-in header lands with the FFI in M5.
+- `include/uchardet.h` drop-in header — DONE (C FFI + C CLI shipped).
+- **EUC-TW differential divergence — PENDING PETER'S DECISION (not blocking CI):**
+  the EUCTW bounds-guard (above) is *semantically* correct (orders beyond the
+  freq table = not-frequent) but DIVERGES from uchardet's upstream OOB read
+  (which lands on `<512` garbage → counts those rare chars as frequent). Fuzz
+  **seed 42** surfaces it (chardetz=UTF-8 vs uchardet=EUC-TW on plane-2-heavy
+  input); default-seed fuzz is green. Resolve via either: (a) pad the EUC-TW
+  generated table to `table_size` with a `<512` sentinel → matches the oracle
+  deterministically, kills the UB, fuzz green at any seed (breaks the
+  "generated==.tab" invariant for this one table — documented); or (b) keep the
+  guard and record the divergence in `expected_divergences.json` (blessed-hash
+  control). Recommendation: (a).
 - **M3 EUCTW prober bounds — RESOLVED 2026-06-14:** EUCTW `GetOrder` max ≈ 5545
   exceeds its ~5378-entry `char_to_freq_order` array (table_size define is 8102).
   `CharDistributionAnalysis.handleOneChar` now guards
