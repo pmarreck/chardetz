@@ -12,6 +12,8 @@ comptime {
 	_ = @import("unit/sbcs_model_test.zig");
 	_ = @import("unit/state_machine_test.zig");
 	_ = @import("unit/dist_jp_test.zig");
+	_ = @import("unit/char_distribution_analysis_test.zig");
+	_ = @import("unit/jp_context_analysis_test.zig");
 	// M2: detection engine
 	_ = @import("unit/coding_state_machine_test.zig");
 	_ = @import("unit/utf8_prober_test.zig");
@@ -22,6 +24,8 @@ comptime {
 	_ = @import("unit/hebrew_prober_test.zig");
 	_ = @import("unit/latin1_prober_test.zig");
 	_ = @import("unit/sbcs_group_prober_test.zig");
+	// CJK multibyte group + escape prober
+	_ = @import("unit/mbcs_prober_test.zig");
 	// Phase 3: generator tests
 	_ = @import("gen_tables/parse_sbcs_test.zig");
 	_ = @import("gen_tables/emit_test.zig");

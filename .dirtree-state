@@ -15,13 +15,23 @@ annotate=[
 	scripts/bless-hashes = Deliberately re-records sha256 of control files into blessed_hashes.txt; run only on intentional changes
 	scripts/check-blessed-hashes = CI assertion: verifies control files match blessed_hashes.txt; exits 1 on any unblessed change
 	src/char_distribution.zig = DistributionTable struct for CJK frequency-order tables (ported from CharDistribution.h)
+	src/char_distribution_analysis.zig = CJK confidence engine: CharDistributionAnalysis port — per-charset GetOrder byte-math (Big5/GB2312/EUCTW/EUCKR/SJIS/EUCJP) → freq-rank lookup → freq/((total-freq)*ratio) confidence
 	src/chardetz.zig = Core module root (pure, no I/O); re-exports struct defs + tables as they land
 	src/filter.zig = Buffer filters (nsCharSetProber::FilterWith[out]EnglishLetters): collapse delimiter runs / strip tags before SBCS-group + Latin1 scoring
 	src/jp_context.zig = ContextTable struct for Japanese 2-char hiragana context table (ported from JpCntx.h)
+	src/jp_context_analysis.zig = Japanese context engine: JapaneseContextAnalysis port — hiragana bigram model over jp2_context 83x83 table; SJIS/EUCJP GetOrder; (totalRel-relSample[0])/totalRel confidence
+	src/probers/big5.zig = Big5 prober (nsBig5Prober): Big5 SM + Big5 CharDistributionAnalysis; confidence = distribution
+	src/probers/escape.zig = Escape-sequence prober (nsEscCharSetProber): 4 SMs [HZ,ISO2022CN,ISO2022JP,ISO2022KR]; first eItsMe wins; charset = winning SM model name
+	src/probers/eucjp.zig = EUC-JP prober (nsEUCJPProber): EUC-JP SM + EUC-JP distribution + EUC-JP Japanese context; confidence = max(ctx,dist)
+	src/probers/euckr.zig = EUC-KR prober (nsEUCKRProber): EUC-KR SM + EUC-KR distribution
+	src/probers/euctw.zig = EUC-TW prober (nsEUCTWProber): EUC-TW SM + EUC-TW distribution
+	src/probers/gb18030.zig = GB18030 prober (nsGB18030Prober): GB18030 SM + GB2312 distribution (18030 superset of 2312); name GB18030
 	src/probers/hebrew.zig = Hebrew prober (nsHebrewProber): final-letter heuristic deciding logical WINDOWS-1255 vs visual ISO-8859-8; name prober for the two win1255 model probers
 	src/probers/latin1.zig = Latin1/WINDOWS-1252 prober (nsLatin1Prober): 8-class char model + class-bigram frequency table; FilterWithEnglishLetters; downweighted *0.5 confidence
+	src/probers/mbcs_group.zig = MBCS group prober (nsMBCSGroupProber): holds [UTF8,SJIS,EUCJP,GB18030,EUCKR,Big5,EUCTW]; incremental high-byte-run filter; max-confidence argmax
 	src/probers/sbcs.zig = Generic single-byte charset prober (nsSBCharSetProber): bigram precedence-matrix scoring + positive-ratio confidence; supports reversed lookup + name prober
 	src/probers/sbcs_group.zig = SBCS group prober (nsSBCSGroupProber): 35 single-byte sub-probers in upstream order incl. Hebrew helper; FilterWithoutEnglishLetters then max-confidence argmax
+	src/probers/sjis.zig = Shift-JIS prober (nsSJISProber): SJIS SM + SJIS distribution + SJIS Japanese context; confidence = max(ctx,dist)
 	src/sbcs_model.zig = SequenceModel struct + ILL/CTR/SYM/RET/NUM sentinel constants (ported from nsSBCharSetProber.h)
 	src/state_machine.zig = PckInt packed-integer unpacker (GETFROMPCK port) + SMModel state-machine model struct (ported from nsPkgInt.h + nsCodingStateMachine.h)
 	src/tables/char_distribution.zig = @generated: 5 CJK DistributionTable constants (Big5/GB2312/EUCTW/JIS/EUCKR)
@@ -41,10 +51,13 @@ annotate=[
 	tests/gen_tables/fixtures/jpcntx_snippet.txt = Minimal JpCntx fixture (3×3) for parse_jpcntx tests
 	tests/gen_tables/parse_distribution_test.zig = Unit tests for parse_distribution using dist_snippet.txt fixture
 	tests/gen_tables/parse_jpcntx_test.zig = Unit tests for parse_jpcntx using jpcntx_snippet.txt fixture
+	tests/unit/char_distribution_analysis_test.zig = Unit tests for CharDistributionAnalysis GetOrder byte-math + confidence + EUC-TW OOB guard
 	tests/unit/dist_jp_test.zig = Unit tests for char_distribution.zig and jp_context.zig: struct construction
 	tests/unit/filter_test.zig = Unit tests for the FilterWith[out]EnglishLetters buffer filters
 	tests/unit/hebrew_prober_test.zig = Unit tests for HebrewProber final-letter logical/visual decision
+	tests/unit/jp_context_analysis_test.zig = Unit tests for JapaneseContextAnalysis hiragana GetOrder + pair counting + confidence
 	tests/unit/latin1_prober_test.zig = Unit tests for Latin1Prober class model + confidence formula
+	tests/unit/mbcs_prober_test.zig = Unit tests for the 6 CJK probers + MBCS group + escape prober (names, states, real escape-seq detection)
 	tests/unit/sbcs_group_prober_test.zig = Unit tests for SBCSGroupProber 35-slot construction + dispatch + name selection
 	tests/unit/sbcs_model_test.zig = Unit tests for sbcs_model.zig: order constants + SequenceModel struct construction
 	tests/unit/sbcs_prober_test.zig = Unit tests for SingleByteCharSetProber state machine + confidence invariants

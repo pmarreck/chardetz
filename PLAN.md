@@ -20,7 +20,14 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
   - [x] Phase 10: ./bm skeleton + bench/.gitkeep + nix flake check -L green (all 5 cross-target packages + 3 checks evaluated clean; only aarch64-darwin checks run hermetically; cross-targets pure-Zig fine) + docs — *2026-06-14 EST*
 - [x] **M2 — UTF-8 + Latin-1 + one single-byte model at oracle parity** — *UTF-8 prober + detection engine 2026-06-14; Latin-1 + full single-byte set 2026-06-14*
       → first green prober → name veto → create PUBLIC repo (repo step still pending)
-- [ ] **M3 — full multibyte prober set** (CJK MBCS group + escape prober — the 8 pending charsets)
+- [x] **M3 — full multibyte prober set** (CJK MBCS group + escape prober — the 8 pending charsets) — *complete 2026-06-14 EST*
+  - [x] `CharDistributionAnalysis` → `src/char_distribution_analysis.zig` (per-charset GetOrder byte-math for Big5/GB2312/EUCTW/EUCKR/SJIS/EUCJP; freq/((total-freq)*ratio) confidence + SURE_YES/SURE_NO clamps; EUC-TW OOB guard — table_size 8102 > array ~5378)
+  - [x] `JapaneseContextAnalysis` → `src/jp_context_analysis.zig` (hiragana bigram model over jp2_context 83x83; SJIS/EUCJP GetOrder; (totalRel-relSample[0])/totalRel confidence)
+  - [x] 6 CJK probers → `src/probers/{big5,gb18030,euckr,euctw,sjis,eucjp}.zig` (SJIS/EUCJP take max(context,distribution); others distribution-only; GB18030 prober uses GB2312 distribution)
+  - [x] `nsMBCSGroupProber` → `src/probers/mbcs_group.zig` ([UTF8,SJIS,EUCJP,GB18030,EUCKR,Big5,EUCTW] — exact upstream order; incremental high-byte-run filter (keepNext), not the SBCS English-letter filter; max-confidence argmax)
+  - [x] `nsEscCharSetProber` → `src/probers/escape.zig` (4 SMs [HZ,ISO2022CN,ISO2022JP,ISO2022KR]; first eItsMe wins; charset = winning SM model name)
+  - [x] Detector restructured to uchardet's true shape: slot 0 = MBCSGroup (UTF-8 moved INSIDE it), slot 1 = SBCSGroup, slot 2 = Latin1; escape prober fed on the eEscAscii path
+  - [x] Differential gate: IMPLEMENTED grown to all 8 CJK/escape charsets; **checked=59, pending=0, divergences=0** (full corpus coverage at oracle parity). `./test` green end-to-end.
 - [x] **M4 — full single-byte language models + Hebrew + SBCS group** — *complete 2026-06-14 EST*
   - [x] `nsSBCharSetProber` → `src/probers/sbcs.zig` (bigram precedence-matrix scoring + positive-ratio confidence; reversed + name-prober support)
   - [x] `nsSBCSGroupProber` → `src/probers/sbcs_group.zig` (35 sub-probers in exact upstream order incl. Hebrew helper at slot 10; FilterWithoutEnglishLetters → max-confidence argmax)
@@ -36,11 +43,12 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
 - Bring the in-harness differential gate into Garnix CI (C++-in-sandbox via
   zigDeps) by M2 if M1 keeps it local-only.
 - `include/uchardet.h` drop-in header lands with the FFI in M5.
-- **M3 EUCTW prober bounds:** EUCTW `GetOrder` max ≈ 5545 exceeds its 5376-entry
-  `char_to_freq_order` array (table_size define is 8102, but the compiled array is
-  5376 — uchardet's `order < table_size` guard does NOT prevent OOB here). The M3
-  EUCTW prober MUST guard `order < char_to_freq_order.len` (not just table_size) to
-  avoid a Zig panic on rare/malformed input; replicate uchardet's effective behavior.
+- **M3 EUCTW prober bounds — RESOLVED 2026-06-14:** EUCTW `GetOrder` max ≈ 5545
+  exceeds its ~5378-entry `char_to_freq_order` array (table_size define is 8102).
+  `CharDistributionAnalysis.handleOneChar` now guards
+  `order < table_size AND order < char_to_freq_order.len` (an out-of-array order is
+  simply never "frequent" — reproducing uchardet's effective UB behavior safely).
+  Covered by a unit test feeding {0xfe,0xfe} (order 5545).
 
 ## Completed (recent, for continuity)
 - 2026-06-13: brainstorm → spec → M1 plan (subagent-driven execution chosen).

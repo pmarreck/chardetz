@@ -5,17 +5,20 @@
 //!
 //! Tri-licensed MPL 1.1 / GPL 2.0-or-later / LGPL 2.1-or-later — see COPYING.
 //!
-//! Milestone status: detection engine + UTF-8 prober + the full single-byte
-//! prober family (SBCS group of 35 sub-probers incl. Hebrew, plus Latin1). The
-//! CodingStateMachine drives the generated SMModels; a vtable-based Prober
-//! interface unifies probers heterogeneously; UniversalDetector dispatches
-//! (BOM + BOM-less UTF-16 heuristic + input classification + argmax-confidence)
-//! over the prober array [UTF8, SBCSGroup, Latin1]. Detected charsets: ASCII,
-//! UTF-8, UTF-16/BE/LE, UTF-32, and every single-byte charset (Cyrillic, Greek,
-//! Hebrew, Thai, Arabic, Vietnamese, Turkish, Latin-1/15, WINDOWS-125x, etc.) —
-//! verified at 0 divergences vs the uchardet oracle. Remaining: the CJK
-//! multibyte (MBCS) group + the escape-sequence prober (ISO-2022-*, SHIFT_JIS,
-//! BIG5, EUC-*, GB18030), which plug into the same dispatcher array next.
+//! Milestone status: COMPLETE detection engine — every charset uchardet
+//! supports, at oracle parity. The CodingStateMachine drives the generated
+//! SMModels; a vtable-based Prober interface unifies probers heterogeneously;
+//! UniversalDetector dispatches (BOM + BOM-less UTF-16 heuristic + input
+//! classification + argmax-confidence) over the prober array
+//! [MBCSGroup, SBCSGroup, Latin1] — with the escape-sequence prober fed on the
+//! eEscAscii path. The MBCS group holds [UTF8, SJIS, EUCJP, GB18030, EUCKR,
+//! Big5, EUCTW]; the SBCS group holds 35 single-byte sub-probers (incl.
+//! Hebrew); plus the Latin1 prober. Detected charsets: ASCII, UTF-8,
+//! UTF-16/BE/LE, UTF-32, every single-byte charset (Cyrillic, Greek, Hebrew,
+//! Thai, Arabic, Vietnamese, Turkish, Latin-1/15, WINDOWS-125x, etc.), the CJK
+//! multibyte set (SHIFT_JIS, BIG5, EUC-JP/KR/TW, GB18030) and the escape
+//! encodings (ISO-2022-JP/KR/CN, HZ-GB-2312) — verified at checked=59,
+//! pending=0, divergences=0 vs the uchardet oracle over the full corpus.
 
 const std = @import("std");
 
@@ -24,6 +27,8 @@ pub const sbcs_model = @import("sbcs_model.zig");
 pub const state_machine = @import("state_machine.zig");
 pub const char_distribution = @import("char_distribution.zig");
 pub const jp_context = @import("jp_context.zig");
+pub const char_distribution_analysis = @import("char_distribution_analysis.zig");
+pub const jp_context_analysis = @import("jp_context_analysis.zig");
 
 // ── Phase 4: generated SM tables ────────────────────────────────────────────
 pub const tables = @import("tables.zig");
@@ -43,6 +48,14 @@ pub const probers = struct {
 	pub const sbcs_group = @import("probers/sbcs_group.zig");
 	pub const hebrew = @import("probers/hebrew.zig");
 	pub const latin1 = @import("probers/latin1.zig");
+	pub const big5 = @import("probers/big5.zig");
+	pub const gb18030 = @import("probers/gb18030.zig");
+	pub const euckr = @import("probers/euckr.zig");
+	pub const euctw = @import("probers/euctw.zig");
+	pub const sjis = @import("probers/sjis.zig");
+	pub const eucjp = @import("probers/eucjp.zig");
+	pub const mbcs_group = @import("probers/mbcs_group.zig");
+	pub const escape = @import("probers/escape.zig");
 };
 
 /// One-shot detection: returns the detected charset name (a static string

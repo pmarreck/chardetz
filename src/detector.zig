@@ -17,9 +17,10 @@
 
 const std = @import("std");
 const prober = @import("prober.zig");
-const utf8_prober = @import("probers/utf8.zig");
+const mbcs_group_prober = @import("probers/mbcs_group.zig");
 const sbcs_group_prober = @import("probers/sbcs_group.zig");
 const latin1_prober = @import("probers/latin1.zig");
+const esc_prober = @import("probers/escape.zig");
 
 const Prober = prober.Prober;
 const ProbingState = prober.ProbingState;
@@ -56,14 +57,20 @@ pub const UniversalDetector = struct {
     reported: []const u8 = "",
 
     // ── Concrete probers owned by the detector ──────────────────────────────
-    // Later chunks add fields here (mbcs group, sbcs group, latin1, escape) and
-    // extend `buildProberSlice()` to include their `asProber()` handles.
-    utf8: utf8_prober.UTF8Prober,
+    // uchardet's high-byte prober array is [MBCSGroup, SBCSGroup, Latin1]; the
+    // escape prober lives outside that array on the eEscAscii path.
+    /// The multibyte (CJK) group — UTF-8 + the 6 CJK probers. uchardet's
+    /// dispatcher slot [0]. The standalone UTF-8 prober now lives INSIDE here,
+    /// matching uchardet's real structure.
+    mbcs_group: mbcs_group_prober.MBCSGroupProber,
     /// The single-byte charset group (35 sub-probers incl. Hebrew). uchardet's
     /// dispatcher slot [1]. Allocates internally for the buffer filters.
     sbcs_group: sbcs_group_prober.SBCSGroupProber,
     /// The Latin-1 / WINDOWS-1252 class-model prober. uchardet's slot [2].
     latin1: latin1_prober.Latin1Prober,
+    /// The escape-sequence prober (ISO-2022-*, HZ). Constructed/fed only on the
+    /// eEscAscii input path; not part of the high-byte prober array.
+    esc: esc_prober.EscCharSetProber,
     /// Backing storage for the polymorphic prober array, (re)built on demand
     /// from the concrete prober fields. Built lazily — never in init() — so the
     /// erased `ptr`s always point at THIS struct's fields, never a stale copy
@@ -73,27 +80,26 @@ pub const UniversalDetector = struct {
     prober_storage: [MAX_PROBERS]Prober = undefined,
 
     const MAX_PROBERS = 8;
-    /// Number of probers wired for the high-byte path. Grows in later chunks.
-    /// uchardet's order is [MBCSGroup, SBCSGroup, Latin1]; the MBCS group lands
-    /// in the CJK chunk, so for now slot 0 is the standalone UTF-8 prober,
-    /// followed by the SBCS group and Latin1.
+    /// Number of probers wired for the high-byte path. uchardet's order is
+    /// [MBCSGroup, SBCSGroup, Latin1].
     const PROBER_COUNT = 3;
 
     pub fn init(allocator: std.mem.Allocator) UniversalDetector {
         return UniversalDetector{
-            .utf8 = utf8_prober.UTF8Prober.init(),
+            .mbcs_group = mbcs_group_prober.MBCSGroupProber.init(),
             .sbcs_group = sbcs_group_prober.SBCSGroupProber.init(allocator),
             .latin1 = latin1_prober.Latin1Prober.init(allocator),
+            .esc = esc_prober.EscCharSetProber.init(),
         };
     }
 
     /// (Re)build the polymorphic prober array from the concrete fields against
     /// the CURRENT address of `self`, then return it. uchardet's order is
-    /// [MBCSGroup, SBCSGroup, Latin1]; the MBCS group is not ported yet, so
-    /// slot 0 is the standalone UTF-8 prober, then the SBCS group + Latin1.
-    /// Cheap (a few pointer writes); called per dispatch.
+    /// [MBCSGroup, SBCSGroup, Latin1]. The escape prober is NOT in this array
+    /// (it runs on the eEscAscii path, separately). Cheap (a few pointer
+    /// writes); called per dispatch.
     fn proberSlice(self: *UniversalDetector) []Prober {
-        self.prober_storage[0] = self.utf8.asProber();
+        self.prober_storage[0] = self.mbcs_group.asProber();
         self.prober_storage[1] = self.sbcs_group.asProber();
         self.prober_storage[2] = self.latin1.asProber();
         return self.prober_storage[0..PROBER_COUNT];
@@ -109,6 +115,7 @@ pub const UniversalDetector = struct {
         self.detected_charset = null;
         self.reported = "";
         for (self.proberSlice()) |p| p.reset();
+        self.esc.reset();
     }
 
     /// nsUniversalDetector::HandleData.
@@ -216,10 +223,14 @@ pub const UniversalDetector = struct {
         // ── Dispatch on input state ──
         switch (self.input_state) {
             .esc_ascii => {
-                // Escape prober lands in a later chunk. Until then, mirror the
-                // upstream fallbacks for the escape branch: NBSP → ISO-8859-1,
-                // otherwise still ASCII until proven otherwise.
-                if (self.nbsp_found) {
+                // nsUniversalDetector: feed the whole buffer to the escape
+                // prober. If it locks onto an escape charset, report it; else
+                // ASCII-with-ESC is still ASCII (or ISO-8859-1 if NBSP seen).
+                const st = self.esc.handleData(buf);
+                if (st == .found_it) {
+                    self.done = true;
+                    self.detected_charset = self.esc.charsetName();
+                } else if (self.nbsp_found) {
                     self.detected_charset = "ISO-8859-1";
                 } else {
                     self.detected_charset = "ASCII";

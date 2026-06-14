@@ -58,6 +58,9 @@ const IMPLEMENTED = [_][]const u8{
     "ISO-8859-1",   "ISO-8859-2",   "ISO-8859-3",   "ISO-8859-5",   "ISO-8859-6",   "ISO-8859-7",
     "ISO-8859-8",   "ISO-8859-9",   "ISO-8859-11",  "ISO-8859-15",
     "KOI8-R",       "IBM855",       "IBM866",       "MAC-CYRILLIC", "TIS-620",      "VISCII",
+    // CJK multibyte (MBCS) group + escape-sequence prober — the final chunk.
+    "SHIFT_JIS",    "BIG5",         "EUC-JP",       "EUC-KR",       "EUC-TW",       "GB18030",
+    "ISO-2022-JP",  "ISO-2022-KR",
 };
 
 fn isImplemented(charset: []const u8) bool {
