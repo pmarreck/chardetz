@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # Generate tests/corpus/manifest.json from the labelled corpus.
-# Label derivation:
-#   - Strip extension; uppercase the stem.
-#   - If the extension (after the FIRST dot) is "be" or "le", it encodes byte
-#     order and is folded into the label: utf-16.be → UTF-16BE, utf-32.le → UTF-32LE.
-#   - Byte-order already encoded in stem (utf-16be, utf-16le) are uppercased as-is.
-#   - All other extensions (.txt, .smi, etc.) are discarded; stem only.
+# Label derivation: uppercase the filename up to the first dot (mirrors uchardet's
+# own test convention, uchardet-tests.c: strtok(basename, ".")). So utf-16.be →
+# UTF-16, utf-16be.txt → UTF-16BE, iso-8859-6.txt → ISO-8859-6, euc-kr.smi → EUC-KR.
+# Rationale: uchardet reports the endianless family (UTF-16/UTF-32) for BOM-bearing
+# files (the BOM conveys byte order at decode), so the expected label must match.
 set -u
 cd "$(dirname "$0")" || exit 1
 
@@ -19,23 +18,14 @@ for lang_dir in */; do
 	for fpath in "$lang_dir"*; do
 		[ -f "$fpath" ] || continue
 		fname="$(basename "$fpath")"
-		# Split at first dot to get stem and ext.
+		# Label = filename up to the FIRST dot, uppercased — mirrors uchardet's own
+		# test convention (uchardet-tests.c: strtok(basename, ".")). A BOM, when
+		# present, conveys byte order at decode time, so uchardet reports the
+		# endianless family (UTF-16 / UTF-32) for BOM-bearing .be/.le files; when
+		# the endianness is encoded in the stem (utf-16be) it is preserved. Do NOT
+		# fold .be/.le into the label — that diverges from what the oracle returns.
 		stem="${fname%%.*}"
-		after_first_dot="${fname#*.}"
-		# Determine if the first extension is a byte-order suffix (.be / .le).
-		# The extension after the first dot might be "be", "le", or "txt", "smi", etc.
-		first_ext="${after_first_dot%%.*}"
-		case "$first_ext" in
-			be|le)
-				# byte-order suffix: fold into label
-				bo="$(printf '%s' "$first_ext" | tr 'a-z' 'A-Z')"
-				label="$(printf '%s' "$stem" | tr 'a-z' 'A-Z')${bo}"
-				;;
-			*)
-				# Normal extension: stem only, already uppercased.
-				label="$(printf '%s' "$stem" | tr 'a-z' 'A-Z')"
-				;;
-		esac
+		label="$(printf '%s' "$stem" | tr 'a-z' 'A-Z')"
 		rel="$lang/$fname"
 		if [ "$first" -eq 1 ]; then
 			first=0
