@@ -18,10 +18,17 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
   - [x] Phase 8: differential harness — in-harness uchardetz link. C ABI link works end-to-end in hermetic nix sandbox; all 59 corpus files agree with the oracle after BOM/endianness corpus-label fix (manifest.json corrected: fr/utf-16.be→UTF-16, fr/utf-32.le→UTF-32, ko/utf-16.le→UTF-16, ko/utf-32.be→UTF-32). — *2026-06-14 EST*
   - [x] Phase 9: CLI-vs-CLI parity harness (tests/cli/parity.sh; oracle CLI vs corpus labels; 0 mismatches across 59 files; wired into ./test) — *2026-06-14 EST*
   - [x] Phase 10: ./bm skeleton + bench/.gitkeep + nix flake check -L green (all 5 cross-target packages + 3 checks evaluated clean; only aarch64-darwin checks run hermetically; cross-targets pure-Zig fine) + docs — *2026-06-14 EST*
-- [ ] **M2 — UTF-8 + Latin-1 + one single-byte model at oracle parity**
-      → first green prober → name veto → create PUBLIC repo
-- [ ] **M3 — full multibyte prober set**
-- [ ] **M4 — full single-byte language models + Hebrew + SBCS group**
+- [x] **M2 — UTF-8 + Latin-1 + one single-byte model at oracle parity** — *UTF-8 prober + detection engine 2026-06-14; Latin-1 + full single-byte set 2026-06-14*
+      → first green prober → name veto → create PUBLIC repo (repo step still pending)
+- [ ] **M3 — full multibyte prober set** (CJK MBCS group + escape prober — the 8 pending charsets)
+- [x] **M4 — full single-byte language models + Hebrew + SBCS group** — *complete 2026-06-14 EST*
+  - [x] `nsSBCharSetProber` → `src/probers/sbcs.zig` (bigram precedence-matrix scoring + positive-ratio confidence; reversed + name-prober support)
+  - [x] `nsSBCSGroupProber` → `src/probers/sbcs_group.zig` (35 sub-probers in exact upstream order incl. Hebrew helper at slot 10; FilterWithoutEnglishLetters → max-confidence argmax)
+  - [x] `nsHebrewProber` → `src/probers/hebrew.zig` (final-letter logical/visual heuristic → WINDOWS-1255 vs ISO-8859-8)
+  - [x] `nsLatin1Prober` → `src/probers/latin1.zig` (8-class model + class-bigram table; FilterWithEnglishLetters; *0.5 downweight)
+  - [x] `FilterWith[out]EnglishLetters` → `src/filter.zig`
+  - [x] Wired into dispatcher: prober array now [UTF8, SBCSGroup, Latin1] (PROBER_COUNT=3; MBCS group lands in M3)
+  - [x] Differential gate: IMPLEMENTED grown to all single-byte charsets; **checked=51, pending=8 (CJK+escape only), divergences=0**
 - [ ] **M5 — C FFI + C CLI + performance gate**
 - [ ] **M6 — WASM target**
 
