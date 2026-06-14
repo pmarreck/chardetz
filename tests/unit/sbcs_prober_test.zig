@@ -83,3 +83,28 @@ test "SBCS: reversed lookup transposes the bigram (visual vs logical Hebrew)" {
     try std.testing.expect(!std.math.isNan(fwd.getConfidence()));
     try std.testing.expect(!std.math.isNan(rev.getConfidence()));
 }
+
+// ── Regression: faithful port of uchardet's PRUint32 underflow ──────────────
+// nsSingleByteCharSetProber::GetConfidence (nsSBCharSetProber.cpp:131) computes
+//   r = r * (mTotalChar - mCtrlChar) / mTotalChar
+// with mTotalChar/mCtrlChar as PRUint32 (unsigned). When a buffer has MORE
+// control bytes than word bytes (ctrl_char > total_char), the C++ subtraction
+// WRAPS to a huge value, blowing r past 1.0 so the `if (r >= 1.0) r = 0.99` cap
+// fires → confidence 0.99. A naive float port subtracts as signed, gets a
+// negative r, and reports ~0 → the SBCS group falls below MINIMUM_THRESHOLD and
+// the detector returns "" (or a different charset). The differential FUZZ
+// harness surfaced this on inputs like `fe f0 9f 98 81` (oracle: ISO-8859-7,
+// pre-fix chardetz: ""). To stay a faithful drop-in we must reproduce the
+// wraparound. This pins it: ctrl-heavy high-byte input must yield the capped
+// 0.99, NOT a negative/near-zero confidence.
+test "SBCS: ctrl-heavy input wraps like uchardet's PRUint32 (confidence caps at 0.99, not negative)" {
+    // fe f0 = one word bigram (orders 28, 11 in ISO-8859-7); 9f 98 81 are all
+    // control (order CTR) → total_char=2, ctrl_char=3 → (2 - 3) underflows.
+    var p = Sbcs.init(&sm.greek.Iso_8859_7GreekModel);
+    _ = p.handleData("\xfe\xf0\x9f\x98\x81");
+    const cf = p.getConfidence();
+    // Must match uchardet's capped 0.99 (the wraparound result), and in
+    // particular must NOT be negative (the signed-float-subtraction bug).
+    try std.testing.expect(cf >= 0.0); // catches the negative-confidence bug
+    try std.testing.expectApproxEqAbs(@as(f32, 0.99), cf, eps);
+}

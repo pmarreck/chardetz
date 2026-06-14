@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Differential FUZZ suite. Feeds MANY seeded, deterministic, generated/mutated
+# byte buffers to BOTH chardetz (the Zig core, in-process) AND the uchardet C++
+# oracle (via its C ABI), asserting they agree on the detected charset. This
+# catches divergences the 59-file corpus cannot reach (partial multibyte
+# sequences, adversarial bytes, lone BOMs, truncations).
+#
+# Runs via nix — it links uchardetz's C++ through the same zigDeps cache the
+# Phase-8 oracle test uses. Kept OUT of the default `./test` (fuzz is a separate
+# suite per house convention); run it explicitly with `./fuzz`.
+#
+# Determinism: the harness seeds std.Random.DefaultPrng from a FIXED constant
+# (override CHARDETZ_FUZZ_SEED) and reads its iteration budget from
+# CHARDETZ_FUZZ_ITERS — no time-based seeds, no sleeps. Same seed ⇒ same run, so
+# any disagreement is exactly reproducible.
+#
+# Usage:
+#   ./fuzz                         # default seed + iters (from the flake check)
+#   CHARDETZ_FUZZ_ITERS=50000 ./fuzz
+#   CHARDETZ_FUZZ_SEED=12345 CHARDETZ_FUZZ_ITERS=20000 ./fuzz
+#
+# NEVER use `set -e`/`set -o pipefail` — a disagreement legitimately returns
+# nonzero; we want that exit code to propagate, not be masked.
+set -u
+cd "$(dirname "$0")" || exit 1
+
+sys="$(nix eval --impure --raw --expr 'builtins.currentSystem')"
+
+# If the caller overrode seed/iters, pass them through to the build's run step.
+# The flake's `fuzz` check bakes in a default iters; for ad-hoc tuning we go
+# through the dev shell + `zig build test-fuzz` so env vars reach the test.
+if [ -n "${CHARDETZ_FUZZ_SEED:-}" ] || [ -n "${CHARDETZ_FUZZ_ITERS:-}" ]; then
+	echo "== Differential fuzz (tuned: seed=${CHARDETZ_FUZZ_SEED:-default} iters=${CHARDETZ_FUZZ_ITERS:-default}) ==" >&2
+	export HOME="${HOME:-$TMPDIR}"
+	exec nix develop -c env \
+		CHARDETZ_FUZZ_SEED="${CHARDETZ_FUZZ_SEED:-}" \
+		CHARDETZ_FUZZ_ITERS="${CHARDETZ_FUZZ_ITERS:-}" \
+		zig build test-fuzz -Dwith-fuzz
+fi
+
+echo "== Differential fuzz (hermetic nix check) ==" >&2
+exec nix build ".#checks.${sys}.fuzz" -L

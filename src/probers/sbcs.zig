@@ -149,12 +149,21 @@ pub const SingleByteCharSetProber = struct {
             const total_char_f: f32 = @floatFromInt(self.total_char);
             const pos_f: f32 = @floatFromInt(self.seq_counters[POSITIVE_CAT]);
             const prob_f: f32 = @floatFromInt(self.seq_counters[PROBABLE_CAT]);
-            const ctrl_f: f32 = @floatFromInt(self.ctrl_char);
             const freq_f: f32 = @floatFromInt(self.freq_char);
 
             var r: f32 = @as(f32, 1.0) * pos_f / total_seqs_f / self.model.typical_positive_ratio;
             r = r * (pos_f + prob_f / 4.0) / total_char_f;
-            r = r * (total_char_f - ctrl_f) / total_char_f;
+            // FAITHFUL PORT of nsSBCharSetProber.cpp:131
+            //   r = r * (mTotalChar - mCtrlChar) / mTotalChar;
+            // mTotalChar/mCtrlChar are PRUint32 (unsigned). When ctrl_char >
+            // total_char (a control-heavy high-byte fragment) the subtraction
+            // WRAPS to a huge value, so r blows past 1.0 and the cap below
+            // pins it to 0.99. A signed/float subtraction would go negative
+            // and report ~0 — diverging from the oracle (caught by the
+            // differential fuzz harness on inputs like `fe f0 9f 98 81`). Use
+            // wrapping u32 subtraction to reproduce the wraparound exactly.
+            const non_ctrl: u32 = self.total_char -% self.ctrl_char;
+            r = r * @as(f32, @floatFromInt(non_ctrl)) / total_char_f;
             r = r * freq_f / total_char_f;
             if (r >= 1.00) r = 0.99;
             return r;

@@ -49,8 +49,29 @@ test "UTF-8 SM: reset returns to start" {
     try std.testing.expect(sm.nextState(0xC3) != .@"error");
     try std.testing.expectEqual(SMState.start, sm.nextState(0xA9));
 }
-
 test "UTF-8 SM: model name is UTF-8" {
     var sm = CodingStateMachine.init(&cz.tables.mbcs_sm.UTF8SMModel);
     try std.testing.expectEqualStrings("UTF-8", sm.getCodingStateMachine());
+}
+
+// ── Regression: intermediate DFA states must not be illegal-enum UB ─────────
+// uchardet's nsSMState is `(nsSMState)` cast over an `unsigned int` — its state
+// tables carry INTERMEDIATE values (UTF8_st packs 3..15, e.g. F0 drives the DFA
+// into state 8). A closed `enum(u32){start,error,its_me}` makes `@enumFromInt(8)`
+// ILLEGAL-VALUE UB — it traps in Debug and is silent UB in ReleaseFast
+// (corrupting CJK verdicts; the differential fuzz harness caught an EUC-TW
+// buffer mis-detected as UTF-8 under ReleaseFast). SMState must therefore be a
+// NON-EXHAUSTIVE enum. This pins it: a 4-byte UTF-8 lead (F0, class 10) MUST
+// drive the DFA into intermediate state 8 WITHOUT trapping. (Note: uchardet's
+// UTF8 DFA is conservative — F0 9F is then rejected to error; we assert the
+// intermediate state is reached cleanly and matches the oracle, not that the
+// whole 4-byte char is accepted. Verified bit-identical to uchardet's
+// nsCodingStateMachine on the same bytes.)
+test "UTF-8 SM: 4-byte lead reaches intermediate state 8 without illegal-enum trap" {
+    var sm = CodingStateMachine.init(&cz.tables.mbcs_sm.UTF8SMModel);
+    const s1 = sm.nextState(0xF0); // class 10 → intermediate state 8 (NOT a named variant)
+    try std.testing.expectEqual(@as(u32, 8), @intFromEnum(s1)); // would have trapped pre-fix
+    try std.testing.expectEqual(@as(u32, 4), sm.getCurrentCharLen());
+    // Matches uchardet's conservative UTF8 DFA: F0 then 9F → error (oracle-verified).
+    try std.testing.expectEqual(SMState.@"error", sm.nextState(0x9F));
 }

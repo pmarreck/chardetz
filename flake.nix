@@ -136,6 +136,34 @@
               echo "oracle test passed" > $out/result
             '';
           };
+
+          # Differential FUZZ. Same C++ link as oracle-test (via the zigDeps
+          # cache), but drives MANY generated/mutated buffers through BOTH
+          # chardetz and the uchardet C ABI, asserting agreement. Seeded &
+          # deterministic (CHARDETZ_FUZZ_SEED). Iteration budget is modest here
+          # so CI stays fast; `./fuzz` can crank it via CHARDETZ_FUZZ_ITERS.
+          fuzz = pkgs.stdenvNoCC.mkDerivation {
+            pname = "chardetz-fuzz";
+            version = "0.1.0";
+            src = ./.;
+            nativeBuildInputs = [ zig ];
+            dontConfigure = true;
+            dontFixup = true;
+            buildPhase = ''
+              export HOME=$TMPDIR
+              export ZIG_GLOBAL_CACHE_DIR=$TMPDIR/zig-cache
+              mkdir -p $ZIG_GLOBAL_CACHE_DIR
+              cp -r ${zigDeps}/* $ZIG_GLOBAL_CACHE_DIR/
+              chmod -R u+w $ZIG_GLOBAL_CACHE_DIR
+              export CHARDETZ_FUZZ_ITERS=''${CHARDETZ_FUZZ_ITERS:-6000}
+              timeout 900 zig build test-fuzz -Dwith-fuzz \
+                || { echo "Fuzz harness failed"; exit 1; }
+            '';
+            installPhase = ''
+              mkdir -p $out
+              echo "fuzz passed" > $out/result
+            '';
+          };
         };
 
         devShells.default = pkgs.mkShell {

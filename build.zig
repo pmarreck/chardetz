@@ -154,4 +154,48 @@ pub fn build(b: *std.Build) void {
 		const run_diff = b.addRunArtifact(diff_tests);
 		b.step("test-oracle", "Run the differential oracle test (links uchardetz C++)").dependOn(&run_diff.step);
 	}
+
+	// ── Differential FUZZ (opt-in; links uchardetz C++, like the oracle test) ──
+	// Off by default so the hermetic `test` step stays pure-Zig and fuzz stays a
+	// SEPARATE suite (house convention — NOT in the default `./test`). Enabled
+	// via `-Dwith-fuzz` and run through the dedicated `test-fuzz` step (and the
+	// flake's fuzz check), driven by `./fuzz`. Feeds MANY generated/mutated
+	// buffers to BOTH chardetz (Zig core) and the uchardet C ABI, asserting they
+	// agree. Reuses the exact same C++ link + translate-c plumbing as the oracle
+	// test above. Seed/iters come from CHARDETZ_FUZZ_SEED / CHARDETZ_FUZZ_ITERS.
+	const with_fuzz = b.option(
+		bool,
+		"with-fuzz",
+		"Build the differential fuzz harness (links uchardetz C++)",
+	) orelse false;
+	if (with_fuzz) {
+		const uz = b.dependency("uchardetz", .{ .target = target, .optimize = optimize });
+		const uz_lib = uz.artifact("uchardet-static");
+
+		const translate_c = b.addTranslateC(.{
+			.root_source_file = b.path("tests/differential/c_imports.h"),
+			.target = target,
+			.optimize = optimize,
+		});
+		translate_c.addIncludePath(uz.path("src"));
+		const c_mod = translate_c.createModule();
+
+		const fuzz_mod = b.createModule(.{
+			.root_source_file = b.path("tests/fuzz/differential_fuzz.zig"),
+			.target = target,
+			.optimize = optimize,
+			.link_libcpp = true, // uchardet is C++
+			.imports = &.{
+				.{ .name = "chardetz", .module = core_mod },
+				.{ .name = "c", .module = c_mod },
+			},
+		});
+		fuzz_mod.linkLibrary(uz_lib);
+
+		const fuzz_tests = b.addTest(.{ .root_module = fuzz_mod });
+		fuzz_tests.use_llvm = true; // same SEGV-avoidance as the other test steps
+		const run_fuzz = b.addRunArtifact(fuzz_tests);
+		run_fuzz.has_side_effects = true; // never cached: always re-run on demand
+		b.step("test-fuzz", "Run the differential fuzz harness (links uchardetz C++)").dependOn(&run_fuzz.step);
+	}
 }

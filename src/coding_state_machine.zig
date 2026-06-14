@@ -10,13 +10,21 @@
 
 const state_machine = @import("state_machine.zig");
 
-/// DFA state — port of nsSMState (nsCodingStateMachine.h). Values are
-/// load-bearing: they index the packed state table together with the byte
-/// class, and the probers compare against them directly.
+/// DFA state — port of nsSMState (nsCodingStateMachine.h). uchardet declares
+/// nsSMState as `enum { eStart, eError, eItsMe }` but assigns it via
+/// `(nsSMState)GETFROMPCK(...)` — i.e. it is really an opaque `unsigned int`
+/// tag whose state tables carry INTERMEDIATE values (UTF8_st packs 3..12). So
+/// this MUST be a NON-EXHAUSTIVE enum (`_`): `@enumFromInt(12)` on a closed
+/// `enum{start,error,its_me}` is illegal-value UB (traps in Debug, silent UB in
+/// ReleaseFast — caught by the differential fuzz harness as an EUC-TW buffer
+/// mis-detected as UTF-8). The `_` carries intermediate states as unnamed
+/// variants; the `== .start/.@"error"/.its_me` comparisons in the probers still
+/// work exactly as uchardet's `== eStart` etc.
 pub const SMState = enum(u32) {
     start = 0,
     @"error" = 1,
     its_me = 2,
+    _,
 };
 
 /// Runs an SMModel DFA byte-by-byte. Port of nsCodingStateMachine: for each
