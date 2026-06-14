@@ -5,10 +5,13 @@ annotate=[
 	PROVENANCE.md = Lineage Mozilla→BYVoid→uchardetz@abacfc1f + license rationale
 	README.md = Public README incl. license + provenance sections
 	THIRD_PARTY_LICENSES = Third-party attributions (Mozilla/Netscape, BYVoid, uchardetz)
+	blessed_hashes.txt = SHA256 hashes of MFIC control files (manifest.zig, expected_divergences.json); human-reviewed sentinel
 	build = Nix-based build wrapper (ReleaseFast)
 	build.zig = Build: ReleaseFast default; chardetz module + static lib + test step
 	build.zig.zon = Package manifest: name=chardetz, no deps yet (uchardetz added Phase 8)
 	flake.nix = Nix flake: zig_0_16 pinned; packages.default + 5 cross-targets; checks{build,test}
+	scripts/bless-hashes = Deliberately re-records sha256 of control files into blessed_hashes.txt; run only on intentional changes
+	scripts/check-blessed-hashes = CI assertion: verifies control files match blessed_hashes.txt; exits 1 on any unblessed change
 	src/char_distribution.zig = DistributionTable struct for CJK frequency-order tables (ported from CharDistribution.h)
 	src/chardetz.zig = Core module root (pure, no I/O); re-exports struct defs + tables as they land
 	src/jp_context.zig = ContextTable struct for Japanese 2-char hiragana context table (ported from JpCntx.h)
@@ -18,6 +21,10 @@ annotate=[
 	src/tables/jp_context.zig = @generated: jp2CharContext [6889]u8 + jp2_context ContextTable constant
 	test = Master test runner; accumulates sub-suite failures into exit code
 	tests/all.zig = Test aggregator; append _ = @import(...) per test module
+	tests/corpus = Labelled detection corpus seeded from uchardetz/test; 59 data files across 18 languages
+	tests/corpus/gen-manifest = Generates tests/corpus/manifest.json: walks lang subdirs, derives charset label from filename stem/ext
+	tests/corpus/manifest.json = Path→label manifest (JSON array); 59 entries mapping corpus file paths to expected charset labels
+	tests/expected_divergences.json = Fence ledger of known oracle divergences (empty at start); MFIC control file, hash-guarded
 	tests/gen_tables/fixtures/dist_snippet.txt = Minimal CJK .tab fixture for parse_distribution tests
 	tests/gen_tables/fixtures/jpcntx_snippet.txt = Minimal JpCntx fixture (3×3) for parse_jpcntx tests
 	tests/gen_tables/parse_distribution_test.zig = Unit tests for parse_distribution using dist_snippet.txt fixture

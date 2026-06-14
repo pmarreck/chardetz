@@ -13,8 +13,8 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
   - [x] Phase 3: table generator — single-byte models (33 SequenceModels) — *2026-06-13 ~20:35 EST*
   - [x] Phase 4: table generator — MBCS + Esc state machines (11 SMModels: 7 MBCS + 4 Esc; GB2312 correctly excluded — obsolete/commented-out upstream, superseded by GB18030) — *2026-06-13 ~16:50 EST*
   - [x] Phase 5: table generator — CharDistribution + JpCntx (5 DistributionTables + jp2_context 6889-entry ContextTable; all tests green, idempotent) — *2026-06-13 ~23:55 EST*
-  - [ ] Phase 6: MFIC blessed-hash control-file sentinel
-  - [ ] Phase 7: corpus (seed from uchardetz/test + manifest)
+  - [x] Phase 6: MFIC blessed-hash control-file sentinel (scripts/bless-hashes + scripts/check-blessed-hashes + blessed_hashes.txt; gate wired into ./test) — *2026-06-13 EST*
+  - [x] Phase 7: corpus (seed from uchardetz/test + manifest; 59 data files, 18 langs; tests/corpus/gen-manifest + manifest.json) — *2026-06-13 EST*
   - [ ] Phase 8: differential harness — in-harness uchardetz link
   - [ ] Phase 9: differential harness — CLI vs CLI parity
   - [ ] Phase 10: wire ./test + ./bm skeleton + Garnix-green + LLMsend Einstein
@@ -42,3 +42,6 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
 - 2026-06-13 ~20:35 EST: Phase 3 complete — gen_tables tool (parse_sbcs, emit,
   manifest, root, main), 2 new test files, 33 SequenceModels across 14 langs,
   jj commit e1a775df. Bug fixed: C++ `//` line comments in Bulgarian/others.
+- 2026-06-13 EST: Phases 6+7 complete — MFIC blessed-hash sentinel (2 control files,
+  negative test verified gate fires+exits-1), 59-file labelled corpus (18 langs),
+  gen-manifest script, check-blessed-hashes wired into ./test; jj commit 4fcc5348.
