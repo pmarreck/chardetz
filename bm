@@ -1,13 +1,70 @@
 #!/usr/bin/env bash
-# Benchmark suite. M1 has no detection runtime yet — the real per-function
-# throughput gate (chardetz vs C++ uchardet; scaling-ratio N/2N/4N/8N + two-sided
-# constant-factor ndjson log) lands in M5 when the probers exist. This skeleton
-# establishes the machine-id + ndjson log convention so M5 plugs straight in.
+# Benchmark suite. Runs the chardetz vs C++ uchardet throughput comparison and
+# the machine-INDEPENDENT scaling-ratio gate (bench/bench.zig, ReleaseFast).
+#
+# Two controls (see bench/bench.zig):
+#   * SCALING-RATIO GATE (hard): the harness exits nonzero if any hot path goes
+#     super-linear (>= 2.5x per input doubling). That failure propagates here.
+#   * CONSTANT-FACTOR (statistical, two-sided): we log aggregate chardetz MB/s to
+#     bench/<machine-id>.ndjson and LOUDLY warn if it moved > TOL vs this machine's
+#     last run in EITHER direction (a surprise speedup may mean lost work). A
+#     machine with no prior entry seeds its baseline and passes. Rerunning is
+#     implicit acceptance of the new number.
+#
+# NEVER use `set -e`/`set -o pipefail` — the scaling gate legitimately returns
+# nonzero and we want that to propagate, not be masked.
 set -u
 cd "$(dirname "$0")" || exit 1
-arch="$(uname -m)"; cpu="$(sysctl -n machdep.cpu.brand_string 2>/dev/null || uname -p)"
+
+TOL="${CHARDETZ_BENCH_TOL:-0.25}" # ±25% two-sided constant-factor tolerance
+
+arch="$(uname -m)"
+cpu="$(sysctl -n machdep.cpu.brand_string 2>/dev/null || uname -p)"
 machine_id="$(printf '%s|%s' "$arch" "$cpu" | shasum -a 256 | cut -c1-12)"
 mkdir -p bench
-echo "bench machine-id: $machine_id  (log: bench/$machine_id.ndjson)" >&2
-echo "No runtime benchmarks in M1 — detection probers arrive in M2+, full perf gate in M5." >&2
+log="bench/$machine_id.ndjson"
+echo "bench machine-id: $machine_id  (log: $log)" >&2
+
+export HOME="${HOME:-$TMPDIR}"
+
+# Run the harness in the dev shell (ReleaseFast default; network available so the
+# lazy uchardetz C++ dep can be fetched/built, like ./fuzz's tuned mode).
+out="$(nix develop -c zig build bench -Dwith-bench 2>&1)"
+rc=$?
+printf '%s\n' "$out" >&2
+if [ "$rc" -ne 0 ]; then
+	echo "BENCH FAILED (scaling gate or build error, rc=$rc)" >&2
+	exit "$rc"
+fi
+
+# Extract the machine-parseable result line.
+line="$(printf '%s\n' "$out" | grep '@@NDJSON@@' | tail -1 | sed 's/^.*@@NDJSON@@ //')"
+if [ -z "$line" ]; then
+	echo "BENCH ERROR: harness emitted no @@NDJSON@@ result line" >&2
+	exit 1
+fi
+
+cur_mbps="$(printf '%s' "$line" | grep -oE '"agg_cz_mbps":[0-9.]+' | cut -d: -f2)"
+
+# Two-sided constant-factor tolerance vs THIS machine's previous entry.
+prev="$(tail -1 "$log" 2>/dev/null)"
+if [ -n "$prev" ]; then
+	prev_mbps="$(printf '%s' "$prev" | grep -oE '"agg_cz_mbps":[0-9.]+' | cut -d: -f2)"
+	if [ -n "$prev_mbps" ] && [ -n "$cur_mbps" ]; then
+		awk -v cur="$cur_mbps" -v prev="$prev_mbps" -v tol="$TOL" 'BEGIN{
+			d=(cur-prev)/prev;
+			ad=(d<0)?-d:d;
+			printf("[bench] aggregate chardetz: %.1f MB/s  (prev %.1f, %+.1f%%)\n", cur, prev, d*100) > "/dev/stderr";
+			if (ad > tol) {
+				printf("\033[33m[bench] CONSTANT-FACTOR ALERT\033[0m: aggregate throughput moved %+.1f%% (> %.0f%% tol) vs last run on this machine. Investigate (regression, or lost work if a surprise speedup). Rerun = acceptance.\n", d*100, tol*100) > "/dev/stderr";
+			}
+		}'
+	fi
+else
+	echo "[bench] no prior entry for this machine — seeding baseline (PASS)." >&2
+fi
+
+# Append the new measurement (rerunning is implicit acceptance).
+printf '%s\n' "$line" >> "$log"
+echo "[bench] logged to $log" >&2
 exit 0

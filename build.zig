@@ -202,4 +202,52 @@ pub fn build(b: *std.Build) void {
 		run_fuzz.has_side_effects = true; // never cached: always re-run on demand
 		b.step("test-fuzz", "Run the differential fuzz harness (links uchardetz C++)").dependOn(&run_fuzz.step);
 	}
+
+	// ── Benchmark harness (opt-in; links uchardetz C++ for the throughput cmp) ──
+	// Off by default so the hermetic `test`/lib builds stay pure-Zig and offline.
+	// Enabled via `-Dwith-bench` and run through the dedicated `bench` step, driven
+	// by `./bm`. Reuses the same C++ link + translate-c plumbing as the oracle/fuzz
+	// suites. The harness is an EXECUTABLE (Juicy Main, for the std.Io clock) rather
+	// than a test: it carries a hard scaling-ratio gate (exits nonzero on a
+	// super-linear regression) and prints an ndjson throughput line that `./bm` logs
+	// per machine-id. ReleaseFast only.
+	const with_bench = b.option(
+		bool,
+		"with-bench",
+		"Build the benchmark harness (links uchardetz C++)",
+	) orelse false;
+	if (with_bench) {
+		// Lazy (bench-only dep): only fetched when this opt-in step is built, so
+		// the default lib/packages build stays offline (no sandbox NameServerFailure).
+		const uz = b.lazyDependency("uchardetz", .{ .target = target, .optimize = optimize }) orelse return;
+		const uz_lib = uz.artifact("uchardet-static");
+
+		const translate_c = b.addTranslateC(.{
+			.root_source_file = b.path("tests/differential/c_imports.h"),
+			.target = target,
+			.optimize = optimize,
+		});
+		translate_c.addIncludePath(uz.path("src"));
+		const c_mod = translate_c.createModule();
+
+		const bench_mod = b.createModule(.{
+			.root_source_file = b.path("bench/bench.zig"),
+			.target = target,
+			.optimize = optimize,
+			.link_libc = true, // detect()'s SBCS/Latin1 filters use std.heap.c_allocator
+			.link_libcpp = true, // uchardet is C++
+			.imports = &.{
+				.{ .name = "chardetz", .module = core_mod },
+				.{ .name = "c", .module = c_mod },
+			},
+		});
+		bench_mod.linkLibrary(uz_lib);
+
+		const bench_exe = b.addExecutable(.{ .name = "chardetz-bench", .root_module = bench_mod });
+		bench_exe.use_llvm = true; // same SEGV-avoidance as the other steps
+		const run_bench = b.addRunArtifact(bench_exe);
+		run_bench.has_side_effects = true; // never cached: always re-measure
+		if (b.args) |args| run_bench.addArgs(args);
+		b.step("bench", "Run the benchmark harness (chardetz vs uchardetz C++)").dependOn(&run_bench.step);
+	}
 }
