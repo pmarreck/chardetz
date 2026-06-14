@@ -7,8 +7,8 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
 ## Milestones
 
 - [ ] **M1 — Infrastructure (local-only, NO public repo, NO prober)**
-  - [x] Phase 0: scaffold + jj init + house-brief symlinks + flake (Zig 0.16 pinned) + docs — *2026-06-13 ~16:00 EST*
-  - [ ] Phase 1: license/provenance artifacts (COPYING, PROVENANCE, THIRD_PARTY_LICENSES, SPDX header)
+  - [x] Phase 0: scaffold + jj init + house-brief symlinks + flake (Zig 0.16 pinned) + docs; `./build`+`./test` green — *2026-06-13 ~12:00 EST*
+  - [x] Phase 1: license/provenance artifacts (COPYING verbatim, PROVENANCE, THIRD_PARTY_LICENSES, README, SPDX header) — *2026-06-13 ~12:05 EST*
   - [ ] Phase 2: core struct defs (SequenceModel, SMModel+PckInt, CharDistribution, JpCntx)
   - [ ] Phase 3: table generator — single-byte models (33 SequenceModels)
   - [ ] Phase 4: table generator — MBCS + Esc state machines
