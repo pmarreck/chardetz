@@ -6,6 +6,10 @@
         .uchardetz = .{
             .url = "git+https://github.com/pmarreck/uchardetz#abacfc1fc86ef7618547d7dce7cc7501e756fa31",
             .hash = "uchardetz-0.0.6-koAyw7pFCwAzXYaKhsirPcnwf7wfPYm8B8UCRkNc2WbD",
+            // test-only (differential oracle + fuzz). Lazy so the lib/packages/
+            // checks never fetch it — eager fetch fails in Garnix's network-isolated
+            // Linux sandbox (NameServerFailure); darwin's relaxed sandbox hid it.
+            .lazy = true,
         },
     },
     .paths = .{

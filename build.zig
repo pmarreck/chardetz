@@ -125,7 +125,9 @@ pub fn build(b: *std.Build) void {
 		"Build the differential oracle test (links uchardetz C++)",
 	) orelse false;
 	if (with_oracle) {
-		const uz = b.dependency("uchardetz", .{ .target = target, .optimize = optimize });
+		// Lazy (test-only dep): only fetched when this opt-in step is built, so
+		// the default lib/packages build offline (no sandbox NameServerFailure).
+		const uz = b.lazyDependency("uchardetz", .{ .target = target, .optimize = optimize }) orelse return;
 		const uz_lib = uz.artifact("uchardet-static");
 
 		// translate-c: turn uchardet.h into an importable Zig module named "c".
@@ -169,7 +171,9 @@ pub fn build(b: *std.Build) void {
 		"Build the differential fuzz harness (links uchardetz C++)",
 	) orelse false;
 	if (with_fuzz) {
-		const uz = b.dependency("uchardetz", .{ .target = target, .optimize = optimize });
+		// Lazy (test-only dep): only fetched when this opt-in step is built, so
+		// the default lib/packages build offline (no sandbox NameServerFailure).
+		const uz = b.lazyDependency("uchardetz", .{ .target = target, .optimize = optimize }) orelse return;
 		const uz_lib = uz.artifact("uchardet-static");
 
 		const translate_c = b.addTranslateC(.{
