@@ -10,7 +10,7 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
   - [x] Phase 0: scaffold + jj init + house-brief symlinks + flake (Zig 0.16 pinned) + docs; `./build`+`./test` green — *2026-06-13 ~12:00 EST*
   - [x] Phase 1: license/provenance artifacts (COPYING verbatim, PROVENANCE, THIRD_PARTY_LICENSES, README, SPDX header) — *2026-06-13 ~12:05 EST*
   - [x] Phase 2: core struct defs (SequenceModel, SMModel+PckInt, CharDistribution, JpCntx) — *2026-06-13 ~20:30 EST*
-  - [ ] Phase 3: table generator — single-byte models (33 SequenceModels)
+  - [x] Phase 3: table generator — single-byte models (33 SequenceModels) — *2026-06-13 ~20:35 EST*
   - [ ] Phase 4: table generator — MBCS + Esc state machines
   - [ ] Phase 5: table generator — CharDistribution + JpCntx
   - [ ] Phase 6: MFIC blessed-hash control-file sentinel
@@ -34,3 +34,6 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
 - 2026-06-13: brainstorm → spec → M1 plan (subagent-driven execution chosen).
 - 2026-06-13 ~20:30 EST: Phase 2 complete — all 4 struct files + 3 test files,
   TDD red→green, jj commit d06aae7b.
+- 2026-06-13 ~20:35 EST: Phase 3 complete — gen_tables tool (parse_sbcs, emit,
+  manifest, root, main), 2 new test files, 33 SequenceModels across 14 langs,
+  jj commit e1a775df. Bug fixed: C++ `//` line comments in Bulgarian/others.

@@ -78,3 +78,43 @@ pub fn emitSequenceModel(w: anytype, model: anytype) !void {
 	try w.print("\t.charset_name = \"{s}\",\n", .{model.charset_name});
 	try w.writeAll("};\n\n");
 }
+
+/// Emit a `[N]u32` packed integer array constant (used for class/state tables).
+/// Values are emitted as hex literals for readability.
+/// `w` must be an anytype writer with `.print()` and `.writeAll()` methods.
+pub fn emitU32Array(w: anytype, name: []const u8, vals: []const u32) !void {
+	try w.print("pub const {s} = [{}]u32{{", .{ name, vals.len });
+	for (vals, 0..) |v, i| {
+		if (i % 8 == 0) try w.writeAll("\n\t");
+		try w.print("0x{X:0>8}", .{v});
+		if (i < vals.len - 1) try w.writeAll(",");
+	}
+	try w.writeAll("\n};\n\n");
+}
+
+/// Emit a state_machine.SMModel struct literal referencing previously-emitted arrays.
+/// Uses anytype so emit.zig need not import parse_sm; any struct with the expected
+/// fields (var_name, class_descriptors[4], class_data_ref, class_factor,
+/// state_descriptors[4], state_data_ref, char_len_ref, name) is accepted.
+/// `w` must be an anytype writer with `.print()` and `.writeAll()` methods.
+pub fn emitSMModel(w: anytype, model: anytype) !void {
+	try w.print("pub const {s} = state_machine.SMModel{{\n", .{model.var_name});
+	try w.writeAll("\t.class_table = .{\n");
+	try w.print("\t\t.idx_sft = state_machine.{s},\n", .{model.class_descriptors[0]});
+	try w.print("\t\t.sft_msk = state_machine.{s},\n", .{model.class_descriptors[1]});
+	try w.print("\t\t.bit_sft = state_machine.{s},\n", .{model.class_descriptors[2]});
+	try w.print("\t\t.unit_msk = state_machine.{s},\n", .{model.class_descriptors[3]});
+	try w.print("\t\t.data = &{s},\n", .{model.class_data_ref});
+	try w.writeAll("\t},\n");
+	try w.print("\t.class_factor = {d},\n", .{model.class_factor});
+	try w.writeAll("\t.state_table = .{\n");
+	try w.print("\t\t.idx_sft = state_machine.{s},\n", .{model.state_descriptors[0]});
+	try w.print("\t\t.sft_msk = state_machine.{s},\n", .{model.state_descriptors[1]});
+	try w.print("\t\t.bit_sft = state_machine.{s},\n", .{model.state_descriptors[2]});
+	try w.print("\t\t.unit_msk = state_machine.{s},\n", .{model.state_descriptors[3]});
+	try w.print("\t\t.data = &{s},\n", .{model.state_data_ref});
+	try w.writeAll("\t},\n");
+	try w.print("\t.char_len_table = &{s},\n", .{model.char_len_ref});
+	try w.print("\t.name = \"{s}\",\n", .{model.name});
+	try w.writeAll("};\n\n");
+}

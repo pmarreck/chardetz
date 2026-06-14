@@ -15,6 +15,8 @@ comptime {
 	// Phase 3: generator tests
 	_ = @import("gen_tables/parse_sbcs_test.zig");
 	_ = @import("gen_tables/emit_test.zig");
+	// Phase 4: SM parser and generator tests
+	_ = @import("gen_tables/parse_sm_test.zig");
 }
 
 test "test harness wired" {

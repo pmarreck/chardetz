@@ -3,6 +3,7 @@
 pub const PINNED_COMMIT = "abacfc1fc86ef7618547d7dce7cc7501e756fa31";
 pub const UPSTREAM_SRC = "/Users/pmarreck/Documents-CloudManaged/uchardetz/src";
 
+pub const sm_sources = [_][]const u8{ "nsMBCSSM.cpp", "nsEscSM.cpp" };
 pub const sbcs_sources = [_][]const u8{
 	"LangModels/LangArabicModel.cpp",
 	"LangModels/LangBulgarianModel.cpp",

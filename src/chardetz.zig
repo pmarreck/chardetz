@@ -17,6 +17,9 @@ pub const state_machine = @import("state_machine.zig");
 pub const char_distribution = @import("char_distribution.zig");
 pub const jp_context = @import("jp_context.zig");
 
+// ── Phase 4: generated SM tables ────────────────────────────────────────────
+pub const tables = @import("tables.zig");
+
 test "scaffold compiles" {
 	try std.testing.expect(true);
 }
