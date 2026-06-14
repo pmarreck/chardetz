@@ -29,6 +29,11 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
 - Bring the in-harness differential gate into Garnix CI (C++-in-sandbox via
   zigDeps) by M2 if M1 keeps it local-only.
 - `include/uchardet.h` drop-in header lands with the FFI in M5.
+- **M3 EUCTW prober bounds:** EUCTW `GetOrder` max ≈ 5545 exceeds its 5376-entry
+  `char_to_freq_order` array (table_size define is 8102, but the compiled array is
+  5376 — uchardet's `order < table_size` guard does NOT prevent OOB here). The M3
+  EUCTW prober MUST guard `order < char_to_freq_order.len` (not just table_size) to
+  avoid a Zig panic on rare/malformed input; replicate uchardet's effective behavior.
 
 ## Completed (recent, for continuity)
 - 2026-06-13: brainstorm → spec → M1 plan (subagent-driven execution chosen).
