@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# Generate tests/corpus/manifest.json from the labelled corpus.
+# Label derivation:
+#   - Strip extension; uppercase the stem.
+#   - If the extension (after the FIRST dot) is "be" or "le", it encodes byte
+#     order and is folded into the label: utf-16.be → UTF-16BE, utf-32.le → UTF-32LE.
+#   - Byte-order already encoded in stem (utf-16be, utf-16le) are uppercased as-is.
+#   - All other extensions (.txt, .smi, etc.) are discarded; stem only.
+set -u
+cd "$(dirname "$0")" || exit 1
+
+out="manifest.json"
+printf '[\n' > "$out"
+first=1
+
+for lang_dir in */; do
+	lang="${lang_dir%/}"
+	# Walk files inside this language dir (non-recursive; no subdirs expected).
+	for fpath in "$lang_dir"*; do
+		[ -f "$fpath" ] || continue
+		fname="$(basename "$fpath")"
+		# Split at first dot to get stem and ext.
+		stem="${fname%%.*}"
+		after_first_dot="${fname#*.}"
+		# Determine if the first extension is a byte-order suffix (.be / .le).
+		# The extension after the first dot might be "be", "le", or "txt", "smi", etc.
+		first_ext="${after_first_dot%%.*}"
+		case "$first_ext" in
+			be|le)
+				# byte-order suffix: fold into label
+				bo="$(printf '%s' "$first_ext" | tr 'a-z' 'A-Z')"
+				label="$(printf '%s' "$stem" | tr 'a-z' 'A-Z')${bo}"
+				;;
+			*)
+				# Normal extension: stem only, already uppercased.
+				label="$(printf '%s' "$stem" | tr 'a-z' 'A-Z')"
+				;;
+		esac
+		rel="$lang/$fname"
+		if [ "$first" -eq 1 ]; then
+			first=0
+		else
+			printf ',\n' >> "$out"
+		fi
+		printf '  {"path": "%s", "label": "%s"}' "$rel" "$label" >> "$out"
+	done
+done
+
+printf '\n]\n' >> "$out"
+echo "manifest.json written ($(wc -l < "$out" | tr -d ' ') lines)"

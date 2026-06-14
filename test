@@ -15,7 +15,10 @@ if ! nix build ".#checks.${sys}.test" -L; then
 fi
 
 # Subsequent milestones append here (kept in run-order, each updating rc):
-#   - ./scripts/check-blessed-hashes              (MFIC control-file gate, Phase 6)
+echo "== MFIC control-file blessed-hash check ==" >&2
+if ! ./scripts/check-blessed-hashes; then
+	rc=1
+fi
 #   - nix develop -c zig build test -Dwith-oracle (in-harness differential, Phase 8)
 #   - ./tests/cli/parity.sh                       (CLI-vs-CLI parity, Phase 9)
 

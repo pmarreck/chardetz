@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# CI assertion: control files must match their blessing. ANY change fails until
+# `scripts/bless-hashes` is deliberately re-run (a two-file diff, human-reviewed).
+set -u
+cd "$(dirname "$0")/.." || exit 1
+fail=0
+while read -r want f; do
+	[ -z "$want" ] && continue
+	got="$(shasum -a 256 "$f" | awk '{print $1}')"
+	if [ "$want" != "$got" ]; then
+		echo "CONTROL FILE CHANGED (re-bless deliberately via scripts/bless-hashes): $f" >&2
+		fail=1
+	fi
+done < blessed_hashes.txt
+[ "$fail" -eq 0 ] && echo "control files: clean"
+exit $fail

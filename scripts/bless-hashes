@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Deliberately (re)record sha256 of the control files. Run this ONLY when a
+# control-file change is intended; the diff to blessed_hashes.txt then sits
+# conspicuously in one commit for human review.
+set -u
+cd "$(dirname "$0")/.." || exit 1
+: > blessed_hashes.txt
+for f in tools/gen_tables/manifest.zig tests/expected_divergences.json; do
+	printf '%s  %s\n' "$(shasum -a 256 "$f" | awk '{print $1}')" "$f" >> blessed_hashes.txt
+done
+echo "blessed $(wc -l < blessed_hashes.txt | tr -d ' ') control files"
