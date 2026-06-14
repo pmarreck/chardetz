@@ -12,7 +12,7 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
   - [x] Phase 2: core struct defs (SequenceModel, SMModel+PckInt, CharDistribution, JpCntx) — *2026-06-13 ~20:30 EST*
   - [x] Phase 3: table generator — single-byte models (33 SequenceModels) — *2026-06-13 ~20:35 EST*
   - [x] Phase 4: table generator — MBCS + Esc state machines (11 SMModels: 7 MBCS + 4 Esc; GB2312 correctly excluded — obsolete/commented-out upstream, superseded by GB18030) — *2026-06-13 ~16:50 EST*
-  - [ ] Phase 5: table generator — CharDistribution + JpCntx
+  - [x] Phase 5: table generator — CharDistribution + JpCntx (5 DistributionTables + jp2_context 6889-entry ContextTable; all tests green, idempotent) — *2026-06-13 ~23:55 EST*
   - [ ] Phase 6: MFIC blessed-hash control-file sentinel
   - [ ] Phase 7: corpus (seed from uchardetz/test + manifest)
   - [ ] Phase 8: differential harness — in-harness uchardetz link

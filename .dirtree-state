@@ -14,10 +14,18 @@ annotate=[
 	src/jp_context.zig = ContextTable struct for Japanese 2-char hiragana context table (ported from JpCntx.h)
 	src/sbcs_model.zig = SequenceModel struct + ILL/CTR/SYM/RET/NUM sentinel constants (ported from nsSBCharSetProber.h)
 	src/state_machine.zig = PckInt packed-integer unpacker (GETFROMPCK port) + SMModel state-machine model struct (ported from nsPkgInt.h + nsCodingStateMachine.h)
+	src/tables/char_distribution.zig = @generated: 5 CJK DistributionTable constants (Big5/GB2312/EUCTW/JIS/EUCKR)
+	src/tables/jp_context.zig = @generated: jp2CharContext [6889]u8 + jp2_context ContextTable constant
 	test = Master test runner; accumulates sub-suite failures into exit code
 	tests/all.zig = Test aggregator; append _ = @import(...) per test module
+	tests/gen_tables/fixtures/dist_snippet.txt = Minimal CJK .tab fixture for parse_distribution tests
+	tests/gen_tables/fixtures/jpcntx_snippet.txt = Minimal JpCntx fixture (3×3) for parse_jpcntx tests
+	tests/gen_tables/parse_distribution_test.zig = Unit tests for parse_distribution using dist_snippet.txt fixture
+	tests/gen_tables/parse_jpcntx_test.zig = Unit tests for parse_jpcntx using jpcntx_snippet.txt fixture
 	tests/unit/dist_jp_test.zig = Unit tests for char_distribution.zig and jp_context.zig: struct construction
 	tests/unit/sbcs_model_test.zig = Unit tests for sbcs_model.zig: order constants + SequenceModel struct construction
 	tests/unit/state_machine_test.zig = Unit tests for state_machine.zig: PkgInt 4-bit constants + PckInt.get nibble unpacking
 	tools/gen_tables/emit.zig = Generator: LICENSE_HEADER + writeHeader provenance for generated tables
+	tools/gen_tables/parse_distribution.zig = Parser for CJK .tab frequency-distribution files (ratio, table_size, CharToFreqOrder array)
+	tools/gen_tables/parse_jpcntx.zig = Parser for JpCntx.cpp 2D hiragana context table (jp2CharContext[R][C] → flat []u8)
 ]
