@@ -18,6 +18,8 @@
 const std = @import("std");
 const prober = @import("prober.zig");
 const utf8_prober = @import("probers/utf8.zig");
+const sbcs_group_prober = @import("probers/sbcs_group.zig");
+const latin1_prober = @import("probers/latin1.zig");
 
 const Prober = prober.Prober;
 const ProbingState = prober.ProbingState;
@@ -57,6 +59,11 @@ pub const UniversalDetector = struct {
     // Later chunks add fields here (mbcs group, sbcs group, latin1, escape) and
     // extend `buildProberSlice()` to include their `asProber()` handles.
     utf8: utf8_prober.UTF8Prober,
+    /// The single-byte charset group (35 sub-probers incl. Hebrew). uchardet's
+    /// dispatcher slot [1]. Allocates internally for the buffer filters.
+    sbcs_group: sbcs_group_prober.SBCSGroupProber,
+    /// The Latin-1 / WINDOWS-1252 class-model prober. uchardet's slot [2].
+    latin1: latin1_prober.Latin1Prober,
     /// Backing storage for the polymorphic prober array, (re)built on demand
     /// from the concrete prober fields. Built lazily — never in init() — so the
     /// erased `ptr`s always point at THIS struct's fields, never a stale copy
@@ -67,19 +74,28 @@ pub const UniversalDetector = struct {
 
     const MAX_PROBERS = 8;
     /// Number of probers wired for the high-byte path. Grows in later chunks.
-    const PROBER_COUNT = 1;
+    /// uchardet's order is [MBCSGroup, SBCSGroup, Latin1]; the MBCS group lands
+    /// in the CJK chunk, so for now slot 0 is the standalone UTF-8 prober,
+    /// followed by the SBCS group and Latin1.
+    const PROBER_COUNT = 3;
 
-    pub fn init() UniversalDetector {
-        return UniversalDetector{ .utf8 = utf8_prober.UTF8Prober.init() };
+    pub fn init(allocator: std.mem.Allocator) UniversalDetector {
+        return UniversalDetector{
+            .utf8 = utf8_prober.UTF8Prober.init(),
+            .sbcs_group = sbcs_group_prober.SBCSGroupProber.init(allocator),
+            .latin1 = latin1_prober.Latin1Prober.init(allocator),
+        };
     }
 
     /// (Re)build the polymorphic prober array from the concrete fields against
     /// the CURRENT address of `self`, then return it. uchardet's order is
-    /// [MBCSGroup, SBCSGroup, Latin1]; this chunk installs only the UTF-8
-    /// prober. Append more asProber() handles here in later chunks (and bump
-    /// PROBER_COUNT). Cheap (a few pointer writes); called per dispatch.
+    /// [MBCSGroup, SBCSGroup, Latin1]; the MBCS group is not ported yet, so
+    /// slot 0 is the standalone UTF-8 prober, then the SBCS group + Latin1.
+    /// Cheap (a few pointer writes); called per dispatch.
     fn proberSlice(self: *UniversalDetector) []Prober {
         self.prober_storage[0] = self.utf8.asProber();
+        self.prober_storage[1] = self.sbcs_group.asProber();
+        self.prober_storage[2] = self.latin1.asProber();
         return self.prober_storage[0..PROBER_COUNT];
     }
 
@@ -278,11 +294,11 @@ pub const UniversalDetector = struct {
 
 /// One-shot convenience: construct a detector, feed all bytes, finalize, and
 /// return the charset verdict. Mirrors uchardet's new → handle_data → data_end
-/// → get_charset usage. Returns a static string slice (no allocation), so the
-/// `allocator` is accepted for API symmetry but unused.
+/// → get_charset usage. The returned charset name is a static string slice; the
+/// allocator is used internally by the SBCS group / Latin1 probers' buffer
+/// filters (freed before return), so nothing the caller sees is allocated.
 pub fn detect(allocator: std.mem.Allocator, bytes: []const u8) []const u8 {
-    _ = allocator;
-    var det = UniversalDetector.init();
+    var det = UniversalDetector.init(allocator);
     det.handleData(bytes);
     det.dataEnd();
     return det.getCharset();

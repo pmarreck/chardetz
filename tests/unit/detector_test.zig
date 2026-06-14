@@ -60,7 +60,7 @@ test "high-byte UTF-8 text → UTF-8 via the UTF8 prober" {
 }
 
 test "detector reset clears detected charset and prober state" {
-    var det = cz.detector.UniversalDetector.init();
+    var det = cz.detector.UniversalDetector.init(std.testing.allocator);
     det.handleData("\xEF\xBB\xBFhi");
     det.dataEnd();
     try std.testing.expectEqualStrings("UTF-8", det.getCharset());

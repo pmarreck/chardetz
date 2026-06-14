@@ -16,6 +16,12 @@ comptime {
 	_ = @import("unit/coding_state_machine_test.zig");
 	_ = @import("unit/utf8_prober_test.zig");
 	_ = @import("unit/detector_test.zig");
+	// M3: single-byte charset probers
+	_ = @import("unit/filter_test.zig");
+	_ = @import("unit/sbcs_prober_test.zig");
+	_ = @import("unit/hebrew_prober_test.zig");
+	_ = @import("unit/latin1_prober_test.zig");
+	_ = @import("unit/sbcs_group_prober_test.zig");
 	// Phase 3: generator tests
 	_ = @import("gen_tables/parse_sbcs_test.zig");
 	_ = @import("gen_tables/emit_test.zig");

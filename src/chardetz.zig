@@ -29,9 +29,16 @@ pub const coding_state_machine = @import("coding_state_machine.zig");
 pub const prober = @import("prober.zig");
 pub const detector = @import("detector.zig");
 
+/// Buffer filters shared by the SBCS group / Latin1 probers.
+pub const filter = @import("filter.zig");
+
 /// Grouped re-export of concrete probers (extended as later chunks land).
 pub const probers = struct {
 	pub const utf8 = @import("probers/utf8.zig");
+	pub const sbcs = @import("probers/sbcs.zig");
+	pub const sbcs_group = @import("probers/sbcs_group.zig");
+	pub const hebrew = @import("probers/hebrew.zig");
+	pub const latin1 = @import("probers/latin1.zig");
 };
 
 /// One-shot detection: returns the detected charset name (a static string

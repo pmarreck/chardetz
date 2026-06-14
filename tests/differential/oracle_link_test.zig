@@ -48,7 +48,16 @@ const Entry = struct {
 /// probers. A charset NOT in this set is "pending" — its prober lands later, so
 /// a chardetz≠oracle there is expected and tallied, NOT a divergence, NOT fenced.
 const IMPLEMENTED = [_][]const u8{
-    "ASCII", "UTF-8", "UTF-16", "UTF-16BE", "UTF-16LE", "UTF-32",
+    // BOM / UTF / Unicode (detector + UTF8 prober)
+    "ASCII",        "UTF-8",        "UTF-16",     "UTF-16BE", "UTF-16LE", "UTF-32",
+    // Single-byte: Latin1 prober + SBCS group (Cyrillic, Greek, Hebrew, Thai,
+    // Latin-1/15, Arabic, Vietnamese, Turkish, etc.) — every charset name these
+    // 35 sub-probers + the Latin1 prober report. The CJK (MBCS) group and the
+    // escape prober land in later chunks, so their charsets stay pending.
+    "WINDOWS-1250", "WINDOWS-1251", "WINDOWS-1252", "WINDOWS-1253", "WINDOWS-1255", "WINDOWS-1256", "WINDOWS-1258",
+    "ISO-8859-1",   "ISO-8859-2",   "ISO-8859-3",   "ISO-8859-5",   "ISO-8859-6",   "ISO-8859-7",
+    "ISO-8859-8",   "ISO-8859-9",   "ISO-8859-11",  "ISO-8859-15",
+    "KOI8-R",       "IBM855",       "IBM866",       "MAC-CYRILLIC", "TIS-620",      "VISCII",
 };
 
 fn isImplemented(charset: []const u8) bool {
