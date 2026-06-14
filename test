@@ -25,7 +25,11 @@ if ! ./tests/differential/run; then
 	echo "FAIL: differential oracle test" >&2
 	rc=1
 fi
-#   - ./tests/cli/parity.sh                       (CLI-vs-CLI parity, Phase 9)
+echo "== Phase 9: CLI-vs-CLI parity (oracle CLI vs corpus labels) ==" >&2
+if ! ./tests/cli/parity.sh; then
+	echo "FAIL: CLI parity" >&2
+	rc=1
+fi
 
 if [ "$rc" -eq 0 ]; then
 	echo "ALL TESTS PASSED" >&2

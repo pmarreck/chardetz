@@ -5,7 +5,9 @@ annotate=[
 	PROVENANCE.md = Lineage Mozilla→BYVoid→uchardetz@abacfc1f + license rationale
 	README.md = Public README incl. license + provenance sections
 	THIRD_PARTY_LICENSES = Third-party attributions (Mozilla/Netscape, BYVoid, uchardetz)
+	bench = Benchmark log directory; machine-keyed ndjson logs land here in M5 when per-function throughput gates are active
 	blessed_hashes.txt = SHA256 hashes of MFIC control files (manifest.zig, expected_divergences.json); human-reviewed sentinel
+	bm = Benchmark suite skeleton; M1 stub — real per-function throughput gate (chardetz vs uchardet, scaling-ratio + ndjson log) lands in M5 with probers
 	build = Nix-based build wrapper (ReleaseFast)
 	build.zig = Build: ReleaseFast default; chardetz module + static lib + test step
 	build.zig.zon = Package manifest: name=chardetz, no deps yet (uchardetz added Phase 8)
@@ -21,6 +23,7 @@ annotate=[
 	src/tables/jp_context.zig = @generated: jp2CharContext [6889]u8 + jp2_context ContextTable constant
 	test = Master test runner; accumulates sub-suite failures into exit code
 	tests/all.zig = Test aggregator; append _ = @import(...) per test module
+	tests/cli/parity.sh = Phase 9 CLI-vs-CLI parity: validates oracle CLI (uchardet) against corpus filename labels; M5 hook for chardetz-CLI comparison
 	tests/corpus = Labelled detection corpus seeded from uchardetz/test; 59 data files across 18 languages
 	tests/corpus/gen-manifest = Generates tests/corpus/manifest.json: walks lang subdirs, derives charset label from filename stem/ext
 	tests/corpus/manifest.json = Path→label manifest (JSON array); 59 entries mapping corpus file paths to expected charset labels
