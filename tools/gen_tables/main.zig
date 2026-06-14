@@ -8,6 +8,8 @@ const std = @import("std");
 const manifest = @import("manifest.zig");
 const parse_sbcs = @import("parse_sbcs.zig");
 const parse_sm = @import("parse_sm.zig");
+const parse_distribution = @import("parse_distribution.zig");
+const parse_jpcntx = @import("parse_jpcntx.zig");
 const emit_mod = @import("emit.zig");
 
 pub fn main(init: std.process.Init) !void {
@@ -211,7 +213,95 @@ pub fn main(init: std.process.Init) !void {
 		});
 	}
 
-	// Write src/tables.zig (includes both sbcs and SM tables)
+	// ── Phase 5: CJK distribution table generation ────────────────────────────
+	// Write src/tables/char_distribution.zig with all 5 DistributionTable constants.
+	const dist_out_path = try std.fmt.allocPrint(alloc, "{s}/char_distribution.zig", .{out_dir_path});
+	defer alloc.free(dist_out_path);
+
+	{
+		const f = try cwd.createFile(io, dist_out_path, .{});
+		defer f.close(io);
+		var out_buf: [65536]u8 = undefined;
+		var fw = f.writer(io, &out_buf);
+		const w = &fw.interface;
+
+		// Emit header — references all 5 source files.
+		try emit_mod.writeHeader(w, "Big5Freq.tab GB2312Freq.tab EUCTWFreq.tab JISFreq.tab EUCKRFreq.tab");
+		try w.writeAll("const char_distribution = @import(\"../char_distribution.zig\");\n\n");
+
+		for (manifest.dist_sources) |tab_rel| {
+			// Derive table_name: "Big5Freq.tab" → "Big5"
+			const tab_basename = std.fs.path.basename(tab_rel);
+			const table_name = if (std.mem.endsWith(u8, tab_basename, "Freq.tab"))
+				tab_basename[0 .. tab_basename.len - "Freq.tab".len]
+			else
+				tab_basename;
+
+			const tab_src_path = try std.fmt.allocPrint(alloc, "{s}/{s}", .{ upstream_src, tab_rel });
+			defer alloc.free(tab_src_path);
+
+			const tab_src = cwd.readFileAlloc(io, tab_src_path, alloc, .unlimited) catch |err| {
+				std.debug.print("ERROR: failed to read {s}: {}\n", .{ tab_src_path, err });
+				continue;
+			};
+			defer alloc.free(tab_src);
+
+			const dist = parse_distribution.parseDistribution(alloc, tab_src, table_name) catch |err| {
+				std.debug.print("ERROR: failed to parse {s}: {}\n", .{ tab_rel, err });
+				continue;
+			};
+			defer parse_distribution.freeDistTable(alloc, dist);
+
+			// Emit: <Name>CharToFreqOrder array, then DistributionTable struct literal.
+			const array_name = try std.fmt.allocPrint(alloc, "{s}CharToFreqOrder", .{table_name});
+			defer alloc.free(array_name);
+			try emit_mod.emitU16Array(w, array_name, dist.char_to_freq_order);
+			try emit_mod.emitDistributionTable(w, dist);
+
+			std.debug.print("Generated distribution table {s} (table_size={d}, ratio={d:.4}, entries={d})\n", .{
+				table_name, dist.table_size, dist.typical_distribution_ratio, dist.char_to_freq_order.len,
+			});
+		}
+
+		try w.flush();
+	}
+
+	// ── Phase 5: JpCntx context table generation ──────────────────────────────
+	// Write src/tables/jp_context.zig with the jp2_context ContextTable constant.
+	const jpcntx_src_path = try std.fmt.allocPrint(alloc, "{s}/{s}", .{ upstream_src, manifest.jpcntx_source });
+	defer alloc.free(jpcntx_src_path);
+
+	const jpcntx_out_path = try std.fmt.allocPrint(alloc, "{s}/jp_context.zig", .{out_dir_path});
+	defer alloc.free(jpcntx_out_path);
+
+	{
+		const jpcntx_src = cwd.readFileAlloc(io, jpcntx_src_path, alloc, .unlimited) catch |err| {
+			std.debug.print("ERROR: failed to read {s}: {}\n", .{ jpcntx_src_path, err });
+			return err;
+		};
+		defer alloc.free(jpcntx_src);
+
+		const jp_tbl = try parse_jpcntx.parseJp2dTable(alloc, jpcntx_src);
+		defer parse_jpcntx.freeJp2dTable(alloc, jp_tbl);
+
+		const f = try cwd.createFile(io, jpcntx_out_path, .{});
+		defer f.close(io);
+		var out_buf: [65536]u8 = undefined;
+		var fw = f.writer(io, &out_buf);
+		const w = &fw.interface;
+
+		try emit_mod.writeHeader(w, manifest.jpcntx_source);
+		try w.writeAll("const jp_context = @import(\"../jp_context.zig\");\n\n");
+		try emit_mod.emitU8Array(w, "jp2CharContext", jp_tbl.values);
+		try emit_mod.emitContextTable(w);
+		try w.flush();
+
+		std.debug.print("Generated jp_context table ({d}×{d} = {d} entries)\n", .{
+			jp_tbl.rows, jp_tbl.cols, jp_tbl.values.len,
+		});
+	}
+
+	// Write src/tables.zig (includes sbcs, SM tables, and Phase 5 tables)
 	const tables_path = try std.fmt.allocPrint(alloc, "{s}/../tables.zig", .{out_dir_path});
 	defer alloc.free(tables_path);
 
@@ -225,6 +315,8 @@ pub fn main(init: std.process.Init) !void {
 		try w.writeAll("pub const sbcs = @import(\"tables/sbcs.zig\");\n");
 		try w.writeAll("pub const mbcs_sm = @import(\"tables/mbcs_sm.zig\");\n");
 		try w.writeAll("pub const esc_sm = @import(\"tables/esc_sm.zig\");\n");
+		try w.writeAll("pub const char_distribution = @import(\"tables/char_distribution.zig\");\n");
+		try w.writeAll("pub const jp_context = @import(\"tables/jp_context.zig\");\n");
 		try w.flush();
 	}
 

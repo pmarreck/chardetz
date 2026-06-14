@@ -92,6 +92,55 @@ pub fn emitU32Array(w: anytype, name: []const u8, vals: []const u32) !void {
 	try w.writeAll("\n};\n\n");
 }
 
+/// Emit a `[N]u16` frequency-order array constant (used for CJK distribution tables).
+/// Values are emitted as decimal literals.
+/// `w` must be an anytype writer with `.print()` and `.writeAll()` methods.
+pub fn emitU16Array(w: anytype, name: []const u8, vals: []const u16) !void {
+	try w.print("pub const {s} = [{}]u16{{", .{ name, vals.len });
+	for (vals, 0..) |v, i| {
+		if (i % 16 == 0) try w.writeAll("\n\t");
+		try w.print("{d}", .{v});
+		if (i < vals.len - 1) try w.writeAll(",");
+	}
+	try w.writeAll("\n};\n\n");
+}
+
+/// Emit a `[N]u8` array constant (used for the jp2CharContext table).
+/// Values are emitted as decimal literals.
+/// `w` must be an anytype writer with `.print()` and `.writeAll()` methods.
+pub fn emitU8Array(w: anytype, name: []const u8, vals: []const u8) !void {
+	try w.print("pub const {s} = [{}]u8{{", .{ name, vals.len });
+	for (vals, 0..) |v, i| {
+		if (i % 16 == 0) try w.writeAll("\n\t");
+		try w.print("{d}", .{v});
+		if (i < vals.len - 1) try w.writeAll(",");
+	}
+	try w.writeAll("\n};\n\n");
+}
+
+/// Emit a `char_distribution.DistributionTable` struct literal referencing a
+/// previously-emitted `<Name>CharToFreqOrder` u16 array.
+/// Uses anytype for the `decl` parameter; expects fields: name ([]const u8),
+/// table_size (u32), typical_distribution_ratio (f32).
+/// `w` must be an anytype writer with `.print()` and `.writeAll()` methods.
+pub fn emitDistributionTable(w: anytype, decl: anytype) !void {
+	try w.print("pub const {s}DistributionTable = char_distribution.DistributionTable{{\n", .{decl.name});
+	try w.print("\t.char_to_freq_order = &{s}CharToFreqOrder,\n", .{decl.name});
+	try w.print("\t.table_size = {d},\n", .{decl.table_size});
+	try w.print("\t.typical_distribution_ratio = {d},\n", .{decl.typical_distribution_ratio});
+	try w.print("\t.name = \"{s}\",\n", .{decl.name});
+	try w.writeAll("};\n\n");
+}
+
+/// Emit the `jp_context.ContextTable` struct literal referencing the previously-emitted
+/// `jp2CharContext` u8 array.
+/// `w` must be an anytype writer with `.print()` and `.writeAll()` methods.
+pub fn emitContextTable(w: anytype) !void {
+	try w.writeAll("pub const jp2_context = jp_context.ContextTable{\n");
+	try w.writeAll("\t.jis2_char_context = &jp2CharContext,\n");
+	try w.writeAll("};\n\n");
+}
+
 /// Emit a state_machine.SMModel struct literal referencing previously-emitted arrays.
 /// Uses anytype so emit.zig need not import parse_sm; any struct with the expected
 /// fields (var_name, class_descriptors[4], class_data_ref, class_factor,

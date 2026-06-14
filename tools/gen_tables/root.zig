@@ -3,3 +3,5 @@ pub const emit = @import("emit.zig");
 pub const manifest = @import("manifest.zig");
 pub const parse_sbcs = @import("parse_sbcs.zig");
 pub const parse_sm = @import("parse_sm.zig");
+pub const parse_distribution = @import("parse_distribution.zig");
+pub const parse_jpcntx = @import("parse_jpcntx.zig");

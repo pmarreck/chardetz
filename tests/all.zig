@@ -17,6 +17,9 @@ comptime {
 	_ = @import("gen_tables/emit_test.zig");
 	// Phase 4: SM parser and generator tests
 	_ = @import("gen_tables/parse_sm_test.zig");
+	// Phase 5: CJK distribution + JpCntx parser tests
+	_ = @import("gen_tables/parse_distribution_test.zig");
+	_ = @import("gen_tables/parse_jpcntx_test.zig");
 }
 
 test "test harness wired" {

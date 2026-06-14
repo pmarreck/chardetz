@@ -1,0 +1,6 @@
+#define FOO_TYPICAL_DISTRIBUTION_RATIO (float)0.75
+#define FOO_TABLE_SIZE  4
+static const PRInt16 FooCharToFreqOrder[] =
+{
+   1,1801,1506, 255, // comment
+};
