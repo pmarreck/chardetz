@@ -12,6 +12,9 @@ comptime {
 	_ = @import("unit/sbcs_model_test.zig");
 	_ = @import("unit/state_machine_test.zig");
 	_ = @import("unit/dist_jp_test.zig");
+	// Phase 3: generator tests
+	_ = @import("gen_tables/parse_sbcs_test.zig");
+	_ = @import("gen_tables/emit_test.zig");
 }
 
 test "test harness wired" {
