@@ -26,6 +26,8 @@ comptime {
 	_ = @import("unit/sbcs_group_prober_test.zig");
 	// CJK multibyte group + escape prober
 	_ = @import("unit/mbcs_prober_test.zig");
+	// M5: uchardet-compatible C FFI + WASM one-shot ABI
+	_ = @import("unit/ffi_test.zig");
 	// Phase 3: generator tests
 	_ = @import("gen_tables/parse_sbcs_test.zig");
 	_ = @import("gen_tables/emit_test.zig");

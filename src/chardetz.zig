@@ -41,6 +41,13 @@ pub const detector = @import("detector.zig");
 /// Buffer filters shared by the SBCS group / Latin1 probers.
 pub const filter = @import("filter.zig");
 
+/// M5: the uchardet-compatible C FFI (drop-in ABI) + the WASM one-shot ABI.
+/// Exposed here so the test aggregator can exercise the FFI surface; the
+/// `@export`ed symbols only land in the static-lib / wasm artifacts (whose root
+/// is src/lib.zig). The unit-test build links libc so the FFI's c_allocator
+/// path is satisfiable.
+pub const ffi = @import("ffi.zig");
+
 /// Grouped re-export of concrete probers (extended as later chunks land).
 pub const probers = struct {
 	pub const utf8 = @import("probers/utf8.zig");

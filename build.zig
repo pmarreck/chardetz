@@ -26,17 +26,59 @@ pub fn build(b: *std.Build) void {
 		.optimize = optimize,
 	});
 
-	// ── Static library (compilation artifact; the uchardet-compatible C FFI lands in M5) ──
-	const lib = b.addLibrary(.{
-		.name = "chardetz",
-		.linkage = .static,
-		.root_module = b.createModule(.{
-			.root_source_file = b.path("src/chardetz.zig"),
+	const is_wasm = target.result.cpu.arch.isWasm();
+
+	if (is_wasm) {
+		// ── WASM target: freestanding, exports the one-shot chardetz_detect ABI. ──
+		// `-Dtarget=wasm32-freestanding`. The FFI uses std.heap.wasm_allocator
+		// here (no libc). ReleaseSmall keeps the .wasm tiny. Export symbols come
+		// from src/lib.zig → ffi.zig. The C CLI / libc static lib are NOT built
+		// for WASM (freestanding has no libc).
+		const wasm_mod = b.createModule(.{
+			.root_source_file = b.path("src/lib.zig"),
 			.target = target,
 			.optimize = optimize,
-		}),
-	});
-	b.installArtifact(lib);
+		});
+		const wasm = b.addExecutable(.{ .name = "chardetz", .root_module = wasm_mod });
+		wasm.entry = .disabled; // no _start; we export functions
+		wasm.rdynamic = true; // keep exported symbols
+		b.installArtifact(wasm);
+	} else {
+		// ── Static library: the uchardet-compatible C FFI (drop-in ABI) ──
+		// Root is src/lib.zig (core + ffi exports). Links libc because the FFI's
+		// handle allocator is std.heap.c_allocator (malloc/free) on non-WASM
+		// targets. The C CLI below links this library and #includes uchardet.h,
+		// dogfooding the FFI boundary.
+		const lib_mod = b.createModule(.{
+			.root_source_file = b.path("src/lib.zig"),
+			.target = target,
+			.optimize = optimize,
+		});
+		lib_mod.link_libc = true;
+		const lib = b.addLibrary(.{
+			.name = "chardetz",
+			.linkage = .static,
+			.root_module = lib_mod,
+		});
+		lib.installHeader(b.path("include/uchardet.h"), "uchardet.h");
+		b.installArtifact(lib);
+
+		// ── C CLI: dogfoods the FFI. Pure C, #includes uchardet.h, links the lib. ──
+		const cli_mod = b.createModule(.{
+			.target = target,
+			.optimize = optimize,
+		});
+		cli_mod.link_libc = true;
+		cli_mod.addCSourceFile(.{ .file = b.path("cli/main.c"), .flags = &.{"-std=c11"} });
+		cli_mod.addIncludePath(b.path("include"));
+		cli_mod.linkLibrary(lib);
+		const cli = b.addExecutable(.{ .name = "chardetz", .root_module = cli_mod });
+		b.installArtifact(cli);
+
+		const run_cli = b.addRunArtifact(cli);
+		if (b.args) |args| run_cli.addArgs(args);
+		b.step("run", "Run the chardetz CLI").dependOn(&run_cli.step);
+	}
 
 	// Generator executable — runs natively to write src/tables/
 	const gen_exe = b.addExecutable(.{
@@ -52,17 +94,20 @@ pub fn build(b: *std.Build) void {
 	b.step("gen-tables", "Generate SBCS tables from uchardet source").dependOn(&b.addRunArtifact(gen_exe).step);
 
 	// ── Unit + generator tests (aggregated via tests/all.zig) ──
-	const tests = b.addTest(.{
-		.root_module = b.createModule(.{
-			.root_source_file = b.path("tests/all.zig"),
-			.target = target,
-			.optimize = optimize,
-			.imports = &.{
-				.{ .name = "chardetz", .module = core_mod },
-				.{ .name = "gen_tables", .module = gen_mod },
-			},
-		}),
+	// link_libc: the core module now re-exports the FFI (src/ffi.zig), whose
+	// non-WASM handle allocator is std.heap.c_allocator — so the test binary
+	// must link libc to satisfy malloc/free.
+	const test_mod = b.createModule(.{
+		.root_source_file = b.path("tests/all.zig"),
+		.target = target,
+		.optimize = optimize,
+		.imports = &.{
+			.{ .name = "chardetz", .module = core_mod },
+			.{ .name = "gen_tables", .module = gen_mod },
+		},
 	});
+	test_mod.link_libc = true;
+	const tests = b.addTest(.{ .root_module = test_mod });
 	// Zig 0.16 self-hosted backend can SEGV compiling tests on x86_64 Debug; force LLVM.
 	tests.use_llvm = true;
 	const run_tests = b.addRunArtifact(tests);
