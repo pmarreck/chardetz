@@ -136,6 +136,22 @@ pub fn parseDistribution(alloc: std.mem.Allocator, src: []const u8, table_name: 
 		try vals.append(alloc, v);
 	}
 
+	// Pad up to table_size to neutralize an upstream out-of-bounds read.
+	// uchardet's CharDistributionAnalysis guards only `order < table_size`, then
+	// indexes char_to_freq_order[order]. For EUC-TW the compiled array (5376) is
+	// SHORTER than table_size (8102), so orders in [len, table_size) read past
+	// the array in C++ — undefined behavior; the adjacent .rodata happens to be
+	// < 512 on the pinned build, i.e. classified "frequent". chardetz cannot read
+	// OOB (Zig bounds-checks), so we pad the table to table_size with a < 512
+	// ("frequent") sentinel, reproducing uchardet's de-facto behavior
+	// DETERMINISTICALLY and making `order < table_size` in-bounds by construction
+	// (physics over policy). Peter's call (2026-06-14): match the oracle. Only
+	// EUC-TW is affected — every other table already has len == table_size.
+	const FREQUENT_PAD: u16 = 0; // any value < 512 classifies as "frequent"
+	while (vals.items.len < table_size) {
+		try vals.append(alloc, FREQUENT_PAD);
+	}
+
 	return DistTable{
 		.name = try alloc.dupe(u8, table_name),
 		.char_to_freq_order = try vals.toOwnedSlice(alloc),
