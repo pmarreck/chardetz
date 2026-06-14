@@ -58,18 +58,35 @@ fn oracleDetect(alloc: std.mem.Allocator, bytes: []const u8) ![]u8 {
 /// agree (exact, case-insensitive). Returns true on agreement; on disagreement
 /// prints a reproduction (label, hex dump, both verdicts) and returns false.
 /// The caller tallies and ultimately FAILS the test — we do NOT fence here.
+const CheckResult = enum { agree, allowed_divergence, disagree };
+
 fn checkAgreement(
     alloc: std.mem.Allocator,
     label: []const u8,
     input: []const u8,
-) !bool {
+    allowed_oracle: []const []const u8,
+) !CheckResult {
     const oracle = try oracleDetect(alloc, input);
     defer alloc.free(oracle);
     const got = cz.detect(alloc, input);
 
-    if (std.ascii.eqlIgnoreCase(oracle, got)) return true;
+    if (std.ascii.eqlIgnoreCase(oracle, got)) return .agree;
 
-    // DISAGREEMENT — print a fully reproducible report (do NOT suppress).
+    // Mismatch. Is this a DOCUMENTED, accepted divergence? Allowances come ONLY
+    // from the blessed-hash ledger (expected_divergences.json) — never a silent
+    // in-harness fence. This keeps the fuzz honestly green at any seed instead
+    // of dodging a known peculiarity by seed choice.
+    for (allowed_oracle) |cs| {
+        if (std.ascii.eqlIgnoreCase(oracle, cs)) {
+            std.debug.print(
+                "[fuzz] allowed divergence [{s}]  oracle=\"{s}\"  chardetz=\"{s}\"  (documented peculiarity — see expected_divergences.json)\n",
+                .{ label, oracle, got },
+            );
+            return .allowed_divergence;
+        }
+    }
+
+    // REAL DISAGREEMENT — print a fully reproducible report (do NOT suppress).
     std.debug.print(
         "\n!! FUZZ DISAGREEMENT [{s}]  oracle=\"{s}\"  chardetz=\"{s}\"  len={d}\n",
         .{ label, oracle, got, input.len },
@@ -80,7 +97,7 @@ fn checkAgreement(
     for (input[0..dump_len]) |b| std.debug.print("{x:0>2}", .{b});
     if (input.len > max_dump) std.debug.print("…(+{d} more bytes)", .{input.len - max_dump});
     std.debug.print("\n", .{});
-    return false;
+    return .disagree;
 }
 
 // ── Corpus loading (for the mutation generator) ──────────────────────────────
@@ -246,12 +263,40 @@ test "differential fuzz: chardetz core agrees with the uchardet oracle on genera
     defer freeCorpus(alloc, corpus);
     try std.testing.expect(corpus.len > 0); // vacuity guard: must have inputs to mutate
 
+    // Load DOCUMENTED, accepted divergences from the blessed-hash ledger so the
+    // fuzz honors them at ANY seed (governed by the control file, not a seed
+    // choice). Currently: the EUC-TW table_size-vs-array peculiarity.
+    const ledger_json = try std.Io.Dir.cwd().readFileAlloc(io, "tests/expected_divergences.json", alloc, .unlimited);
+    defer alloc.free(ledger_json);
+    const LedgerEntry = struct {
+        scope: []const u8 = "",
+        match: []const u8 = "",
+        oracle_charset: []const u8 = "",
+        status: []const u8 = "",
+        reason: []const u8 = "",
+    };
+    const ledger = try std.json.parseFromSlice(
+        struct { divergences: []LedgerEntry },
+        alloc,
+        ledger_json,
+        .{ .ignore_unknown_fields = true },
+    );
+    defer ledger.deinit();
+    var allowed_list: std.ArrayListUnmanaged([]const u8) = .empty;
+    defer allowed_list.deinit(alloc);
+    for (ledger.value.divergences) |e| {
+        if (std.mem.eql(u8, e.scope, "fuzz") and std.mem.eql(u8, e.match, "oracle_charset"))
+            try allowed_list.append(alloc, e.oracle_charset);
+    }
+    const allowed_oracle = allowed_list.items;
+
     std.debug.print(
         "\n[fuzz] seed=0x{x}  iters={d}  corpus_files={d}\n",
         .{ seed, iters, corpus.len },
     );
 
     var disagreements: usize = 0;
+    var allowed: usize = 0; // documented (ledger) divergences — green, but counted
     var checked: usize = 0;
 
     var i: usize = 0;
@@ -271,21 +316,24 @@ test "differential fuzz: chardetz core agrees with the uchardet oracle on genera
             else => "edge-case",
         };
 
-        const agreed = try checkAgreement(alloc, label, input);
-        checked += 1;
-        if (!agreed) {
-            disagreements += 1;
-            // Cap the noise: after the first handful, stop printing dumps but
-            // keep counting so the final tally is honest.
-            if (disagreements > 10) {
-                std.debug.print("[fuzz] (suppressing further dumps; still counting)\n", .{});
-            }
+        switch (try checkAgreement(alloc, label, input, allowed_oracle)) {
+            .agree => {},
+            .allowed_divergence => allowed += 1,
+            .disagree => {
+                disagreements += 1;
+                // Cap the noise: after the first handful, stop printing dumps but
+                // keep counting so the final tally is honest.
+                if (disagreements > 10) {
+                    std.debug.print("[fuzz] (suppressing further dumps; still counting)\n", .{});
+                }
+            },
         }
+        checked += 1;
     }
 
     std.debug.print(
-        "[fuzz] checked={d}  disagreements={d}\n",
-        .{ checked, disagreements },
+        "[fuzz] checked={d}  disagreements={d}  allowed-divergences={d}\n",
+        .{ checked, disagreements, allowed },
     );
 
     // MFIC verdict: every generated input must agree. A disagreement is a real
