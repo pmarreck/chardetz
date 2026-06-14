@@ -18,6 +18,9 @@ const std = @import("std");
 // `c` is the translate-c module created in build.zig from c_imports.h, which
 // #includes uchardet.h. (Zig 0.16 deprecates source-level @cImport.)
 const c = @import("c");
+// The chardetz core under test (the named module wired in build.zig). This is
+// the M2 flip: the gate now compares chardetz.detect against the uchardet C ABI.
+const cz = @import("chardetz");
 
 /// Drive uchardet's C API over a byte buffer and return its charset verdict.
 /// Mirrors the canonical uchardet usage: new → handle_data → data_end →
@@ -40,7 +43,22 @@ const Entry = struct {
     label: []const u8,
 };
 
-test "uchardetz oracle agrees with corpus filename labels" {
+/// Case-insensitive set membership over the charsets chardetz implements THIS
+/// chunk. A transient build tracker: it grows toward 100% as later chunks add
+/// probers. A charset NOT in this set is "pending" — its prober lands later, so
+/// a chardetz≠oracle there is expected and tallied, NOT a divergence, NOT fenced.
+const IMPLEMENTED = [_][]const u8{
+    "ASCII", "UTF-8", "UTF-16", "UTF-16BE", "UTF-16LE", "UTF-32",
+};
+
+fn isImplemented(charset: []const u8) bool {
+    for (IMPLEMENTED) |c_set| {
+        if (std.ascii.eqlIgnoreCase(charset, c_set)) return true;
+    }
+    return false;
+}
+
+test "chardetz.detect matches the uchardet oracle on every IMPLEMENTED-charset corpus file" {
     const alloc = std.testing.allocator;
     const io = std.testing.io;
 
@@ -54,7 +72,18 @@ test "uchardetz oracle agrees with corpus filename labels" {
     const parsed = try std.json.parseFromSlice([]Entry, alloc, manifest_json, .{});
     defer parsed.deinit();
 
-    var mismatches: usize = 0;
+    var mismatches: usize = 0; // chardetz≠oracle on an IMPLEMENTED charset → FAIL
+    var read_failures: usize = 0;
+    var checked: usize = 0; // IMPLEMENTED-charset files asserted strictly
+    var pending: usize = 0; // files whose oracle charset's prober lands later
+
+    // Track distinct pending charsets for the end-of-run report.
+    var pending_set = std.StringHashMap(void).init(alloc);
+    defer {
+        var it = pending_set.keyIterator();
+        while (it.next()) |k| alloc.free(k.*);
+        pending_set.deinit();
+    }
 
     for (parsed.value) |e| {
         const path = try std.fmt.allocPrint(alloc, "tests/corpus/{s}", .{e.path});
@@ -62,26 +91,56 @@ test "uchardetz oracle agrees with corpus filename labels" {
 
         const data = cwd.readFileAlloc(io, path, alloc, .unlimited) catch |err| {
             std.debug.print("READ FAIL  {s}: {}\n", .{ e.path, err });
-            mismatches += 1;
+            read_failures += 1;
             continue;
         };
         defer alloc.free(data);
 
-        const got = try detect(alloc, data);
-        defer alloc.free(got);
+        // The oracle (uchardet C ABI) is the spec.
+        const oracle = try detect(alloc, data);
+        defer alloc.free(oracle);
 
-        // M2 HOOK: once chardetz has a detector, add a parallel
-        // `chardetz.detect(data)` here and assert it equals `got` (the oracle),
-        // gated by tests/expected_divergences.json. For M1 we validate the
-        // oracle against the corpus labels only.
-        if (!std.ascii.eqlIgnoreCase(got, e.label)) {
-            std.debug.print("ORACLE MISMATCH  {s}\tlabel={s}\tgot={s}\n", .{ e.path, e.label, got });
-            mismatches += 1;
+        // chardetz under test (pure Zig, no alloc — but pass the allocator for
+        // API symmetry with the eventual allocating probers).
+        const got = cz.detect(alloc, data);
+
+        if (isImplemented(oracle)) {
+            checked += 1;
+            // STRICT, case-insensitive equality against the oracle.
+            if (!std.ascii.eqlIgnoreCase(got, oracle)) {
+                std.debug.print(
+                    "DIVERGENCE  {s}\toracle={s}\tchardetz={s}\n",
+                    .{ e.path, oracle, got },
+                );
+                mismatches += 1;
+            }
+        } else {
+            // Pending: a charset whose prober is not in this chunk. Not a
+            // divergence, not fenced — just tallied so coverage growth is visible.
+            pending += 1;
+            if (!pending_set.contains(oracle)) {
+                try pending_set.put(try alloc.dupe(u8, oracle), {});
+            }
         }
     }
 
-    if (mismatches != 0) {
-        std.debug.print("TOTAL MISMATCHES: {d}/{d}\n", .{ mismatches, parsed.value.len });
+    // ── End-of-run report ──
+    std.debug.print(
+        "\n[differential] checked(IMPLEMENTED)={d}  pending={d}  read_failures={d}  divergences={d}\n",
+        .{ checked, pending, read_failures, mismatches },
+    );
+    std.debug.print("[differential] distinct pending charsets ({d}):\n", .{pending_set.count()});
+    {
+        var it = pending_set.keyIterator();
+        while (it.next()) |k| std.debug.print("  - {s}\n", .{k.*});
     }
+
+    // The gate passes iff every IMPLEMENTED-charset file matched the oracle and
+    // no corpus file failed to read.
+    try std.testing.expectEqual(@as(usize, 0), read_failures);
     try std.testing.expectEqual(@as(usize, 0), mismatches);
+    // Vacuity guard: the gate must actually have ASSERTED something. If the
+    // corpus ever stops covering any IMPLEMENTED charset, fail loudly rather
+    // than pass green on zero assertions.
+    try std.testing.expect(checked > 0);
 }

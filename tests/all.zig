@@ -12,6 +12,10 @@ comptime {
 	_ = @import("unit/sbcs_model_test.zig");
 	_ = @import("unit/state_machine_test.zig");
 	_ = @import("unit/dist_jp_test.zig");
+	// M2: detection engine
+	_ = @import("unit/coding_state_machine_test.zig");
+	_ = @import("unit/utf8_prober_test.zig");
+	_ = @import("unit/detector_test.zig");
 	// Phase 3: generator tests
 	_ = @import("gen_tables/parse_sbcs_test.zig");
 	_ = @import("gen_tables/emit_test.zig");
