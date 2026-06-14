@@ -36,8 +36,21 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
   - [x] `FilterWith[out]EnglishLetters` → `src/filter.zig`
   - [x] Wired into dispatcher: prober array now [UTF8, SBCSGroup, Latin1] (PROBER_COUNT=3; MBCS group lands in M3)
   - [x] Differential gate: IMPLEMENTED grown to all single-byte charsets; **checked=51, pending=8 (CJK+escape only), divergences=0**
-- [ ] **M5 — C FFI + C CLI + performance gate**
-- [ ] **M6 — WASM target**
+- [x] **M5 — C FFI + C CLI** (uchardet drop-in ABI + dogfooding C CLI) — *complete 2026-06-14 EST*
+  - [x] `include/uchardet.h` — verbatim copy of uchardetz's header (tri-license intact); chardetz is a binary drop-in for the 6-function uchardet ABI
+  - [x] `src/ffi.zig` — exports `uchardet_new/delete/handle_data/data_end/reset/get_charset` (Zig 0.16 `@export(&fn, ...)`, `callconv(.c)`); handle = heap `UniversalDetector` + NUL-terminated name buffer (robust C-string contract); allocator picked by target (c_allocator native / wasm_allocator on wasm)
+  - [x] `src/lib.zig` — library/wasm artifact root (core + ffi exports force-referenced); pure core stays libc-free in `src/chardetz.zig`
+  - [x] `cli/main.c` — C CLI dogfooding the FFI (`#include "uchardet.h"`, links `libchardetz.a`, calls THROUGH the C ABI). `-h/--help`, `--about` (name+ver+os/arch), `--json`, `--simple`/`--no-color`, file or `-`/`@stdin`, later-args-override, charset->stdout / diagnostics->stderr
+  - [x] `build.zig` — native branch: static lib (installs header) + C CLI exe `chardetz` + `run` step; wasm branch: freestanding `.wasm`. Test module links libc for the FFI c_allocator path
+  - [x] 7 FFI/WASM-ABI unit tests (`tests/unit/ffi_test.zig`), red-phase verified (deliberate fail -> 109/110, proving discovery)
+  - [x] All 6 `uchardet_*` symbols exported with strong/global linkage (T) in `libchardetz.a`
+  - [ ] **deferred:** per-function performance gate (`./bm` scaling-ratio + ndjson) — separate from the FFI/CLI/WASM deliverable
+- [x] **M6 — WASM target** — *complete 2026-06-14 EST*
+  - [x] `wasm32-freestanding` build (`-Dtarget=wasm32-freestanding`, `entry=.disabled`, `rdynamic`, ReleaseSmall) -> `chardetz.wasm` (~115 KB)
+  - [x] WASM one-shot ABI: `chardetz_detect(ptr,len)->*name`, `chardetz_alloc(len)`, `chardetz_free(ptr,len)` over linear memory; returned name is a stable NUL-terminated static buffer
+  - [x] `docs/wasm_abi.md` — exported fns + JS host recipe
+  - [x] flake `packages.wasm` (`nix build .#wasm`) + `./build_all` (native + 5 cross + wasm)
+  - [x] VALIDATED: instantiates in node (dev-shell), exports `chardetz_detect/alloc/free`+`memory`, detects ASCII->ASCII / UTF-8 BOM->UTF-8 / accented UTF-8->UTF-8 correctly
 
 ## Tripwires / deferred
 - Bring the in-harness differential gate into Garnix CI (C++-in-sandbox via

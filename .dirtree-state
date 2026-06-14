@@ -11,15 +11,21 @@ annotate=[
 	build = Nix-based build wrapper (ReleaseFast)
 	build.zig = Build: ReleaseFast default; chardetz module + static lib + test step
 	build.zig.zon = Package manifest: name=chardetz, no deps yet (uchardetz added Phase 8)
+	build_all = Build native + 5 cross targets + wasm via nix; accumulates failures
+	cli/main.c = C CLI dogfooding the FFI: #includes uchardet.h, links libchardetz.a, calls through the C ABI. -h/--help/--about/--json/--simple/--no-color, file or -/@stdin
+	docs/wasm_abi.md = WASM ABI doc: exported fns + JS host recipe (alloc/detect/free over linear memory)
 	flake.nix = Nix flake: zig_0_16 pinned; packages.default + 5 cross-targets; checks{build,test}
+	include/uchardet.h = uchardet-compatible C ABI header — verbatim copy of uchardetz's (tri-license); the drop-in contract
 	scripts/bless-hashes = Deliberately re-records sha256 of control files into blessed_hashes.txt; run only on intentional changes
 	scripts/check-blessed-hashes = CI assertion: verifies control files match blessed_hashes.txt; exits 1 on any unblessed change
 	src/char_distribution.zig = DistributionTable struct for CJK frequency-order tables (ported from CharDistribution.h)
 	src/char_distribution_analysis.zig = CJK confidence engine: CharDistributionAnalysis port — per-charset GetOrder byte-math (Big5/GB2312/EUCTW/EUCKR/SJIS/EUCJP) → freq-rank lookup → freq/((total-freq)*ratio) confidence
 	src/chardetz.zig = Core module root (pure, no I/O); re-exports struct defs + tables as they land
+	src/ffi.zig = M5 C FFI: exports uchardet_* ABI (drop-in) + WASM one-shot chardetz_detect/alloc/free; handle = heap UniversalDetector + NUL-terminated name buffer; allocator picked by target
 	src/filter.zig = Buffer filters (nsCharSetProber::FilterWith[out]EnglishLetters): collapse delimiter runs / strip tags before SBCS-group + Latin1 scoring
 	src/jp_context.zig = ContextTable struct for Japanese 2-char hiragana context table (ported from JpCntx.h)
 	src/jp_context_analysis.zig = Japanese context engine: JapaneseContextAnalysis port — hiragana bigram model over jp2_context 83x83 table; SJIS/EUCJP GetOrder; (totalRel-relSample[0])/totalRel confidence
+	src/lib.zig = Library/WASM artifact root: core + ffi exports (force-referenced). Pure core stays in chardetz.zig (no libc)
 	src/probers/big5.zig = Big5 prober (nsBig5Prober): Big5 SM + Big5 CharDistributionAnalysis; confidence = distribution
 	src/probers/escape.zig = Escape-sequence prober (nsEscCharSetProber): 4 SMs [HZ,ISO2022CN,ISO2022JP,ISO2022KR]; first eItsMe wins; charset = winning SM model name
 	src/probers/eucjp.zig = EUC-JP prober (nsEUCJPProber): EUC-JP SM + EUC-JP distribution + EUC-JP Japanese context; confidence = max(ctx,dist)
@@ -53,6 +59,7 @@ annotate=[
 	tests/gen_tables/parse_jpcntx_test.zig = Unit tests for parse_jpcntx using jpcntx_snippet.txt fixture
 	tests/unit/char_distribution_analysis_test.zig = Unit tests for CharDistributionAnalysis GetOrder byte-math + confidence + EUC-TW OOB guard
 	tests/unit/dist_jp_test.zig = Unit tests for char_distribution.zig and jp_context.zig: struct construction
+	tests/unit/ffi_test.zig = FFI + WASM-ABI unit tests reached via the named chardetz module (aggregator discovery)
 	tests/unit/filter_test.zig = Unit tests for the FilterWith[out]EnglishLetters buffer filters
 	tests/unit/hebrew_prober_test.zig = Unit tests for HebrewProber final-letter logical/visual decision
 	tests/unit/jp_context_analysis_test.zig = Unit tests for JapaneseContextAnalysis hiragana GetOrder + pair counting + confidence

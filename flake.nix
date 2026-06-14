@@ -56,6 +56,23 @@
           installPhase = "true";
         };
 
+        # WASM target: wasm32-freestanding, exports the one-shot chardetz_detect
+        # ABI (see docs/wasm_abi.md). The C CLI / libc static lib are skipped in
+        # build.zig when targeting wasm; this produces only the .wasm.
+        mkWasm = pkgs.stdenvNoCC.mkDerivation {
+          pname = "chardetz-wasm";
+          version = "0.1.0";
+          src = ./.;
+          nativeBuildInputs = [ zig ];
+          dontConfigure = true;
+          dontFixup = true;
+          buildPhase = ''
+            export XDG_CACHE_HOME=$(mktemp -d)
+            zig build -Doptimize=ReleaseSmall -Dtarget=wasm32-freestanding --prefix $out
+          '';
+          installPhase = "true";
+        };
+
         # 5 house targets: macOS aarch64, Linux aarch64/x86_64, Windows aarch64/x86_64.
         crossTargets = {
           aarch64-macos   = { target = "aarch64-macos";       suffix = "-aarch64-macos"; };
@@ -72,6 +89,7 @@
         packages.x86_64-linux    = mkChardetz crossTargets.x86_64-linux;
         packages.aarch64-windows = mkChardetz crossTargets.aarch64-windows;
         packages.x86_64-windows  = mkChardetz crossTargets.x86_64-windows;
+        packages.wasm            = mkWasm;
 
         # Garnix auto-evaluates these. checks (not checks.${system}) — eachDefaultSystem
         # already nests per-system; double-nesting would yield checks.<sys>.<sys>.

@@ -9,6 +9,7 @@ result
 result-*
 .oracle
 .oracle-*
+.chardetz-cli
 
 # Side-effect of `zig build --fetch=all`
 zig-pkg/

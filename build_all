@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Build chardetz for every distribution target: native (default), the 5 house
+# OS/arch combos (macOS aarch64, Linux aarch64/x86_64, Windows aarch64/x86_64),
+# and the wasm32-freestanding .wasm. All via `nix build` (sandboxed,
+# deterministic), ReleaseFast (ReleaseSmall for wasm). Accumulates failures.
+set -u
+cd "$(dirname "$0")" || exit 1
+
+rc=0
+build() { # build <flake-attr> <out-symlink> <label>
+	echo "== building $3 ($1) ==" >&2
+	if ! nix build ".#$1" -o "$2" -L; then
+		echo "FAIL: $3 ($1)" >&2; rc=1
+	fi
+}
+
+build default         result               "native (host)"
+build aarch64-macos   result-aarch64-macos "macOS aarch64"
+build aarch64-linux   result-aarch64-linux "Linux aarch64 (musl)"
+build x86_64-linux    result-x86_64-linux  "Linux x86_64 (musl)"
+build aarch64-windows result-aarch64-win   "Windows aarch64 (gnu)"
+build x86_64-windows  result-x86_64-win    "Windows x86_64 (gnu)"
+build wasm            result-wasm          "wasm32-freestanding"
+
+if [ "$rc" -eq 0 ]; then
+	echo "ALL TARGETS BUILT" >&2
+	# Surface the wasm artifact for convenience.
+	[ -e result-wasm/bin/chardetz.wasm ] && \
+		echo "wasm -> result-wasm/bin/chardetz.wasm ($(wc -c < result-wasm/bin/chardetz.wasm) bytes)" >&2
+else
+	echo "BUILD_ALL FAILED (rc=$rc)" >&2
+fi
+exit "$rc"

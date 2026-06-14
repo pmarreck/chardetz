@@ -1,14 +1,20 @@
 #!/usr/bin/env bash
-# Build chardetz via nix (sandboxed, deterministic — avoids host-OS libSystem
+# Build chardetz via nix (sandboxed, deterministic -- avoids host-OS libSystem
 # stub issues that break native `zig build` on newer macOS). ReleaseFast default.
+# Produces the static lib (libchardetz.a, the uchardet C ABI), the drop-in
+# header (include/uchardet.h), and the C CLI -- copied to zig-out/bin/chardetz.
 set -u
 cd "$(dirname "$0")" || exit 1
 
 echo "Building chardetz (nix build, ReleaseFast)..." >&2
-if nix build .#default -L "$@"; then
-	echo "Built. Static library artifact in ./result (nix store)." >&2
-	exit 0
-else
+if ! nix build .#default -L "$@"; then
 	echo "BUILD FAILED" >&2
 	exit 1
 fi
+
+# Surface the CLI binary at the conventional zig-out/bin/chardetz path (the nix
+# result is read-only in the store; copy out so it's runnable/overwritable).
+mkdir -p zig-out/bin
+cp -f result/bin/chardetz zig-out/bin/chardetz 2>/dev/null && chmod u+w zig-out/bin/chardetz
+echo "Built. CLI -> zig-out/bin/chardetz ; lib -> result/lib/libchardetz.a ; header -> result/include/uchardet.h" >&2
+exit 0
