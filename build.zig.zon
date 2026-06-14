@@ -2,7 +2,12 @@
     .name = .chardetz,
     .version = "0.1.0",
     .minimum_zig_version = "0.16.0",
-    .dependencies = .{},
+    .dependencies = .{
+        .uchardetz = .{
+            .url = "git+https://github.com/pmarreck/uchardetz#abacfc1fc86ef7618547d7dce7cc7501e756fa31",
+            .hash = "uchardetz-0.0.6-koAyw7pFCwAzXYaKhsirPcnwf7wfPYm8B8UCRkNc2WbD",
+        },
+    },
     .paths = .{
         "build.zig",
         "build.zig.zon",

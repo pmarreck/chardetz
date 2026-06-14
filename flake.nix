@@ -12,6 +12,34 @@
         pkgs = nixpkgs.legacyPackages.${system};
         zig = pkgs.zig_0_16; # PIN: bare pkgs.zig drifts and breaks CI silently.
 
+        # ── Zig dependency cache (fixed-output derivation) ──
+        # The oracle test (Phase 8) pulls in uchardetz via build.zig.zon. Nix's
+        # build sandbox has no network, so we fetch the whole dependency tree
+        # in a fixed-output derivation (network allowed because the output hash
+        # is declared) and copy it into ZIG_GLOBAL_CACHE_DIR for the consumer.
+        # Regenerate zigDepsHash whenever build.zig.zon .dependencies change:
+        # set it to pkgs.lib.fakeHash, run `nix build`, copy the printed hash.
+        zigDepsHash = "sha256-4J9q0uChnPo2P6plu35Jy5pPGTA252lNy9bfVRqp408=";
+        zigDeps = pkgs.stdenvNoCC.mkDerivation {
+          pname = "chardetz-zig-deps";
+          version = "0.1.0";
+          src = ./.;
+          nativeBuildInputs = [ zig pkgs.git pkgs.cacert ];
+          dontConfigure = true;
+          dontFixup = true;
+          outputHashMode = "recursive";
+          outputHashAlgo = "sha256";
+          outputHash = zigDepsHash;
+          buildPhase = ''
+            export HOME=$TMPDIR
+            export ZIG_GLOBAL_CACHE_DIR=$out
+            export SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt
+            export GIT_SSL_CAINFO=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt
+            zig build --fetch=all
+          '';
+          installPhase = "true";
+        };
+
         # Build the static library for a Zig target triple (native when null).
         mkChardetz = { target ? null, suffix ? "" }: pkgs.stdenvNoCC.mkDerivation {
           pname = "chardetz${suffix}";
@@ -63,6 +91,31 @@
             installPhase = ''
               mkdir -p $out
               echo "tests passed" > $out/result
+            '';
+          };
+
+          # Phase 8: differential oracle test. Links uchardetz's C++ (via the
+          # zigDeps cache) and drives its C ABI from a Zig test. Separate from
+          # `test` because it needs the network-fetched dep + C++ toolchain.
+          oracle-test = pkgs.stdenvNoCC.mkDerivation {
+            pname = "chardetz-oracle-test";
+            version = "0.1.0";
+            src = ./.;
+            nativeBuildInputs = [ zig ];
+            dontConfigure = true;
+            dontFixup = true;
+            buildPhase = ''
+              export HOME=$TMPDIR
+              export ZIG_GLOBAL_CACHE_DIR=$TMPDIR/zig-cache
+              mkdir -p $ZIG_GLOBAL_CACHE_DIR
+              cp -r ${zigDeps}/* $ZIG_GLOBAL_CACHE_DIR/
+              chmod -R u+w $ZIG_GLOBAL_CACHE_DIR
+              timeout 600 zig build test-oracle -Dwith-oracle \
+                || { echo "Oracle test failed"; exit 1; }
+            '';
+            installPhase = ''
+              mkdir -p $out
+              echo "oracle test passed" > $out/result
             '';
           };
         };

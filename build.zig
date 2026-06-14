@@ -67,4 +67,46 @@ pub fn build(b: *std.Build) void {
 	tests.use_llvm = true;
 	const run_tests = b.addRunArtifact(tests);
 	b.step("test", "Run unit + generator tests").dependOn(&run_tests.step);
+
+	// ── Phase 8: differential oracle test (opt-in; links uchardetz C++) ──
+	// Off by default so the hermetic `test` step stays pure-Zig. Enabled via
+	// `-Dwith-oracle` and run through the dedicated `test-oracle` step (and the
+	// flake's oracle-test check). Links uchardetz's `uchardet-static` artifact
+	// (C++, link_libcpp) and exposes its C ABI through a translate-c module
+	// (Zig 0.16 deprecates source-level @cImport).
+	const with_oracle = b.option(
+		bool,
+		"with-oracle",
+		"Build the differential oracle test (links uchardetz C++)",
+	) orelse false;
+	if (with_oracle) {
+		const uz = b.dependency("uchardetz", .{ .target = target, .optimize = optimize });
+		const uz_lib = uz.artifact("uchardet-static");
+
+		// translate-c: turn uchardet.h into an importable Zig module named "c".
+		const translate_c = b.addTranslateC(.{
+			.root_source_file = b.path("tests/differential/c_imports.h"),
+			.target = target,
+			.optimize = optimize,
+		});
+		translate_c.addIncludePath(uz.path("src")); // where uchardet.h lives
+		const c_mod = translate_c.createModule();
+
+		const diff_mod = b.createModule(.{
+			.root_source_file = b.path("tests/differential/oracle_link_test.zig"),
+			.target = target,
+			.optimize = optimize,
+			.link_libcpp = true, // uchardet is C++
+			.imports = &.{
+				.{ .name = "chardetz", .module = core_mod },
+				.{ .name = "c", .module = c_mod },
+			},
+		});
+		diff_mod.linkLibrary(uz_lib); // brings in symbols + propagates include path
+
+		const diff_tests = b.addTest(.{ .root_module = diff_mod });
+		diff_tests.use_llvm = true; // same SEGV-avoidance as the main test step
+		const run_diff = b.addRunArtifact(diff_tests);
+		b.step("test-oracle", "Run the differential oracle test (links uchardetz C++)").dependOn(&run_diff.step);
+	}
 }

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Phase 8 differential oracle test runner. Builds + runs the hermetic nix check
+# that links uchardetz's C++ and drives its C ABI from a Zig test, asserting the
+# oracle agrees with the corpus filename labels.
+#
+# NEVER use `set -e`/`set -o pipefail` — a failing check legitimately returns
+# nonzero and the caller (./test) folds that into its accumulated exit code.
+set -u
+cd "$(dirname "$0")/../.." || exit 1
+
+sys="$(nix eval --impure --raw --expr 'builtins.currentSystem')"
+exec nix build ".#checks.${sys}.oracle-test" -L
