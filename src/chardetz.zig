@@ -11,6 +11,12 @@
 
 const std = @import("std");
 
+// ── Phase 2: core struct definitions ────────────────────────────────────────
+pub const sbcs_model = @import("sbcs_model.zig");
+pub const state_machine = @import("state_machine.zig");
+pub const char_distribution = @import("char_distribution.zig");
+pub const jp_context = @import("jp_context.zig");
+
 test "scaffold compiles" {
-    try std.testing.expect(true);
+	try std.testing.expect(true);
 }

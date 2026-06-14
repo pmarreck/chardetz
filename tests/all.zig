@@ -8,9 +8,12 @@
 //!   - Sibling test files under tests/: relative is fine — `@import("unit/foo_test.zig")`.
 
 comptime {
-    _ = @import("chardetz");
+	_ = @import("chardetz");
+	_ = @import("unit/sbcs_model_test.zig");
+	_ = @import("unit/state_machine_test.zig");
+	_ = @import("unit/dist_jp_test.zig");
 }
 
 test "test harness wired" {
-    try @import("std").testing.expect(true);
+	try @import("std").testing.expect(true);
 }
