@@ -5,7 +5,7 @@
 set -u
 cd "$(dirname "$0")/.." || exit 1
 : > blessed_hashes.txt
-for f in tools/gen_tables/manifest.zig tests/expected_divergences.json; do
+for f in tools/gen_tables/manifest.zig tests/expected_divergences.json src/printable_binary_map.txt; do
 	printf '%s  %s\n' "$(shasum -a 256 "$f" | awk '{print $1}')" "$f" >> blessed_hashes.txt
 done
 echo "blessed $(wc -l < blessed_hashes.txt | tr -d ' ') control files"

@@ -21,6 +21,7 @@ const mbcs_group_prober = @import("probers/mbcs_group.zig");
 const sbcs_group_prober = @import("probers/sbcs_group.zig");
 const latin1_prober = @import("probers/latin1.zig");
 const esc_prober = @import("probers/escape.zig");
+const pb_prober = @import("probers/printable_binary.zig");
 
 const Prober = prober.Prober;
 const ProbingState = prober.ProbingState;
@@ -57,16 +58,21 @@ pub const UniversalDetector = struct {
     reported: []const u8 = "",
 
     // ── Concrete probers owned by the detector ──────────────────────────────
-    // uchardet's high-byte prober array is [MBCSGroup, SBCSGroup, Latin1]; the
-    // escape prober lives outside that array on the eEscAscii path.
-    /// The multibyte (CJK) group — UTF-8 + the 6 CJK probers. uchardet's
-    /// dispatcher slot [0]. The standalone UTF-8 prober now lives INSIDE here,
-    /// matching uchardet's real structure.
+    // High-byte prober array: [PBProber, MBCSGroup, SBCSGroup, Latin1]. uchardet's
+    // is [MBCSGroup, SBCSGroup, Latin1]; chardetz prepends the PRINTABLE-BINARY
+    // prober (a uchardet EXTENSION) at slot 0 so a strong PB signal pre-empts the
+    // UTF-8 prober (PB is valid UTF-8). The escape prober lives outside this array
+    // on the eEscAscii path.
+    /// PRINTABLE-BINARY prober (chardetz extension). Slot [0]: only wins on a strong
+    /// PB signature, otherwise inert — so it never perturbs uchardet-faithful verdicts.
+    pb: pb_prober.PBProber,
+    /// The multibyte (CJK) group — UTF-8 + the 6 CJK probers. Slot [1]. The
+    /// standalone UTF-8 prober lives INSIDE here, matching uchardet's structure.
     mbcs_group: mbcs_group_prober.MBCSGroupProber,
-    /// The single-byte charset group (35 sub-probers incl. Hebrew). uchardet's
-    /// dispatcher slot [1]. Allocates internally for the buffer filters.
+    /// The single-byte charset group (35 sub-probers incl. Hebrew). Slot [2].
+    /// Allocates internally for the buffer filters.
     sbcs_group: sbcs_group_prober.SBCSGroupProber,
-    /// The Latin-1 / WINDOWS-1252 class-model prober. uchardet's slot [2].
+    /// The Latin-1 / WINDOWS-1252 class-model prober. Slot [3].
     latin1: latin1_prober.Latin1Prober,
     /// The escape-sequence prober (ISO-2022-*, HZ). Constructed/fed only on the
     /// eEscAscii input path; not part of the high-byte prober array.
@@ -80,12 +86,13 @@ pub const UniversalDetector = struct {
     prober_storage: [MAX_PROBERS]Prober = undefined,
 
     const MAX_PROBERS = 8;
-    /// Number of probers wired for the high-byte path. uchardet's order is
-    /// [MBCSGroup, SBCSGroup, Latin1].
-    const PROBER_COUNT = 3;
+    /// Number of probers wired for the high-byte path:
+    /// [PBProber, MBCSGroup, SBCSGroup, Latin1].
+    const PROBER_COUNT = 4;
 
     pub fn init(allocator: std.mem.Allocator) UniversalDetector {
         return UniversalDetector{
+            .pb = pb_prober.PBProber.init(),
             .mbcs_group = mbcs_group_prober.MBCSGroupProber.init(),
             .sbcs_group = sbcs_group_prober.SBCSGroupProber.init(allocator),
             .latin1 = latin1_prober.Latin1Prober.init(allocator),
@@ -94,14 +101,15 @@ pub const UniversalDetector = struct {
     }
 
     /// (Re)build the polymorphic prober array from the concrete fields against
-    /// the CURRENT address of `self`, then return it. uchardet's order is
-    /// [MBCSGroup, SBCSGroup, Latin1]. The escape prober is NOT in this array
-    /// (it runs on the eEscAscii path, separately). Cheap (a few pointer
+    /// the CURRENT address of `self`, then return it. Order:
+    /// [PBProber, MBCSGroup, SBCSGroup, Latin1]. The escape prober is NOT in this
+    /// array (it runs on the eEscAscii path, separately). Cheap (a few pointer
     /// writes); called per dispatch.
     fn proberSlice(self: *UniversalDetector) []Prober {
-        self.prober_storage[0] = self.mbcs_group.asProber();
-        self.prober_storage[1] = self.sbcs_group.asProber();
-        self.prober_storage[2] = self.latin1.asProber();
+        self.prober_storage[0] = self.pb.asProber();
+        self.prober_storage[1] = self.mbcs_group.asProber();
+        self.prober_storage[2] = self.sbcs_group.asProber();
+        self.prober_storage[3] = self.latin1.asProber();
         return self.prober_storage[0..PROBER_COUNT];
     }
 

@@ -28,6 +28,10 @@ comptime {
 	_ = @import("unit/mbcs_prober_test.zig");
 	// M5: uchardet-compatible C FFI + WASM one-shot ABI
 	_ = @import("unit/ffi_test.zig");
+	// PRINTABLE-BINARY prober (chardetz extension; metamorphic-tested)
+	_ = @import("unit/printable_binary_table_test.zig");
+	_ = @import("unit/printable_binary_prober_test.zig");
+	_ = @import("unit/pb_metamorphic_test.zig");
 	// Phase 3: generator tests
 	_ = @import("gen_tables/parse_sbcs_test.zig");
 	_ = @import("gen_tables/emit_test.zig");

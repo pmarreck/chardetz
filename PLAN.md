@@ -6,6 +6,19 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
 
 ## Milestones
 
+- [x] **M9 — PRINTABLE-BINARY prober (chardetz extension beyond uchardet)** — *2026-06-15 EST*
+  - Design (approved): `docs/superpowers/specs/2026-06-15-printable-binary-prober-design.md`.
+  - [x] Vendored `src/printable_binary_map.txt` (= printable_binary's character_map.txt, source of truth) → `src/printable_binary_table.zig` comptime-builds a 260-codepoint allowed set (256 glyphs + literal space/tab/LF/CR) with a `distinctive` flag (glyph ≠ its source byte). Blessed-hash control file.
+  - [x] `src/probers/printable_binary.zig` — `PBProber`: decode UTF-8 codepoints (carry-over across chunks); heuristic = ≥99% in PB set (A) + ≥10% distinctive (B) + ≥32 codepoints (C) → found_it/0.99, else ~0 (inert). No whitespace-form gating (Peter rescinded — `-f` mixes both forms; literal whitespace is neutral-allowed → resistant to email/terminal reflow).
+  - [x] Wired as **detector slot 0** `[PBProber, MBCSGroup, SBCSGroup, Latin1]` (PROBER_COUNT 3→4) so a strong PB signal pre-empts UTF-8 (PB is valid UTF-8); otherwise inert → structural non-intrusion.
+  - [x] Tests (TDD red→green): table membership/distinctive; 6 prober unit cases (strong/mixed/plain/commas/short/whitespace); detect()-level (PB→PRINTABLE-BINARY, ASCII→ASCII, CJK→UTF-8); **metamorphic** gate over 6 REAL printable-binary fixtures (binary + text-mix × default/-s/-w/-f) committed via `tests/fixtures/pb/gen.sh`.
+  - [x] **Non-intrusion verified:** differential oracle still `checked=59, divergences=0`; fuzz `0 disagreements` over 65k inputs (default + seeds 42/777/31337). Scope excludes hexlike (`-X`) + arbitrary `-P` (per Peter).
+- [x] **M8 — Code review + performance review + real `./bm`** — *2026-06-14 EST*
+  - [x] Full 11-dimension code review → `CODE_REVIEW.md` (0 critical, 1 warn [the `./bm` stub, now fixed], 8 info). Engine is clean & faithful; MFIC-backed (oracle + fuzz + CLI parity). No `catch unreachable`/swallowed errors/`page_allocator`/`anyerror`; tests leak-check.
+  - [x] `bench/bench.zig` — real benchmark replacing the M1 stub: hard machine-independent **scaling-ratio gate** (two declared-O(n) kernels, exits nonzero on super-linear) + **chardetz-vs-C++-uchardet throughput** across the 4 major paths. Juicy-Main exe (std.Io clock), ReleaseFast-only, deterministic synthetic inputs.
+  - [x] `build.zig` `-Dwith-bench` `bench` step (mirrors `-Dwith-oracle`/`-Dwith-fuzz` C++ link); `./bm` rewritten to drive it + log `bench/<machine-id>.ndjson` with two-sided (±25%) tolerance.
+  - [x] **Result:** scaling linear (worst 2.04× ≪ 2.5×); chardetz **~1.10× faster than uchardet aggregate**, 1.13× on SBCS/CJK, parity on UTF-8, 0.84× on trivial ASCII fast-path. → `PERF_REVIEW.md`.
+  - [ ] (optional) MFIC mutation check proving the scaling gate bites (deliberate O(n²) → ≈4× ratio → trip).
 - [x] **M7 — Differential FUZZ harness** (`tests/fuzz/differential_fuzz.zig` + `./fuzz` + flake `checks.fuzz` + `test-fuzz` build step) — *2026-06-14 EST*
   - [x] Seeded/deterministic (CHARDETZ_FUZZ_SEED, default 0xC0FFEE_F00D_1972; CHARDETZ_FUZZ_ITERS, default 6000). 3 generators: uniform-random, corpus-mutation (truncate/bit-flip/byte-inject), structured edge-cases (lone/partial BOMs, near-UTF-8, ESC introducers). Feeds BOTH chardetz core (in-process) + uchardet C ABI; asserts agreement; prints hex + both verdicts on any disagreement; kept OUT of default `./test`.
   - [x] **Bug #1 FOUND+FIXED (TDD):** SBCS prober confidence underflow. `src/probers/sbcs.zig` did `(total_char_f - ctrl_f)` in float → negative when ctrl_char>total_char; uchardet does it in PRUint32 (unsigned WRAP → blows past the r>=1.0 cap → 0.99). Fixed with wrapping u32 sub (`total_char -% ctrl_char`). Regression test in `tests/unit/sbcs_prober_test.zig`. Surfaced on `fe f0 9f 98 81` etc.
@@ -49,7 +62,7 @@ Pinned source: uchardetz @ `abacfc1f`. Spec:
   - [x] `build.zig` — native branch: static lib (installs header) + C CLI exe `chardetz` + `run` step; wasm branch: freestanding `.wasm`. Test module links libc for the FFI c_allocator path
   - [x] 7 FFI/WASM-ABI unit tests (`tests/unit/ffi_test.zig`), red-phase verified (deliberate fail -> 109/110, proving discovery)
   - [x] All 6 `uchardet_*` symbols exported with strong/global linkage (T) in `libchardetz.a`
-  - [ ] **deferred:** per-function performance gate (`./bm` scaling-ratio + ndjson) — separate from the FFI/CLI/WASM deliverable
+  - [x] **per-function performance gate (`./bm` scaling-ratio + ndjson) — DONE 2026-06-14 EST** (see M8)
 - [x] **M6 — WASM target** — *complete 2026-06-14 EST*
   - [x] `wasm32-freestanding` build (`-Dtarget=wasm32-freestanding`, `entry=.disabled`, `rdynamic`, ReleaseSmall) -> `chardetz.wasm` (~115 KB)
   - [x] WASM one-shot ABI: `chardetz_detect(ptr,len)->*name`, `chardetz_alloc(len)`, `chardetz_free(ptr,len)` over linear memory; returned name is a stable NUL-terminated static buffer

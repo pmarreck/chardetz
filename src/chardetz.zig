@@ -39,6 +39,11 @@ pub const prober = @import("prober.zig");
 pub const detector = @import("detector.zig");
 
 /// Buffer filters shared by the SBCS group / Latin1 probers.
+/// PRINTABLE-BINARY glyph table (comptime-built from the vendored
+/// character_map.txt) — the membership/distinctive classifier the PB prober uses.
+pub const printable_binary_table = @import("printable_binary_table.zig");
+
+
 pub const filter = @import("filter.zig");
 
 /// M5: the uchardet-compatible C FFI (drop-in ABI) + the WASM one-shot ABI.
@@ -63,6 +68,7 @@ pub const probers = struct {
 	pub const eucjp = @import("probers/eucjp.zig");
 	pub const mbcs_group = @import("probers/mbcs_group.zig");
 	pub const escape = @import("probers/escape.zig");
+	pub const printable_binary = @import("probers/printable_binary.zig");
 };
 
 /// One-shot detection: returns the detected charset name (a static string
