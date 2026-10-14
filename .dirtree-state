@@ -1,0 +1,21 @@
+# Dirtree: Stateful directory trees in the CLI for humans and LLMs. https://github.com/pmarreck/dirtree
+ver=1.2
+annotate=[
+	PROVENANCE.md = Upstream lineage and the pinned uchardetz revision
+	bless = Re-records control-file hashes into blessed_hashes.txt
+	build = Optimized nix build; --debug and --test variants
+	src/root.zig = chardetz public Zig API; detectCharset returns null until probers land
+	src/tables/all.zig = Generated index importing every generated table module
+	src/tables/tables_test.zig = Smoke checks on generated tables (compile-all, BIG5 classes, table sizes)
+	src/tables/types.zig = Hand port of nsPkgInt.h plus SMModel/SequenceModel record types
+	test = Complete test entry point (re-enters nix develop); accumulates failures
+	tests/expected_divergences.json = CONTROL FILE: accepted oracle divergences, each with a reason (empty)
+	tests/oracle/corpus_test.zig = Differential oracle gate over upstream seed corpus (C++ oracle vs filename label and vs Zig core)
+	tests/oracle/differential.zig = Pure differential classifier: agree/diverge/fenced/pending with guarded ledger and stale-fence detection
+	tests/oracle/oracle.zig = Test-only extern adapter over the C++ uchardet oracle
+	tools/gen_tables/main.zig = gen-tables I/O adapter: writes src/tables or --check for staleness
+	tools/gen_tables/manifest.txt = CONTROL FILE: pinned upstream rev and the upstream headers/table files to translate
+	tools/gen_tables/manifest.zig = Parses the generation manifest (rev, headers, tables) and renders src/tables/all.zig
+	tools/gen_tables/translate.zig = Pure C++->Zig table translator: lexer, constant-expression evaluator (macros, enums, casts, PCK packing), declaration emitter
+	tools/gen_tables/translate_test.zig = Authored-oracle tests for the translator plus zig-fmt stability oracle via std.zig.Ast
+]

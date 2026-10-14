@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Builds chardetz. Default: optimized (ReleaseFast) Nix build into ./result.
+#   --debug  Debug build via the dev shell into zig-out/
+#   --test   run the complete test suite instead
+set -u
+cd "$(dirname "$0")" || exit 1
+case "${1:-}" in
+	"") exec nix build .#default ;;
+	--debug) exec nix develop -c zig build -Doptimize=Debug ;;
+	--test) exec ./test ;;
+	*) echo "usage: ./build [--debug|--test]" >&2; exit 2 ;;
+esac

@@ -1,0 +1,25 @@
+chardetz third-party notices
+============================
+
+chardetz is a translation of uchardet into Zig. The translated logic and data
+tables are derivative works and are distributed under uchardet's license.
+
+Component: uchardet (Mozilla universalchardet lineage)
+Upstream:  https://gitlab.freedesktop.org/uchardet/uchardet
+Fork used: https://github.com/pmarreck/uchardetz
+           commit abacfc1fc86ef7618547d7dce7cc7501e756fa31
+Copyright: Portions created by Netscape Communications Corporation are
+           Copyright (C) 1998 the Initial Developer. All Rights Reserved.
+           Additional portions by the uchardet contributors (see upstream
+           AUTHORS and `git shortlog -s` in the upstream repository).
+License:   Tri-licensed, at your option, under one of:
+           - Mozilla Public License 1.1 (MPL-1.1)
+           - GNU General Public License 2.0 or later (GPL-2.0-or-later)
+           - GNU Lesser General Public License 2.1 or later (LGPL-2.1-or-later)
+           The full text of all three licenses is in COPYING.
+
+Upstream authors, as listed in uchardet's AUTHORS file:
+  The original code is Mozilla Universal charset detector code.
+  The initial developer of the Original Code is Netscape Communications Corporation.
+  The initial developer of the C wrapper is BYVoid.
+  Maintainers: BYVoid, Jehan.

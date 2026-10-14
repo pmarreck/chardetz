@@ -1,0 +1,30 @@
+# chardetz table-generation manifest. CONTROL FILE: guarded by blessed_hashes.txt.
+# Changing the pinned revision or the translated file set requires re-blessing.
+rev abacfc1fc86ef7618547d7dce7cc7501e756fa31
+header src/nscore.h
+header src/nsPkgInt.h
+header src/nsCodingStateMachine.h
+header src/nsSBCharSetProber.h
+table src/LangModels/LangArabicModel.cpp lang_arabic_model
+table src/LangModels/LangBulgarianModel.cpp lang_bulgarian_model
+table src/LangModels/LangDanishModel.cpp lang_danish_model
+table src/LangModels/LangEsperantoModel.cpp lang_esperanto_model
+table src/LangModels/LangFrenchModel.cpp lang_french_model
+table src/LangModels/LangGermanModel.cpp lang_german_model
+table src/LangModels/LangGreekModel.cpp lang_greek_model
+table src/LangModels/LangHebrewModel.cpp lang_hebrew_model
+table src/LangModels/LangHungarianModel.cpp lang_hungarian_model
+table src/LangModels/LangRussianModel.cpp lang_russian_model
+table src/LangModels/LangSpanishModel.cpp lang_spanish_model
+table src/LangModels/LangThaiModel.cpp lang_thai_model
+table src/LangModels/LangTurkishModel.cpp lang_turkish_model
+table src/LangModels/LangVietnameseModel.cpp lang_vietnamese_model
+table src/nsMBCSSM.cpp mbcs_sm
+table src/nsEscSM.cpp esc_sm
+table src/nsLatin1Prober.cpp latin1
+table src/JpCntx.cpp jp_cntx
+table src/Big5Freq.tab big5_freq
+table src/EUCKRFreq.tab euckr_freq
+table src/EUCTWFreq.tab euctw_freq
+table src/GB2312Freq.tab gb2312_freq
+table src/JISFreq.tab jis_freq
