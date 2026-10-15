@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# CLI-vs-CLI parity: runs ORACLE_CLI and CANDIDATE_CLI on every corpus file
+# (test/<language>/<file>) and requires identical stdout and exit status.
+# Usage: parity ORACLE_CLI CANDIDATE_CLI CORPUS_DIR
+# Prints "parity: N files, M mismatches" and one line per mismatch; exits 1
+# on any mismatch, 2 on bad usage or an empty corpus.
+set -u
+if [ "$#" -ne 3 ]; then
+	echo "usage: parity ORACLE_CLI CANDIDATE_CLI CORPUS_DIR" >&2
+	exit 2
+fi
+oracle=$1 candidate=$2 corpus=$3
+files=0 mismatches=0
+while IFS= read -r -d '' f; do
+	files=$((files + 1))
+	want=$("$oracle" "$f" 2>/dev/null); want_rc=$?
+	got=$("$candidate" "$f" 2>/dev/null); got_rc=$?
+	if [ "$want" != "$got" ] || [ "$want_rc" -ne "$got_rc" ]; then
+		mismatches=$((mismatches + 1))
+		printf 'mismatch: %s: oracle %q (exit %d), candidate %q (exit %d)\n' "${f#"$corpus"/}" "$want" "$want_rc" "$got" "$got_rc"
+	fi
+done < <(find "$corpus" -mindepth 2 -type f -print0 | sort -z)
+printf 'parity: %d files, %d mismatches\n' "$files" "$mismatches"
+[ "$files" -gt 0 ] || exit 2
+[ "$mismatches" -eq 0 ]

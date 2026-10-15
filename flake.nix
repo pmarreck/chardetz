@@ -50,7 +50,7 @@
 							export ZIG_GLOBAL_CACHE_DIR=$TMPDIR/zig-cache
 							export CHARDETZ_UCHARDET_SRC=${uchardetz-src}
 							${darwinUnset}
-							patchShebangs ./test
+							patchShebangs ./test tests/cli
 							# Tests run ReleaseSafe so runtime safety checks stay compiled in;
 							# the shipped artifact stays ReleaseFast.
 							timeout 900 ./test --no-nix || { echo "Tests failed"; exit 1; }

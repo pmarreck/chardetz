@@ -1,12 +1,15 @@
 //! gen-tables: I/O adapter around the pure table translator.
-//! Usage: gen-tables MANIFEST UPSTREAM_ROOT OUT_DIR [--check]
-//! Without --check, (re)writes OUT_DIR/<stem>.zig and OUT_DIR/all.zig.
-//! With --check, writes nothing and exits 1 if any committed file is stale.
+//! Usage: gen-tables MANIFEST UPSTREAM_ROOT OUT_DIR [--check | --shims]
+//! Default: (re)writes OUT_DIR/<stem>.zig and OUT_DIR/all.zig.
+//! --check: writes nothing; exits 1 if any committed file is stale.
+//! --shims: writes the test-only C++ shims OUT_DIR/shim_<stem>.cpp.
 const std = @import("std");
 const translate = @import("translate.zig");
 const manifest = @import("manifest.zig");
 
 const max_source_bytes = 16 << 20;
+
+const Mode = enum { write, check, shims };
 
 pub fn main(init: std.process.Init) !u8 {
     const gpa = init.gpa;
@@ -18,11 +21,17 @@ pub fn main(init: std.process.Init) !u8 {
     const stderr = &err_w.interface;
     defer stderr.flush() catch {};
 
-    if (args.len < 4 or args.len > 5 or (args.len == 5 and !std.mem.eql(u8, args[4], "--check"))) {
-        try stderr.writeAll("usage: gen-tables MANIFEST UPSTREAM_ROOT OUT_DIR [--check]\n");
+    const mode: Mode = if (args.len == 4)
+        .write
+    else if (args.len == 5 and std.mem.eql(u8, args[4], "--check"))
+        .check
+    else if (args.len == 5 and std.mem.eql(u8, args[4], "--shims"))
+        .shims
+    else {
+        try stderr.writeAll("usage: gen-tables MANIFEST UPSTREAM_ROOT OUT_DIR [--check | --shims]\n");
         return 2;
-    }
-    const check = args.len == 5;
+    };
+    const check = mode == .check;
     const cwd = std.Io.Dir.cwd();
 
     const manifest_text = try cwd.readFileAlloc(io, args[1], gpa, .limited(max_source_bytes));
@@ -50,15 +59,27 @@ pub fn main(init: std.process.Init) !u8 {
     for (m.tables) |t| {
         const text = try upstream.readFileAlloc(io, t.source, gpa, .limited(max_source_bytes));
         defer gpa.free(text);
-        const zig = translate.translate(gpa, &symbols, text, .{ .source_path = t.source, .source_rev = m.rev }) catch |e| {
+        var translated = translate.translateDetailed(gpa, &symbols, text, .{ .source_path = t.source, .source_rev = m.rev }) catch |e| {
             try stderr.print("gen-tables: {s}: {s}\n", .{ t.source, @errorName(e) });
             return 1;
         };
-        defer gpa.free(zig);
+        defer translated.deinit(gpa);
+        if (mode == .shims) {
+            const include = try std.fs.path.join(gpa, &.{ args[2], t.source });
+            defer gpa.free(include);
+            const shim = try translate.renderShim(gpa, t.stem, include, translated.emitted);
+            defer gpa.free(shim);
+            const shim_name = try std.fmt.allocPrint(gpa, "shim_{s}.cpp", .{t.stem});
+            defer gpa.free(shim_name);
+            try out_dir.writeFile(io, .{ .sub_path = shim_name, .data = shim });
+            continue;
+        }
         const name = try std.fmt.allocPrint(gpa, "{s}.zig", .{t.stem});
         defer gpa.free(name);
-        stale += try emit(io, gpa, out_dir, name, zig, check, stderr);
+        stale += try emit(io, gpa, out_dir, name, translated.zig, check, stderr);
     }
+    if (mode == .shims) return 0;
+
     const index = try manifest.renderIndex(gpa, m);
     defer gpa.free(index);
     stale += try emit(io, gpa, out_dir, "all.zig", index, check, stderr);

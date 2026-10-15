@@ -2,11 +2,11 @@
 
 A pure-Zig translation of [uchardet](https://gitlab.freedesktop.org/uchardet/uchardet), the character-encoding detector descended from Mozilla's universalchardet. The goal is identical detection results with no C or C++ dependency, cross-compiled to macOS, Linux and Windows and built for WebAssembly, behind a drop-in copy of uchardet's C API.
 
-**Status:** early development. The data tables are translated and verified for freshness; the probers and the differential oracle gate are in progress. See `PLAN.md`.
+**Status:** early development. The data tables are translated and verified against the C++ compiler, and the differential oracle gate runs over the upstream corpus; the probers themselves are not ported yet. See `PLAN.md`.
 
 ## How it is built
 
-- Every upstream data table (language models, state machines, CJK frequency tables) is produced by a tested generator, `tools/gen_tables`, from a pinned uchardet source tree. Generated files are committed and a test fails if they drift from regeneration.
+- Every upstream data table (language models, state machines, CJK frequency tables) is produced by a tested generator, `tools/gen_tables`, from a pinned uchardet source tree. Generated files are committed and a test fails if they drift from regeneration. A second test has the C++ compiler evaluate each upstream table file and requires every generated array, constant and model to match it byte for byte.
 - Correctness is defined by a differential oracle: the original C++ is compiled at test time and fed the same input as the Zig code, and the detected encodings must match.
 
 ## Building and testing

@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Self-test for tests/cli/parity, run against the C++ oracle CLI until the
+# chardetz CLI exists (M5). Silent on success; prints details on failure.
+# Usage: parity_test ORACLE_CLI CORPUS_DIR EXPECTED_FILE_COUNT
+set -u
+oracle=$1 corpus=$2 expected=$3
+here=$(cd "$(dirname "$0")" && pwd)
+scratch=$(mktemp -d "${TMPDIR:-/tmp}/parity_test.XXXXXX")
+trap 'rm -r -- "$scratch"' EXIT
+failures=0
+fail() { printf 'parity_test: FAIL: %s\n%s\n' "$1" "$2" >&2; failures=$((failures + 1)); }
+
+# Oracle against itself: every file agrees.
+out=$("$here/parity" "$oracle" "$oracle" "$corpus" 2>&1); rc=$?
+[ "$rc" -eq 0 ] && [ "$out" = "parity: $expected files, 0 mismatches" ] || fail "oracle vs itself (exit $rc)" "$out"
+
+# A candidate that always answers wrongly must mismatch on every file.
+printf '#!%s\necho WRONG\n' "$BASH" > "$scratch/wrong"
+chmod +x "$scratch/wrong"
+out=$("$here/parity" "$oracle" "$scratch/wrong" "$corpus" 2>&1); rc=$?
+[ "$rc" -eq 1 ] && [ "$(tail -n 1 <<<"$out")" = "parity: $expected files, $expected mismatches" ] || fail "always-wrong candidate (exit $rc)" "$out"
+
+# A candidate that prints the right answer but exits differently must mismatch.
+printf '#!%s\n"%s" "$@"\nexit 3\n' "$BASH" "$oracle" > "$scratch/badexit"
+chmod +x "$scratch/badexit"
+out=$("$here/parity" "$oracle" "$scratch/badexit" "$corpus" 2>&1); rc=$?
+[ "$rc" -eq 1 ] && [ "$(tail -n 1 <<<"$out")" = "parity: $expected files, $expected mismatches" ] || fail "wrong exit status (exit $rc)" "$out"
+
+# An empty corpus is an error, never a vacuous pass.
+mkdir "$scratch/empty"
+out=$("$here/parity" "$oracle" "$oracle" "$scratch/empty" 2>&1); rc=$?
+[ "$rc" -eq 2 ] || fail "empty corpus (exit $rc)" "$out"
+
+[ "$failures" -eq 0 ]

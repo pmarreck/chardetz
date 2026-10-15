@@ -11,13 +11,14 @@ const chardetz = @import("chardetz");
 const gpa = std.testing.allocator;
 const io = std.testing.io;
 
-/// Corpus files (test/<language>/<file>) at the pinned revision, counted with
-/// `find test -mindepth 2 -type f`. Any other count means the corpus path or
-/// pin changed, and a smaller one would let the gate pass vacuously.
-const expected_corpus_files = 59;
+/// Exact corpus size, defined once in build.zig (seed_corpus_files).
+const expected_corpus_files = options.expected_corpus_files;
 const max_file_bytes = 16 << 20;
 /// Upstream's own test runner reads in 64 KiB chunks.
 const upstream_chunk = 65536;
+/// Every file is also fed in these chunk sizes, because probers carry state
+/// across `handle_data` calls. Ledger keys for these runs are "path@N".
+const extra_chunks = [_]usize{ 1, 7, 4096 };
 
 test "differential oracle gate over the seed corpus" {
     const ledger_json = try std.Io.Dir.cwd().readFileAlloc(io, options.ledger_path, gpa, .limited(max_file_bytes));
@@ -51,6 +52,11 @@ test "differential oracle gate over the seed corpus" {
             try label_mismatches.append(arena, try std.fmt.allocPrint(arena, "{s}: oracle says {s}", .{ path, answer }));
         }
         try report.record(gpa, &ledger, path, answer, chardetz.detectCharset(bytes));
+        for (extra_chunks) |chunk| {
+            const key = try std.fmt.allocPrint(arena, "{s}@{d}", .{ path, chunk });
+            const chunked = try oracle.detect(arena, bytes, chunk);
+            try report.record(gpa, &ledger, key, chunked, chardetz.detectCharset(bytes));
+        }
     }
 
     try std.testing.expectEqual(@as(usize, expected_corpus_files), files);
@@ -61,5 +67,5 @@ test "differential oracle gate over the seed corpus" {
     defer gpa.free(unused);
     for (unused) |f| std.debug.print("stale fence: {s}\n", .{f.file});
     try std.testing.expect(report.passed(&ledger));
-    try std.testing.expectEqual(files, report.agree + report.pending + report.fenced);
+    try std.testing.expectEqual(files * (1 + extra_chunks.len), report.agree + report.pending + report.fenced);
 }

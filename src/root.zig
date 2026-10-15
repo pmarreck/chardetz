@@ -11,3 +11,6 @@ pub fn detectCharset(bytes: []const u8) ?[]const u8 {
     _ = bytes;
     return null;
 }
+
+/// Record types used by the generated tables (exported for tests).
+pub const table_types = @import("tables/types.zig");
