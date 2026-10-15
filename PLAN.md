@@ -12,7 +12,7 @@ Completed items retire to `docs/PLAN_LOG.md`. Purpose: `INTENT.md`. Design: `doc
 - [x] Oracle gate also feeds every corpus file in 1, 7 and 4096-byte chunks, keyed path@N in the ledger (done 2026-10-15 14:05 EDT)
 - [x] Table-level differential: generated C++ shims include each upstream table file; every array, constant and model in all 23 modules matches the compiler byte-for-byte (done 2026-10-15 14:05 EDT)
 - [x] CLI-vs-CLI parity harness tests/cli/parity, self-tested against the C++ oracle CLI and wrong candidates (done 2026-10-15 14:05 EDT)
-- [ ] Report M1 to the orchestrator
+- [x] Report M1 to the orchestrator (done 2026-10-15 14:40 EDT, 6548328)
 
 ## M2: first probers at oracle parity, then public debut
 - [ ] Silence the sandbox-only Zig warning "cannot build new glibc version 2.44.0" when linking the test-only oracle CLI (pin a glibc version or link it like the test binaries)
