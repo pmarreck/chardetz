@@ -64,7 +64,7 @@ pub fn build(b: *std.Build) void {
     }
 
     // -- Table generator tests (pure translation core) --
-    for ([_][]const u8{ "tools/gen_tables/translate_test.zig", "tools/gen_tables/manifest_test.zig", "src/tables/types.zig", "src/tables/tables_test.zig", "tests/oracle/differential_test.zig" }) |path| {
+    for ([_][]const u8{ "tools/gen_tables/translate_test.zig", "tools/gen_tables/manifest_test.zig", "src/tables/types.zig", "src/tables/tables_test.zig", "tests/oracle/differential_test.zig", "src/root.zig" }) |path| {
         const t = b.addTest(.{
             .root_module = b.createModule(.{
                 .root_source_file = b.path(path),

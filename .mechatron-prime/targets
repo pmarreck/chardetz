@@ -1,0 +1,3 @@
+# Mechatron Prime CI targets: the optimized package and the full ./test suite.
+checks.x86_64-linux.build
+checks.x86_64-linux.test

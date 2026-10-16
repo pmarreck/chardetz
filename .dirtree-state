@@ -1,13 +1,23 @@
 # Dirtree: Stateful directory trees in the CLI for humans and LLMs. https://github.com/pmarreck/dirtree
 ver=1.2
 annotate=[
+	.mechatron-prime/targets = Mechatron Prime CI flake targets
 	PROVENANCE.md = Upstream lineage and the pinned uchardetz revision
 	bless = Re-records control-file hashes into blessed_hashes.txt
 	build = Optimized nix build; --debug and --test variants
-	src/root.zig = chardetz public Zig API; detectCharset returns null until probers land
+	docs/UPSTREAM_DEFECTS.md = Upstream out-of-bounds reads found during translation and chardetz's handling
+	src/detector.zig = Universal detector: BOM/UTF-16 heuristics, input-state dispatch, data_end selection
+	src/esc_prober.zig = ISO-2022/HZ escape-sequence prober
+	src/filter.zig = uchardet's two input filters (with/without English letters) into caller scratch
+	src/latin1_prober.zig = nsLatin1Prober port (windows-1252 class bigrams)
+	src/mbcs.zig = CJK probers, char distribution, Japanese context and the MBCS group
+	src/prober.zig = Shared prober states, uchardet float-cast helpers and the coding state machine
+	src/root.zig = Public Zig API: Detector and detect()
+	src/sbcs.zig = Single-byte probers, Hebrew logical/visual prober and the 35-member SBCS group
 	src/tables/all.zig = Generated index importing every generated table module
 	src/tables/tables_test.zig = Smoke checks on generated tables (compile-all, BIG5 classes, table sizes)
 	src/tables/types.zig = Hand port of nsPkgInt.h plus SMModel/SequenceModel record types
+	src/utf8_prober.zig = nsUTF8Prober port
 	test = Complete test entry point (re-enters nix develop); accumulates failures
 	tests/cli/parity = CLI-vs-CLI parity harness over the corpus (stdout + exit status)
 	tests/cli/parity_test = Self-test of the parity harness against the oracle CLI and wrong candidates
