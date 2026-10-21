@@ -11,8 +11,8 @@ Completed items retire to `docs/PLAN_LOG.md`. Purpose: `INTENT.md`. Accuracy pol
 - [x] Default-mode tests: corpus ground-truth labels at every chunk size, chunk invariance over the randomized campaign; upstream behavior misses 59 of 295 corpus runs, default 0 (done 2026-10-21 14:45 EDT)
 - [ ] Evaluate further fixes with labeled evidence: SBCS unsigned wrap on control-heavy input; EUC-TW orders past its frequency table (recorded as candidates in docs/ACCURACY.md)
 - [ ] Push to GitHub, provision the Mechatron Prime CI webhook, verify the badge reports passing
-- [ ] Hand accuracy fixes and upstream defects to uchardetz, including its native-CPU Nix build that crashes with SIGILL on CPUs without AVX-512
-- [ ] Tell docscan that detect() now returns an error union (module name and charset names unchanged)
+- [x] Hand accuracy fixes and upstream defects to uchardetz, including its native-CPU Nix build that crashes with SIGILL on CPUs without AVX-512 (done 2026-10-21 14:55 EDT, llmsend)
+- [x] Tell docscan that detect() now returns an error union (module name and charset names unchanged) (done 2026-10-21 14:55 EDT, llmsend)
 - [ ] Report to the BDFN
 
 ## Later
