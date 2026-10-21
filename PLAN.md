@@ -9,6 +9,11 @@ Completed items retire to `docs/PLAN_LOG.md`. Purpose: `INTENT.md`. Design: `doc
 - [x] CLI-vs-CLI parity harness tests/cli/parity, self-tested against the C++ oracle CLI and wrong candidates (done 2026-10-15 14:05 EDT)
 - [x] Report M1 to the orchestrator (done 2026-10-15 14:40 EDT, 6548328)
 
+## 2026-10-21 (BDFN request): merge with the June GitHub repo, best of both; accuracy over bug-for-bug fidelity
+- [ ] Check the original development machine for the June working copy and any unpushed work
+- [ ] Merge this port and pmarreck/chardetz into one codebase, keeping the best of each
+- [ ] Accuracy policy: fix upstream mistakes (chunk dependence etc.), with tests and documented reasons
+
 ## Overnight 2026-10-15 (BDFN request): finish M2-M6, meet or exceed uchardet in Zig
 - [ ] Create pmarreck/chardetz as a PRIVATE repo with Mechatron Prime CI; going public stays gated on the BDFN name veto
 
