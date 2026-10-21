@@ -5,6 +5,8 @@ const std = @import("std");
 /// Streaming detector with uchardet's semantics: `handleData` per chunk,
 /// `dataEnd`, then `charset` ("" when nothing was detected).
 pub const Detector = @import("detector.zig").Detector;
+pub const UpstreamDetector = @import("detector.zig").UpstreamDetector;
+pub const Fixes = @import("detector.zig").Fixes;
 
 /// Prober verdicts (nsProbingState).
 pub const ProbingState = @import("prober.zig").State;

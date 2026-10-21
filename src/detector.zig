@@ -57,158 +57,223 @@ const nbsp: u8 = 0xa0;
 
 const InputState = enum { pure_ascii, esc_ascii, highbyte };
 
-pub const Detector = struct {
-    gpa: std.mem.Allocator,
-    scratch: std.ArrayList(u8) = .empty,
+/// Compile-time switches for chardetz's corrections to uchardet behavior.
+/// Each is documented with its rationale and tests in docs/ACCURACY.md.
+/// `Fixes.none` reproduces uchardet exactly and is what the oracle gates run.
+pub const Fixes = struct {
+    /// Feed the probers fixed `block_len` blocks however the caller splits
+    /// the input, so the answer depends only on the bytes. Upstream checks
+    /// byte-order marks and BOM-less UTF-16 only in the first chunk, and
+    /// probers stop early per chunk, so small chunks change its answer.
+    fixed_blocks: bool = true,
+    /// Withdraw the provisional ASCII (or ISO-8859-1) verdict when high bytes
+    /// arrive in a later chunk. Upstream keeps it, so any input whose first
+    /// chunk is plain ASCII is reported as ASCII unless a prober becomes
+    /// certain on its own.
+    revisable_ascii: bool = true,
 
-    input_state: InputState = .pure_ascii,
-    nbsp_found: bool = false,
-    done: bool = false,
-    start: bool = true,
-    got_data: bool = false,
-    last_char: u8 = 0,
-    detected: ?[:0]const u8 = null,
-    /// What uchardet_get_charset returns (HandleUniversalDetector::m_charset).
-    reported: ?[:0]const u8 = null,
-
-    /// chardetz extension (not in uchardet): recognizes printable-binary text.
-    /// Inert unless its signal is strong, and checked first because such text
-    /// is also valid UTF-8.
-    pb: PBProber = .{},
-    mbcs: MbcsGroupProber = .{},
-    sbcs: SbcsGroupProber = .{},
-    latin1: Latin1Prober = .{},
-    /// Upstream deletes the escape prober at the first high byte and
-    /// recreates it on demand; `esc_alive` mirrors that lifetime.
-    esc: EscProber = .{},
-    esc_alive: bool = false,
-
-    pub fn init(gpa: std.mem.Allocator) Detector {
-        return .{ .gpa = gpa };
-    }
-
-    pub fn deinit(self: *Detector) void {
-        self.scratch.deinit(self.gpa);
-        self.* = undefined;
-    }
-
-    pub fn reset(self: *Detector) void {
-        self.nbsp_found = false;
-        self.done = false;
-        self.input_state = .pure_ascii;
-        self.start = true;
-        self.detected = null;
-        self.got_data = false;
-        self.last_char = 0;
-        if (self.esc_alive) self.esc.reset();
-        self.pb.reset();
-        self.mbcs.reset();
-        self.sbcs.reset();
-        self.latin1.reset();
-        self.reported = "";
-    }
-
-    /// Feeds the next chunk. Results can depend on chunk boundaries exactly
-    /// as uchardet's do (byte-order marks are only checked in the first
-    /// chunk, for example). Fails only if the scratch buffer cannot grow, in
-    /// which case no detector state has changed.
-    // complexity: O(n)
-    pub fn handleData(self: *Detector, buf: []const u8) error{OutOfMemory}!void {
-        if (self.done) return;
-        try self.scratch.ensureTotalCapacity(self.gpa, buf.len);
-        if (buf.len > 0) self.got_data = true;
-
-        if (self.start) {
-            self.start = false;
-            if (detectBom(buf)) |name| {
-                self.detected = name;
-                self.done = true;
-                return;
-            }
-            if (detectBomlessUtf16(buf)) |name| {
-                self.detected = name;
-                self.done = true;
-                return;
-            }
-        }
-
-        for (buf) |c| {
-            if (c & 0x80 != 0 and c != nbsp) {
-                if (self.input_state != .highbyte) {
-                    self.input_state = .highbyte;
-                    self.esc_alive = false;
-                }
-            } else {
-                if (c == nbsp) {
-                    self.nbsp_found = true;
-                } else if (self.input_state == .pure_ascii and (c == esc or (c == '{' and self.last_char == '~'))) {
-                    self.input_state = .esc_ascii;
-                }
-                self.last_char = c;
-            }
-        }
-
-        switch (self.input_state) {
-            .esc_ascii => {
-                if (!self.esc_alive) {
-                    self.esc.reset();
-                    self.esc_alive = true;
-                }
-                if (self.esc.handleData(buf) == .found_it) {
-                    self.done = true;
-                    self.detected = self.esc.detected;
-                } else if (self.nbsp_found) {
-                    self.detected = "ISO-8859-1";
-                } else {
-                    self.detected = "ASCII";
-                }
-            },
-            .highbyte => {
-                const scratch = self.scratch.allocatedSlice()[0..buf.len];
-                if (self.pb.handleData(buf) == .found_it) return self.found(PBProber.name);
-                if (self.mbcs.handleData(buf) == .found_it) return self.found(self.mbcs.charsetName());
-                if (self.sbcs.handleData(buf, scratch) == .found_it) return self.found(self.sbcs.charsetName());
-                if (self.latin1.handleData(buf, scratch) == .found_it) return self.found(Latin1Prober.name);
-            },
-            .pure_ascii => self.detected = if (self.nbsp_found) "ISO-8859-1" else "ASCII",
-        }
-    }
-
-    fn found(self: *Detector, name: [:0]const u8) void {
-        self.done = true;
-        self.detected = name;
-    }
-
-    pub fn dataEnd(self: *Detector) void {
-        if (!self.got_data) return;
-        if (self.detected) |name| {
-            self.done = true;
-            self.reported = name;
-            return;
-        }
-        if (self.input_state != .highbyte) return;
-        const confidences = [4]f32{ self.pb.confidence(), self.mbcs.confidence(), self.sbcs.confidence(), self.latin1.confidence() };
-        var max_conf: f32 = 0.0;
-        var max_prober: usize = 0;
-        for (confidences, 0..) |cf, i| {
-            if (cf > max_conf) {
-                max_conf = cf;
-                max_prober = i;
-            }
-        }
-        if (max_conf > minimum_threshold) self.reported = switch (max_prober) {
-            0 => PBProber.name,
-            1 => self.mbcs.charsetName(),
-            2 => self.sbcs.charsetName(),
-            else => Latin1Prober.name,
-        };
-    }
-
-    /// uchardet_get_charset: "" until something has been reported.
-    pub fn charset(self: *const Detector) [:0]const u8 {
-        return self.reported orelse "";
-    }
+    pub const none: Fixes = .{ .fixed_blocks = false, .revisable_ascii = false };
 };
+
+/// Block size for `Fixes.fixed_blocks`: the size uchardet's own command-line
+/// tool and test runner read, against which its corpus labels were set.
+pub const block_len = 65536;
+
+/// The detector chardetz ships: every accuracy fix on.
+pub const Detector = DetectorWith(.{});
+/// Bug-for-bug uchardet, for the differential oracle gates.
+pub const UpstreamDetector = DetectorWith(Fixes.none);
+
+/// One detector implementation; `fixes` selects upstream or corrected behavior.
+pub fn DetectorWith(comptime fixes: Fixes) type {
+    return struct {
+        const Self = @This();
+        gpa: std.mem.Allocator,
+        scratch: std.ArrayList(u8) = .empty,
+        /// Bytes waiting to complete a block (`Fixes.fixed_blocks` only).
+        pending: std.ArrayList(u8) = .empty,
+
+        input_state: InputState = .pure_ascii,
+        nbsp_found: bool = false,
+        done: bool = false,
+        start: bool = true,
+        got_data: bool = false,
+        last_char: u8 = 0,
+        detected: ?[:0]const u8 = null,
+        /// What uchardet_get_charset returns (HandleUniversalDetector::m_charset).
+        reported: ?[:0]const u8 = null,
+
+        /// chardetz extension (not in uchardet): recognizes printable-binary text.
+        /// Inert unless its signal is strong, and checked first because such text
+        /// is also valid UTF-8.
+        pb: PBProber = .{},
+        mbcs: MbcsGroupProber = .{},
+        sbcs: SbcsGroupProber = .{},
+        latin1: Latin1Prober = .{},
+        /// Upstream deletes the escape prober at the first high byte and
+        /// recreates it on demand; `esc_alive` mirrors that lifetime.
+        esc: EscProber = .{},
+        esc_alive: bool = false,
+
+        pub fn init(gpa: std.mem.Allocator) Self {
+            return .{ .gpa = gpa };
+        }
+
+        pub fn deinit(self: *Self) void {
+            self.scratch.deinit(self.gpa);
+            self.pending.deinit(self.gpa);
+            self.* = undefined;
+        }
+
+        pub fn reset(self: *Self) void {
+            self.nbsp_found = false;
+            self.done = false;
+            self.input_state = .pure_ascii;
+            self.start = true;
+            self.detected = null;
+            self.got_data = false;
+            self.last_char = 0;
+            self.pending.clearRetainingCapacity();
+            if (self.esc_alive) self.esc.reset();
+            self.pb.reset();
+            self.mbcs.reset();
+            self.sbcs.reset();
+            self.latin1.reset();
+            self.reported = "";
+        }
+
+        /// Feeds the next chunk. With `Fixes.fixed_blocks` the bytes are
+        /// regrouped into `block_len` blocks, so the result does not depend on
+        /// how the input is split; otherwise results depend on chunk boundaries
+        /// exactly as uchardet's do (byte-order marks are only checked in the
+        /// first chunk, for example). Fails only if a buffer cannot grow, in
+        /// which case no detector state has changed.
+        // complexity: O(n)
+        pub fn handleData(self: *Self, buf: []const u8) error{OutOfMemory}!void {
+            if (self.done) return;
+            if (!fixes.fixed_blocks) {
+                try self.scratch.ensureTotalCapacity(self.gpa, buf.len);
+                return self.process(buf);
+            }
+            const needed = @min(block_len, self.pending.items.len + buf.len);
+            try self.pending.ensureTotalCapacity(self.gpa, needed);
+            try self.scratch.ensureTotalCapacity(self.gpa, needed);
+            var rest = buf;
+            if (self.pending.items.len > 0) {
+                const take = @min(rest.len, block_len - self.pending.items.len);
+                self.pending.appendSliceAssumeCapacity(rest[0..take]);
+                rest = rest[take..];
+                if (self.pending.items.len < block_len) return;
+                self.process(self.pending.items);
+                self.pending.clearRetainingCapacity();
+            }
+            while (rest.len >= block_len and !self.done) : (rest = rest[block_len..]) self.process(rest[0..block_len]);
+            if (!self.done) self.pending.appendSliceAssumeCapacity(rest);
+        }
+
+        /// nsUniversalDetector::HandleData for one chunk. The scratch buffer
+        /// must already hold `buf.len` bytes.
+        fn process(self: *Self, buf: []const u8) void {
+            if (self.done) return;
+            if (buf.len > 0) self.got_data = true;
+
+            if (self.start) {
+                self.start = false;
+                if (detectBom(buf)) |name| {
+                    self.detected = name;
+                    self.done = true;
+                    return;
+                }
+                if (detectBomlessUtf16(buf)) |name| {
+                    self.detected = name;
+                    self.done = true;
+                    return;
+                }
+            }
+
+            for (buf) |c| {
+                if (c & 0x80 != 0 and c != nbsp) {
+                    if (self.input_state != .highbyte) {
+                        self.input_state = .highbyte;
+                        if (fixes.revisable_ascii) self.detected = null;
+                        self.esc_alive = false;
+                    }
+                } else {
+                    if (c == nbsp) {
+                        self.nbsp_found = true;
+                    } else if (self.input_state == .pure_ascii and (c == esc or (c == '{' and self.last_char == '~'))) {
+                        self.input_state = .esc_ascii;
+                    }
+                    self.last_char = c;
+                }
+            }
+
+            switch (self.input_state) {
+                .esc_ascii => {
+                    if (!self.esc_alive) {
+                        self.esc.reset();
+                        self.esc_alive = true;
+                    }
+                    if (self.esc.handleData(buf) == .found_it) {
+                        self.done = true;
+                        self.detected = self.esc.detected;
+                    } else if (self.nbsp_found) {
+                        self.detected = "ISO-8859-1";
+                    } else {
+                        self.detected = "ASCII";
+                    }
+                },
+                .highbyte => {
+                    const scratch = self.scratch.allocatedSlice()[0..buf.len];
+                    if (self.pb.handleData(buf) == .found_it) return self.found(PBProber.name);
+                    if (self.mbcs.handleData(buf) == .found_it) return self.found(self.mbcs.charsetName());
+                    if (self.sbcs.handleData(buf, scratch) == .found_it) return self.found(self.sbcs.charsetName());
+                    if (self.latin1.handleData(buf, scratch) == .found_it) return self.found(Latin1Prober.name);
+                },
+                .pure_ascii => self.detected = if (self.nbsp_found) "ISO-8859-1" else "ASCII",
+            }
+        }
+
+        fn found(self: *Self, name: [:0]const u8) void {
+            self.done = true;
+            self.detected = name;
+        }
+
+        pub fn dataEnd(self: *Self) void {
+            if (fixes.fixed_blocks and self.pending.items.len > 0) {
+                self.process(self.pending.items);
+                self.pending.clearRetainingCapacity();
+            }
+            if (!self.got_data) return;
+            if (self.detected) |name| {
+                self.done = true;
+                self.reported = name;
+                return;
+            }
+            if (self.input_state != .highbyte) return;
+            const confidences = [4]f32{ self.pb.confidence(), self.mbcs.confidence(), self.sbcs.confidence(), self.latin1.confidence() };
+            var max_conf: f32 = 0.0;
+            var max_prober: usize = 0;
+            for (confidences, 0..) |cf, i| {
+                if (cf > max_conf) {
+                    max_conf = cf;
+                    max_prober = i;
+                }
+            }
+            if (max_conf > minimum_threshold) self.reported = switch (max_prober) {
+                0 => PBProber.name,
+                1 => self.mbcs.charsetName(),
+                2 => self.sbcs.charsetName(),
+                else => Latin1Prober.name,
+            };
+        }
+
+        /// uchardet_get_charset: "" until something has been reported.
+        pub fn charset(self: *const Self) [:0]const u8 {
+            return self.reported orelse "";
+        }
+    };
+}
 
 /// Byte-order marks recognized in the first chunk (needs at least 3 bytes).
 fn detectBom(buf: []const u8) ?[:0]const u8 {
@@ -241,4 +306,53 @@ fn detectBomlessUtf16(buf: []const u8) ?[:0]const u8 {
     if (even_nulls * 5 >= half_len and odd_nulls * 20 < half_len) return "UTF-16BE";
     if (odd_nulls * 5 >= half_len and even_nulls * 20 < half_len) return "UTF-16LE";
     return null;
+}
+
+fn detectInChunks(comptime D: type, bytes: []const u8, chunk_len: usize) ![:0]const u8 {
+    var d: D = .init(std.testing.allocator);
+    defer d.deinit();
+    var rest = bytes;
+    while (rest.len > 0) {
+        const n = @min(rest.len, chunk_len);
+        try d.handleData(rest[0..n]);
+        rest = rest[n..];
+    }
+    d.dataEnd();
+    return d.charset();
+}
+
+test "a byte-order mark fed one byte at a time is still recognized" {
+    const bytes = "\xFF\xFEh\x00e\x00l\x00l\x00o\x00";
+    try std.testing.expectEqualStrings("UTF-16", try detectInChunks(UpstreamDetector, bytes, bytes.len));
+    // Upstream only looks for a mark in a first chunk of 3+ bytes.
+    try std.testing.expect(!std.mem.eql(u8, "UTF-16", try detectInChunks(UpstreamDetector, bytes, 1)));
+    try std.testing.expectEqualStrings("UTF-16", try detectInChunks(Detector, bytes, 1));
+}
+
+test "high bytes after a 64 KiB ASCII prefix are not reported as ASCII" {
+    // Two multibyte characters: UTF-8 confidence 0.75, below the 0.95 shortcut
+    // at which the UTF-8 prober would override the verdict by itself.
+    const utf8_text = " na\xC3\xAFve caf\xC3\xA9";
+    var buf: std.ArrayList(u8) = .empty;
+    defer buf.deinit(std.testing.allocator);
+    try buf.appendNTimes(std.testing.allocator, 'a', 65536);
+    try buf.appendSlice(std.testing.allocator, utf8_text);
+    // Upstream fixes the verdict at ASCII after an all-ASCII first chunk.
+    try std.testing.expectEqualStrings("ASCII", try detectInChunks(UpstreamDetector, buf.items, 65536));
+    try std.testing.expectEqualStrings("UTF-8", try detectInChunks(UpstreamDetector, buf.items[65536..], 65536));
+    try std.testing.expectEqualStrings("UTF-8", try detectInChunks(Detector, buf.items, 65536));
+}
+
+test "handleData leaves the detector unchanged when a buffer cannot grow" {
+    const text = "na\xC3\xAFve caf\xC3\xA9 " ** 8;
+    var failing: std.testing.FailingAllocator = .init(std.testing.allocator, .{ .fail_index = 0 });
+    var d: Detector = .init(failing.allocator());
+    defer d.deinit();
+    try std.testing.expectError(error.OutOfMemory, d.handleData(text));
+    try std.testing.expectEqual(@as(usize, 0), d.pending.items.len);
+    try std.testing.expect(!d.got_data);
+    failing.fail_index = std.math.maxInt(usize);
+    try d.handleData(text);
+    d.dataEnd();
+    try std.testing.expectEqualStrings("UTF-8", d.charset());
 }

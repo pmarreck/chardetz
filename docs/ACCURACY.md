@@ -23,4 +23,14 @@ Because the fixes are compile-time switches on shared code, the upstream-mode ga
 
 | Fix | Upstream behavior | Why it is wrong | Test |
 |---|---|---|---|
-| (none yet) | | | |
+| `fixed_blocks` | Byte-order marks and BOM-less UTF-16 are checked only in the first chunk the caller passes, and probers stop early per chunk, so the answer depends on how the caller splits the input. | The same bytes must give the same answer. A UTF-16LE file with a byte-order mark, fed one byte at a time, comes out as WINDOWS-1252. chardetz regroups input into 64 KiB blocks (the size uchardet's own tool reads, against which its corpus labels were set) before the probers see it. | `detector.zig`: "a byte-order mark fed one byte at a time is still recognized"; `corpus_test.zig`: both default-mode tests |
+| `revisable_ascii` | After an all-ASCII first chunk the verdict ASCII (or ISO-8859-1) is kept even when high bytes follow, unless some prober becomes certain on its own. | Text with non-ASCII characters is not ASCII. Any file whose first 64 KiB is plain ASCII is misreported, and with small chunks most of the corpus is. chardetz withdraws the provisional verdict at the first high byte. | `detector.zig`: "high bytes after a 64 KiB ASCII prefix are not reported as ASCII"; `corpus_test.zig`: "default mode: corpus labels hold at every chunk size" |
+
+## Measured effect
+
+On the pinned upstream corpus (59 files, each fed whole and in 65536-, 4096-, 7- and 1-byte chunks), uchardet behavior gives the wrong encoding in 59 of the 295 runs: 35 at 1-byte chunks and 24 at 7-byte chunks. The default mode gives the labeled encoding in all 295. Over the 20,000 seeded randomized inputs, uchardet behavior changes its answer with the chunking in 3,165 cases (15.8%); the default mode in none. For inputs up to 64 KiB the default mode answers exactly as uchardet does when given the whole input at once.
+
+## Candidates under evaluation
+
+- Single-byte confidence on control-heavy input: upstream computes `total - ctrl` in unsigned arithmetic, which wraps when control characters outnumber the counted characters and can yield a high confidence. Upstream mode reproduces it (test "confidence reproduces upstream's unsigned (total - ctrl) wraparound" in `src/sbcs.zig`). It needs labeled evidence before it is changed.
+- EUC-TW frequency orders past the end of the 5376-entry table: upstream reads out of bounds; chardetz treats them as infrequent in both modes (`docs/UPSTREAM_DEFECTS.md`).

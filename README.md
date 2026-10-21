@@ -4,7 +4,7 @@
 
 A pure-[Zig](https://ziglang.org) character-encoding detector, translated from [uchardet](https://gitlab.freedesktop.org/uchardet/uchardet) (the Mozilla universalchardet lineage). It has no C or C++ dependency, cross-compiles to macOS, Linux and Windows, builds for WebAssembly, and exposes a drop-in copy of uchardet's C API.
 
-**Status:** every uchardet prober is ported, and the translation agrees with the C++ original on the upstream corpus at four chunk sizes and on 20,000 seeded randomized inputs. Every generated data table matches the C++ compiler's evaluation byte for byte. Accuracy improvements over uchardet are in progress (`docs/ACCURACY.md`, `PLAN.md`).
+**Status:** every uchardet prober is ported, and the translation agrees with the C++ original on the upstream corpus at four chunk sizes and on 20,000 seeded randomized inputs. Every generated data table matches the C++ compiler's evaluation byte for byte. By default chardetz also corrects two uchardet behaviors that make the answer depend on how input is split into chunks; on the upstream corpus fed in small chunks this removes 59 misdetections. A build of chardetz with the fixes off (`UpstreamDetector`) is what the differential tests compare with uchardet. See `docs/ACCURACY.md`.
 
 ## Using it
 

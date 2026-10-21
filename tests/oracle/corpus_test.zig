@@ -74,7 +74,11 @@ test "differential oracle gate over the seed corpus" {
 /// Runs the Zig detector the way the oracle runs: same chunking, then
 /// data_end. Returns uchardet's charset name (static storage).
 fn detectChunked(bytes: []const u8, chunk_len: usize) ![]const u8 {
-    var d: chardetz.Detector = .init(gpa);
+    return detectChunkedWith(chardetz.UpstreamDetector, bytes, chunk_len);
+}
+
+fn detectChunkedWith(comptime D: type, bytes: []const u8, chunk_len: usize) ![]const u8 {
+    var d: D = .init(gpa);
     defer d.deinit();
     var rest = bytes;
     while (rest.len > 0) {
@@ -179,6 +183,72 @@ test "randomized differential: generated, mutated and spliced inputs in random c
         if (!std.mem.eql(u8, want, got)) {
             mismatches += 1;
             if (mismatches <= 10) std.debug.print("fuzz case {d} (len {d}, chunk {d}): oracle {s}, chardetz {s}\n", .{ case, input.len, chunk, want, got });
+        }
+    }
+    try std.testing.expectEqual(@as(usize, 0), mismatches);
+}
+
+fn loadCorpus(arena: std.mem.Allocator) ![]const []const u8 {
+    var corpus_dir = try std.Io.Dir.cwd().openDir(io, options.corpus_dir, .{ .iterate = true });
+    defer corpus_dir.close(io);
+    var walker = try corpus_dir.walk(gpa);
+    defer walker.deinit();
+    var corpus: std.ArrayList([]const u8) = .empty;
+    var paths: std.ArrayList([]const u8) = .empty;
+    while (try walker.next(io)) |entry| {
+        if (entry.kind != .file or std.mem.indexOfScalar(u8, entry.path, '/') == null) continue;
+        try paths.append(arena, try arena.dupe(u8, entry.path));
+        try corpus.append(arena, try entry.dir.readFileAlloc(io, entry.basename, arena, .limited(max_file_bytes)));
+    }
+    try std.testing.expectEqual(@as(usize, expected_corpus_files), corpus.items.len);
+    corpus_paths = paths.items;
+    return corpus.items;
+}
+
+var corpus_paths: []const []const u8 = &.{};
+
+// Default mode (docs/ACCURACY.md): the shipped detector must give every corpus
+// file its filename label whatever chunk size the caller feeds it in. The
+// labels are upstream's own ground truth, independent of chardetz.
+test "default mode: corpus labels hold at every chunk size" {
+    var arena_impl = std.heap.ArenaAllocator.init(gpa);
+    defer arena_impl.deinit();
+    const arena = arena_impl.allocator();
+    const corpus = try loadCorpus(arena);
+    var wrong: usize = 0;
+    for (corpus, corpus_paths) |bytes, path| {
+        for ([_]usize{ bytes.len + 1, 65536, 4096, 7, 1 }) |chunk| {
+            const got = try detectChunkedWith(chardetz.Detector, bytes, chunk);
+            const lowered = try std.ascii.allocLowerString(arena, got);
+            if (!std.mem.eql(u8, lowered, differential.labelFromPath(path))) {
+                wrong += 1;
+                std.debug.print("default mode: {s} in {d}-byte chunks: {s}\n", .{ path, chunk, got });
+            }
+        }
+    }
+    try std.testing.expectEqual(@as(usize, 0), wrong);
+}
+
+// Default mode: the same bytes give the same answer however they are split.
+// An oracle-free property, checked over the seeded randomized inputs.
+test "default mode: the answer does not depend on chunking" {
+    var arena_impl = std.heap.ArenaAllocator.init(gpa);
+    defer arena_impl.deinit();
+    const corpus = try loadCorpus(arena_impl.allocator());
+    var case_arena = std.heap.ArenaAllocator.init(gpa);
+    defer case_arena.deinit();
+    var prng = std.Random.DefaultPrng.init(fuzz_seed +% 1);
+    const r = prng.random();
+    var mismatches: usize = 0;
+    for (0..fuzz_cases) |case| {
+        _ = case_arena.reset(.retain_capacity);
+        const input = try fuzzInput(r, case_arena.allocator(), corpus);
+        const chunk = if (r.boolean()) fuzz_chunks[r.uintLessThan(usize, fuzz_chunks.len)] else 1 + r.uintLessThan(usize, @max(input.len, 1));
+        const whole = try detectChunkedWith(chardetz.Detector, input, input.len + 1);
+        const split = try detectChunkedWith(chardetz.Detector, input, chunk);
+        if (!std.mem.eql(u8, whole, split)) {
+            mismatches += 1;
+            if (mismatches <= 10) std.debug.print("chunking case {d} (len {d}, chunk {d}): whole {s}, chunked {s}\n", .{ case, input.len, chunk, whole, split });
         }
     }
     try std.testing.expectEqual(@as(usize, 0), mismatches);
