@@ -1,0 +1,5 @@
+# Mechatron Prime CI targets: native package, all cross targets and WebAssembly,
+# and the full ./test suite.
+checks.x86_64-linux.build
+checks.x86_64-linux.cross
+checks.x86_64-linux.test

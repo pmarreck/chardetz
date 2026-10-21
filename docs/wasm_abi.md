@@ -1,7 +1,7 @@
 # chardetz WASM ABI
 
 `chardetz.wasm` (target `wasm32-freestanding`, built via `nix build .#wasm` or
-`./build_all`) exposes a tiny, robust one-shot charset-detection ABI over WASM
+`./build-all`) exposes a tiny, robust one-shot charset-detection ABI over WASM
 linear memory. No libc, no WASI — it instantiates with an empty import object.
 
 ## Exported functions
@@ -21,9 +21,8 @@ the recommended host interface — it needs no handle lifecycle.
 
 A pointer into `memory` to a **NUL-terminated** ASCII charset name, e.g.
 `UTF-8`, `WINDOWS-1251`, `SHIFT_JIS`, or the empty string `""` (just a NUL) when
-the input is undetermined. The pointer is valid until the next
-`chardetz_detect` call (it points at a single reused static buffer in the
-module). Copy the string out before calling `chardetz_detect` again.
+the input is undetermined (or memory ran out). Charset names are static data
+in the module, so the pointer stays valid for the module's lifetime.
 
 ## Host recipe (JavaScript)
 
@@ -61,7 +60,7 @@ Notes:
 
 ## Validation
 
-`./build_all` (or `nix build .#wasm`) produces
+`./build-all` (or `nix build .#wasm`) produces
 `result-wasm/bin/chardetz.wasm`. The artifact is validated by instantiating it
 in Node (available in the dev shell) and asserting the exports exist and that a
 few corpus-shaped inputs detect correctly — see the manual check in the M5/M6

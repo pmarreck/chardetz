@@ -1,253 +1,333 @@
 const std = @import("std");
+const gen_manifest = @import("tools/gen_tables/manifest.zig");
+
+/// Corpus files (test/<language>/<file>) in the pinned uchardetz tree, counted
+/// with `find test -mindepth 2 -type f`. Both corpus tests require exactly this
+/// many, so a wrong corpus path or a changed pin cannot pass vacuously.
+const seed_corpus_files = 59;
+
+const version = "0.2.0";
 
 pub fn build(b: *std.Build) void {
-	const target = b.standardTargetOptions(.{});
-	// House rule: ReleaseFast default (NOT standardOptimizeOption, which defaults to Debug).
-	const optimize = b.option(
-		std.builtin.OptimizeMode,
-		"optimize",
-		"Optimization mode (default: ReleaseFast)",
-	) orelse .ReleaseFast;
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.option(
+        std.builtin.OptimizeMode,
+        "optimize",
+        "Optimization mode (default: ReleaseFast)",
+    ) orelse .ReleaseFast;
+    const fuzz_seed = b.option(u64, "fuzz-seed", "Seed for the randomized differential") orelse 0x63686172_6465747a;
+    const fuzz_cases = b.option(usize, "fuzz-cases", "Cases in the randomized differential") orelse 20_000;
 
-	// ── Core module (pure Zig, no I/O) — exposed to downstream Zig consumers ──
-	// Also imported by the test aggregator under the name "chardetz" (Zig 0.16
-	// forbids `@import("../src/..")` across module roots, so tests reach the
-	// core via this named import, never relative paths).
-	const core_mod = b.addModule("chardetz", .{
-		.root_source_file = b.path("src/chardetz.zig"),
-		.target = target,
-		.optimize = optimize,
-	});
+    const test_step = b.step("test", "Run every test (unit, generator, oracle gates, C ABI, CLI)");
 
-	// Generator module — imported by generator unit tests.
-	const gen_mod = b.addModule("gen_tables", .{
-		.root_source_file = b.path("tools/gen_tables/root.zig"),
-		.target = target,
-		.optimize = optimize,
-	});
+    // -- The Zig module downstream projects import (pure, no I/O) --
+    const chardetz_mod = b.addModule("chardetz", .{
+        .root_source_file = b.path("src/root.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
 
-	const is_wasm = target.result.cpu.arch.isWasm();
+    // -- C ABI: uchardet-compatible exports plus the one-shot WASM entry points --
+    const ffi_mod = b.createModule(.{
+        .root_source_file = b.path("src/ffi.zig"),
+        .target = target,
+        .optimize = optimize,
+        .link_libc = !target.result.cpu.arch.isWasm(),
+    });
 
-	if (is_wasm) {
-		// ── WASM target: freestanding, exports the one-shot chardetz_detect ABI. ──
-		// `-Dtarget=wasm32-freestanding`. The FFI uses std.heap.wasm_allocator
-		// here (no libc). ReleaseSmall keeps the .wasm tiny. Export symbols come
-		// from src/lib.zig → ffi.zig. The C CLI / libc static lib are NOT built
-		// for WASM (freestanding has no libc).
-		const wasm_mod = b.createModule(.{
-			.root_source_file = b.path("src/lib.zig"),
-			.target = target,
-			.optimize = optimize,
-		});
-		const wasm = b.addExecutable(.{ .name = "chardetz", .root_module = wasm_mod });
-		wasm.entry = .disabled; // no _start; we export functions
-		wasm.rdynamic = true; // keep exported symbols
-		b.installArtifact(wasm);
-	} else {
-		// ── Static library: the uchardet-compatible C FFI (drop-in ABI) ──
-		// Root is src/lib.zig (core + ffi exports). Links libc because the FFI's
-		// handle allocator is std.heap.c_allocator (malloc/free) on non-WASM
-		// targets. The C CLI below links this library and #includes uchardet.h,
-		// dogfooding the FFI boundary.
-		const lib_mod = b.createModule(.{
-			.root_source_file = b.path("src/lib.zig"),
-			.target = target,
-			.optimize = optimize,
-		});
-		lib_mod.link_libc = true;
-		const lib = b.addLibrary(.{
-			.name = "chardetz",
-			.linkage = .static,
-			.root_module = lib_mod,
-		});
-		lib.installHeader(b.path("include/uchardet.h"), "uchardet.h");
-		b.installArtifact(lib);
+    if (target.result.cpu.arch.isWasm()) {
+        // wasm32-freestanding: no libc, no entry point, exports only.
+        const wasm = b.addExecutable(.{ .name = "chardetz", .root_module = ffi_mod });
+        wasm.entry = .disabled;
+        wasm.rdynamic = true;
+        b.installArtifact(wasm);
+        return;
+    }
 
-		// ── C CLI: dogfoods the FFI. Pure C, #includes uchardet.h, links the lib. ──
-		const cli_mod = b.createModule(.{
-			.target = target,
-			.optimize = optimize,
-		});
-		cli_mod.link_libc = true;
-		cli_mod.addCSourceFile(.{ .file = b.path("cli/main.c"), .flags = &.{"-std=c11"} });
-		cli_mod.addIncludePath(b.path("include"));
-		cli_mod.linkLibrary(lib);
-		const cli = b.addExecutable(.{ .name = "chardetz", .root_module = cli_mod });
-		b.installArtifact(cli);
+    const lib = b.addLibrary(.{ .name = "chardetz", .linkage = .static, .root_module = ffi_mod });
+    b.installArtifact(lib);
+    b.installFile("include/uchardet.h", "include/uchardet.h");
 
-		const run_cli = b.addRunArtifact(cli);
-		if (b.args) |args| run_cli.addArgs(args);
-		b.step("run", "Run the chardetz CLI").dependOn(&run_cli.step);
-	}
+    // -- C CLI: reaches the detector only through include/uchardet.h --
+    const cli = addCProgram(b, "chardetz", "cli/main.c", lib, target, optimize);
+    b.installArtifact(cli);
+    const run_cli = b.addRunArtifact(cli);
+    if (b.args) |args| run_cli.addArgs(args);
+    b.step("run", "Run the chardetz CLI").dependOn(&run_cli.step);
 
-	// Generator executable — runs natively to write src/tables/
-	const gen_exe = b.addExecutable(.{
-		.name = "gen-tables",
-		.root_module = b.createModule(.{
-			.root_source_file = b.path("tools/gen_tables/main.zig"),
-			.target = b.graph.host,
-			.optimize = optimize,
-		}),
-	});
-	b.installArtifact(gen_exe);
+    // -- C ABI contract test --
+    const ffi_test = addCProgram(b, "ffi-test", "tests/ffi/ffi_test.c", lib, target, optimize);
+    const run_ffi_test = b.addRunArtifact(ffi_test);
+    run_ffi_test.expectExitCode(0);
+    test_step.dependOn(&run_ffi_test.step);
 
-	b.step("gen-tables", "Generate SBCS tables from uchardet source").dependOn(&b.addRunArtifact(gen_exe).step);
+    // Pinned uchardetz checkout: translation source, oracle and seed corpus.
+    // The flake dev shell and checks export CHARDETZ_UCHARDET_SRC.
+    const uchardet_src = b.option([]const u8, "uchardet-src", "Path to the pinned uchardetz source tree") orelse
+        b.graph.environ_map.get("CHARDETZ_UCHARDET_SRC");
 
-	// ── Unit + generator tests (aggregated via tests/all.zig) ──
-	// link_libc: the core module now re-exports the FFI (src/ffi.zig), whose
-	// non-WASM handle allocator is std.heap.c_allocator — so the test binary
-	// must link libc to satisfy malloc/free.
-	const test_mod = b.createModule(.{
-		.root_source_file = b.path("tests/all.zig"),
-		.target = target,
-		.optimize = optimize,
-		.imports = &.{
-			.{ .name = "chardetz", .module = core_mod },
-			.{ .name = "gen_tables", .module = gen_mod },
-		},
-	});
-	test_mod.link_libc = true;
-	const tests = b.addTest(.{ .root_module = test_mod });
-	// Zig 0.16 self-hosted backend can SEGV compiling tests on x86_64 Debug; force LLVM.
-	tests.use_llvm = true;
-	const run_tests = b.addRunArtifact(tests);
-	b.step("test", "Run unit + generator tests").dependOn(&run_tests.step);
+    // -- Table generator (build-host tool) --
+    const gen_exe = b.addExecutable(.{
+        .name = "gen-tables",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("tools/gen_tables/main.zig"),
+            .target = b.graph.host,
+            .optimize = .ReleaseSafe,
+        }),
+    });
+    const gen_step = b.step("gen-tables", "Regenerate src/tables from the pinned uchardetz source");
+    const gen_check_step = b.step("gen-tables-check", "Fail if committed src/tables differ from regeneration");
+    if (uchardet_src) |src_root| {
+        for ([_]*std.Build.Step{ gen_step, gen_check_step }, [_]bool{ false, true }) |step, check| {
+            const run = b.addRunArtifact(gen_exe);
+            run.addFileArg(b.path("tools/gen_tables/manifest.txt"));
+            run.addArg(src_root);
+            run.addArg(b.pathFromRoot("src/tables"));
+            if (check) run.addArg("--check");
+            run.has_side_effects = true;
+            step.dependOn(&run.step);
+        }
+        test_step.dependOn(gen_check_step);
+        const oracle_lib = addOracleLibrary(b, src_root, target, optimize);
+        addOracleGate(b, test_step, oracle_lib, chardetz_mod, src_root, fuzz_seed, fuzz_cases, target, optimize);
+        addCliParity(b, test_step, oracle_lib, cli, src_root, target, optimize);
+        addTableDifferential(b, test_step, gen_exe, chardetz_mod, src_root, target, optimize);
+        addBench(b, oracle_lib, chardetz_mod, target, optimize);
+    } else {
+        const fail = b.addFail("uchardetz source unknown: pass -Duchardet-src=PATH or run inside `nix develop`");
+        gen_step.dependOn(&fail.step);
+        gen_check_step.dependOn(&fail.step);
+        test_step.dependOn(&fail.step);
+    }
 
-	// ── Phase 8: differential oracle test (opt-in; links uchardetz C++) ──
-	// Off by default so the hermetic `test` step stays pure-Zig. Enabled via
-	// `-Dwith-oracle` and run through the dedicated `test-oracle` step (and the
-	// flake's oracle-test check). Links uchardetz's `uchardet-static` artifact
-	// (C++, link_libcpp) and exposes its C ABI through a translate-c module
-	// (Zig 0.16 deprecates source-level @cImport).
-	const with_oracle = b.option(
-		bool,
-		"with-oracle",
-		"Build the differential oracle test (links uchardetz C++)",
-	) orelse false;
-	if (with_oracle) {
-		// Lazy (test-only dep): only fetched when this opt-in step is built, so
-		// the default lib/packages build offline (no sandbox NameServerFailure).
-		const uz = b.lazyDependency("uchardetz", .{ .target = target, .optimize = optimize }) orelse return;
-		const uz_lib = uz.artifact("uchardet-static");
+    // -- Pure unit tests --
+    for ([_][]const u8{
+        "tools/gen_tables/translate_test.zig",
+        "tools/gen_tables/manifest_test.zig",
+        "src/tables/types.zig",
+        "src/tables/tables_test.zig",
+        "tests/oracle/differential_test.zig",
+        "src/root.zig",
+    }) |path| {
+        const t = b.addTest(.{
+            .root_module = b.createModule(.{
+                .root_source_file = b.path(path),
+                .target = target,
+                .optimize = optimize,
+            }),
+        });
+        test_step.dependOn(&b.addRunArtifact(t).step);
+    }
+    // Tests written against the public module (PRINTABLE-BINARY extension).
+    for ([_][]const u8{"tests/pb_tests.zig"}) |path| {
+        const t = b.addTest(.{
+            .root_module = b.createModule(.{
+                .root_source_file = b.path(path),
+                .target = target,
+                .optimize = optimize,
+                .imports = &.{.{ .name = "chardetz", .module = chardetz_mod }},
+            }),
+        });
+        test_step.dependOn(&b.addRunArtifact(t).step);
+    }
+}
 
-		// translate-c: turn uchardet.h into an importable Zig module named "c".
-		const translate_c = b.addTranslateC(.{
-			.root_source_file = b.path("tests/differential/c_imports.h"),
-			.target = target,
-			.optimize = optimize,
-		});
-		translate_c.addIncludePath(uz.path("src")); // where uchardet.h lives
-		const c_mod = translate_c.createModule();
+fn addCProgram(b: *std.Build, name: []const u8, source: []const u8, lib: *std.Build.Step.Compile, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) *std.Build.Step.Compile {
+    const mod = b.createModule(.{ .target = target, .optimize = optimize, .link_libc = true });
+    mod.addCSourceFile(.{
+        .file = b.path(source),
+        .flags = &.{ "-std=c11", "-Wall", "-Wextra", "-Werror", b.fmt("-DCHARDETZ_VERSION=\"{s}\"", .{version}) },
+    });
+    mod.addIncludePath(b.path("include"));
+    mod.linkLibrary(lib);
+    return b.addExecutable(.{ .name = name, .root_module = mod });
+}
 
-		const diff_mod = b.createModule(.{
-			.root_source_file = b.path("tests/differential/oracle_link_test.zig"),
-			.target = target,
-			.optimize = optimize,
-			.link_libcpp = true, // uchardet is C++
-			.imports = &.{
-				.{ .name = "chardetz", .module = core_mod },
-				.{ .name = "c", .module = c_mod },
-			},
-		});
-		diff_mod.linkLibrary(uz_lib); // brings in symbols + propagates include path
+/// Upstream uchardet C++ sources compiled for the test-only oracle library,
+/// as listed in uchardetz's own build.zig at the pinned revision.
+const oracle_sources = [_][]const u8{
+    "src/CharDistribution.cpp",              "src/JpCntx.cpp",
+    "src/LangModels/LangArabicModel.cpp",    "src/LangModels/LangBulgarianModel.cpp",
+    "src/LangModels/LangDanishModel.cpp",    "src/LangModels/LangEsperantoModel.cpp",
+    "src/LangModels/LangFrenchModel.cpp",    "src/LangModels/LangGermanModel.cpp",
+    "src/LangModels/LangGreekModel.cpp",     "src/LangModels/LangHebrewModel.cpp",
+    "src/LangModels/LangHungarianModel.cpp", "src/LangModels/LangRussianModel.cpp",
+    "src/LangModels/LangSpanishModel.cpp",   "src/LangModels/LangThaiModel.cpp",
+    "src/LangModels/LangTurkishModel.cpp",   "src/LangModels/LangVietnameseModel.cpp",
+    "src/nsHebrewProber.cpp",                "src/nsCharSetProber.cpp",
+    "src/nsBig5Prober.cpp",                  "src/nsEUCJPProber.cpp",
+    "src/nsEUCKRProber.cpp",                 "src/nsEUCTWProber.cpp",
+    "src/nsEscCharsetProber.cpp",            "src/nsEscSM.cpp",
+    "src/nsGB2312Prober.cpp",                "src/nsMBCSGroupProber.cpp",
+    "src/nsMBCSSM.cpp",                      "src/nsSBCSGroupProber.cpp",
+    "src/nsSBCharSetProber.cpp",             "src/nsSJISProber.cpp",
+    "src/nsUTF8Prober.cpp",                  "src/nsLatin1Prober.cpp",
+    "src/nsUniversalDetector.cpp",           "src/uchardet.cpp",
+};
 
-		const diff_tests = b.addTest(.{ .root_module = diff_mod });
-		diff_tests.use_llvm = true; // same SEGV-avoidance as the main test step
-		const run_diff = b.addRunArtifact(diff_tests);
-		b.step("test-oracle", "Run the differential oracle test (links uchardetz C++)").dependOn(&run_diff.step);
-	}
+/// The original C++ detector as a static library. Test and benchmark time
+/// only: chardetz itself never depends on C++.
+fn addOracleLibrary(b: *std.Build, src_root: []const u8, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) *std.Build.Step.Compile {
+    const mod = b.createModule(.{
+        .target = target,
+        .optimize = optimize,
+        .link_libcpp = true,
+        // Upstream relies on out-of-range enum values (valid C++), which
+        // Zig's C sanitizer flags; uchardetz disables it for the same reason.
+        .sanitize_c = .off,
+    });
+    mod.addCSourceFiles(.{
+        .root = .{ .cwd_relative = src_root },
+        .files = &oracle_sources,
+        .flags = &.{"-DVERSION=\"0.0.6\""},
+    });
+    return b.addLibrary(.{ .name = "uchardet-oracle", .linkage = .static, .root_module = mod });
+}
 
-	// ── Differential FUZZ (opt-in; links uchardetz C++, like the oracle test) ──
-	// Off by default so the hermetic `test` step stays pure-Zig and fuzz stays a
-	// SEPARATE suite (house convention — NOT in the default `./test`). Enabled
-	// via `-Dwith-fuzz` and run through the dedicated `test-fuzz` step (and the
-	// flake's fuzz check), driven by `./fuzz`. Feeds MANY generated/mutated
-	// buffers to BOTH chardetz (Zig core) and the uchardet C ABI, asserting they
-	// agree. Reuses the exact same C++ link + translate-c plumbing as the oracle
-	// test above. Seed/iters come from CHARDETZ_FUZZ_SEED / CHARDETZ_FUZZ_ITERS.
-	const with_fuzz = b.option(
-		bool,
-		"with-fuzz",
-		"Build the differential fuzz harness (links uchardetz C++)",
-	) orelse false;
-	if (with_fuzz) {
-		// Lazy (test-only dep): only fetched when this opt-in step is built, so
-		// the default lib/packages build offline (no sandbox NameServerFailure).
-		const uz = b.lazyDependency("uchardetz", .{ .target = target, .optimize = optimize }) orelse return;
-		const uz_lib = uz.artifact("uchardet-static");
+/// Differential oracle gate: the seed corpus (whole and chunked) and a seeded
+/// randomized campaign, each run through the C++ oracle and the Zig core.
+fn addOracleGate(b: *std.Build, test_step: *std.Build.Step, oracle_lib: *std.Build.Step.Compile, chardetz_mod: *std.Build.Module, src_root: []const u8, fuzz_seed: u64, fuzz_cases: usize, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) void {
+    const options = b.addOptions();
+    options.addOption([]const u8, "corpus_dir", b.fmt("{s}/test", .{src_root}));
+    options.addOption([]const u8, "ledger_path", b.pathFromRoot("tests/expected_divergences.json"));
+    options.addOption(usize, "expected_corpus_files", seed_corpus_files);
+    options.addOption(u64, "fuzz_seed", fuzz_seed);
+    options.addOption(usize, "fuzz_cases", fuzz_cases);
 
-		const translate_c = b.addTranslateC(.{
-			.root_source_file = b.path("tests/differential/c_imports.h"),
-			.target = target,
-			.optimize = optimize,
-		});
-		translate_c.addIncludePath(uz.path("src"));
-		const c_mod = translate_c.createModule();
+    const gate_mod = b.createModule(.{
+        .root_source_file = b.path("tests/oracle/corpus_test.zig"),
+        .target = target,
+        .optimize = optimize,
+        .imports = &.{
+            .{ .name = "oracle_options", .module = options.createModule() },
+            .{ .name = "chardetz", .module = chardetz_mod },
+        },
+    });
+    gate_mod.linkLibrary(oracle_lib);
+    const gate = b.addTest(.{ .name = "oracle-gate", .root_module = gate_mod });
+    const run_gate = b.addRunArtifact(gate);
+    b.step("oracle-gate", "Run the differential oracle gate (corpus and randomized)").dependOn(&run_gate.step);
+    test_step.dependOn(&run_gate.step);
+}
 
-		const fuzz_mod = b.createModule(.{
-			.root_source_file = b.path("tests/fuzz/differential_fuzz.zig"),
-			.target = target,
-			.optimize = optimize,
-			.link_libcpp = true, // uchardet is C++
-			.imports = &.{
-				.{ .name = "chardetz", .module = core_mod },
-				.{ .name = "c", .module = c_mod },
-			},
-		});
-		fuzz_mod.linkLibrary(uz_lib);
+/// CLI-vs-CLI parity: the C++ uchardet CLI (test-only, never installed) and the
+/// chardetz CLI must print the same thing for every corpus file. The parity
+/// harness is also self-tested against deliberately wrong candidates.
+fn addCliParity(b: *std.Build, test_step: *std.Build.Step, oracle_lib: *std.Build.Step.Compile, cli: *std.Build.Step.Compile, src_root: []const u8, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) void {
+    const oracle_cli_mod = b.createModule(.{ .target = target, .optimize = optimize, .link_libcpp = true });
+    oracle_cli_mod.addCSourceFiles(.{
+        .root = .{ .cwd_relative = src_root },
+        .files = &.{ "src/tools/uchardet.cpp", "src/tools/i18n.cpp" },
+        .flags = &.{"-DVERSION=\"0.0.6\""},
+    });
+    oracle_cli_mod.addIncludePath(.{ .cwd_relative = b.fmt("{s}/src", .{src_root}) });
+    oracle_cli_mod.linkLibrary(oracle_lib);
+    const oracle_cli = b.addExecutable(.{ .name = "uchardet-oracle", .root_module = oracle_cli_mod });
+    const corpus = b.fmt("{s}/test", .{src_root});
 
-		const fuzz_tests = b.addTest(.{ .root_module = fuzz_mod });
-		fuzz_tests.use_llvm = true; // same SEGV-avoidance as the other test steps
-		const run_fuzz = b.addRunArtifact(fuzz_tests);
-		run_fuzz.has_side_effects = true; // never cached: always re-run on demand
-		b.step("test-fuzz", "Run the differential fuzz harness (links uchardetz C++)").dependOn(&run_fuzz.step);
-	}
+    const self_test = b.addSystemCommand(&.{ "bash", "tests/cli/parity_test" });
+    self_test.addArtifactArg(oracle_cli);
+    self_test.addArg(corpus);
+    self_test.addArg(b.fmt("{d}", .{seed_corpus_files}));
+    self_test.addFileInput(b.path("tests/cli/parity"));
+    self_test.addFileInput(b.path("tests/cli/parity_test"));
+    self_test.expectExitCode(0);
 
-	// ── Benchmark harness (opt-in; links uchardetz C++ for the throughput cmp) ──
-	// Off by default so the hermetic `test`/lib builds stay pure-Zig and offline.
-	// Enabled via `-Dwith-bench` and run through the dedicated `bench` step, driven
-	// by `./bm`. Reuses the same C++ link + translate-c plumbing as the oracle/fuzz
-	// suites. The harness is an EXECUTABLE (Juicy Main, for the std.Io clock) rather
-	// than a test: it carries a hard scaling-ratio gate (exits nonzero on a
-	// super-linear regression) and prints an ndjson throughput line that `./bm` logs
-	// per machine-id. ReleaseFast only.
-	const with_bench = b.option(
-		bool,
-		"with-bench",
-		"Build the benchmark harness (links uchardetz C++)",
-	) orelse false;
-	if (with_bench) {
-		// Lazy (bench-only dep): only fetched when this opt-in step is built, so
-		// the default lib/packages build stays offline (no sandbox NameServerFailure).
-		const uz = b.lazyDependency("uchardetz", .{ .target = target, .optimize = optimize }) orelse return;
-		const uz_lib = uz.artifact("uchardet-static");
+    const parity = b.addSystemCommand(&.{ "bash", "tests/cli/parity" });
+    parity.addArtifactArg(oracle_cli);
+    parity.addArtifactArg(cli);
+    parity.addArg(corpus);
+    parity.addFileInput(b.path("tests/cli/parity"));
+    parity.expectStdOutEqual(b.fmt("parity: {d} files, 0 mismatches\n", .{seed_corpus_files}));
 
-		const translate_c = b.addTranslateC(.{
-			.root_source_file = b.path("tests/differential/c_imports.h"),
-			.target = target,
-			.optimize = optimize,
-		});
-		translate_c.addIncludePath(uz.path("src"));
-		const c_mod = translate_c.createModule();
+    const step = b.step("cli-parity", "chardetz CLI vs the C++ uchardet CLI over the corpus");
+    step.dependOn(&self_test.step);
+    step.dependOn(&parity.step);
+    test_step.dependOn(step);
+}
 
-		const bench_mod = b.createModule(.{
-			.root_source_file = b.path("bench/bench.zig"),
-			.target = target,
-			.optimize = optimize,
-			.link_libc = true, // detect()'s SBCS/Latin1 filters use std.heap.c_allocator
-			.link_libcpp = true, // uchardet is C++
-			.imports = &.{
-				.{ .name = "chardetz", .module = core_mod },
-				.{ .name = "c", .module = c_mod },
-			},
-		});
-		bench_mod.linkLibrary(uz_lib);
+/// Table-level differential: gen-tables writes one C++ shim per upstream table
+/// file that `#include`s it verbatim, so the C++ compiler evaluates every
+/// table. Those files are compiled only through their shims (never twice); the
+/// remaining upstream sources resolve any symbols they need. A Zig test then
+/// compares every declaration in src/tables with the compiler's bytes.
+fn addTableDifferential(b: *std.Build, test_step: *std.Build.Step, gen_exe: *std.Build.Step.Compile, chardetz_mod: *std.Build.Module, src_root: []const u8, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) void {
+    const manifest_path = "tools/gen_tables/manifest.txt";
+    const text = b.build_root.handle.readFileAlloc(b.graph.io, manifest_path, b.allocator, .limited(1 << 20)) catch |e|
+        std.debug.panic("reading {s}: {s}", .{ manifest_path, @errorName(e) });
+    const m = gen_manifest.parse(b.allocator, text) catch |e|
+        std.debug.panic("parsing {s}: {s}", .{ manifest_path, @errorName(e) });
 
-		const bench_exe = b.addExecutable(.{ .name = "chardetz-bench", .root_module = bench_mod });
-		bench_exe.use_llvm = true; // same SEGV-avoidance as the other steps
-		const run_bench = b.addRunArtifact(bench_exe);
-		run_bench.has_side_effects = true; // never cached: always re-measure
-		if (b.args) |args| run_bench.addArgs(args);
-		b.step("bench", "Run the benchmark harness (chardetz vs uchardetz C++)").dependOn(&run_bench.step);
-	}
+    const shim_run = b.addRunArtifact(gen_exe);
+    shim_run.addFileArg(b.path(manifest_path));
+    shim_run.addArg(src_root);
+    const shim_dir = shim_run.addOutputDirectoryArg("shims");
+    shim_run.addArg("--shims");
+
+    var shim_files: std.ArrayList([]const u8) = .empty;
+    for (m.tables) |t| shim_files.append(b.allocator, b.fmt("shim_{s}.cpp", .{t.stem})) catch @panic("OOM");
+    var other_sources: std.ArrayList([]const u8) = .empty;
+    outer: for (oracle_sources) |src| {
+        for (m.tables) |t| if (std.mem.eql(u8, t.source, src)) continue :outer;
+        other_sources.append(b.allocator, src) catch @panic("OOM");
+    }
+
+    const lib_mod = b.createModule(.{
+        .target = target,
+        .optimize = optimize,
+        .link_libcpp = true,
+        .sanitize_c = .off,
+    });
+    lib_mod.addIncludePath(b.path("tests/oracle"));
+    lib_mod.addCSourceFiles(.{
+        .root = .{ .cwd_relative = src_root },
+        .files = other_sources.items,
+        .flags = &.{"-DVERSION=\"0.0.6\""},
+    });
+    lib_mod.addCSourceFiles(.{
+        .root = shim_dir,
+        .files = shim_files.items,
+        // The .tab frequency tables expect nscore.h's typedefs to precede them.
+        .flags = &.{ "-include", b.fmt("{s}/src/nscore.h", .{src_root}) },
+    });
+    const lib = b.addLibrary(.{ .name = "uchardet-table-oracle", .linkage = .static, .root_module = lib_mod });
+
+    const diff_options = b.addOptions();
+    diff_options.addOption(usize, "table_modules", m.tables.len);
+    const diff_mod = b.createModule(.{
+        .root_source_file = b.path("tests/oracle/tables_diff_test.zig"),
+        .target = target,
+        .optimize = optimize,
+        .imports = &.{
+            .{ .name = "chardetz", .module = chardetz_mod },
+            .{ .name = "table_options", .module = diff_options.createModule() },
+        },
+    });
+    diff_mod.linkLibrary(lib);
+    const diff = b.addTest(.{ .name = "table-differential", .root_module = diff_mod });
+    const run_diff = b.addRunArtifact(diff);
+    b.step("table-differential", "Compare every generated table with the C++ compiler's evaluation").dependOn(&run_diff.step);
+    test_step.dependOn(&run_diff.step);
+}
+
+/// `zig build bench` (driven by ./bm): scaling-ratio gate plus chardetz-vs-C++
+/// throughput. ReleaseFast only; links the oracle for the comparison.
+fn addBench(b: *std.Build, oracle_lib: *std.Build.Step.Compile, chardetz_mod: *std.Build.Module, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) void {
+    const c_mod = b.createModule(.{ .root_source_file = b.path("bench/oracle_c.zig"), .target = target, .optimize = optimize });
+    const bench_mod = b.createModule(.{
+        .root_source_file = b.path("bench/bench.zig"),
+        .target = target,
+        .optimize = optimize,
+        .link_libc = true,
+        .imports = &.{
+            .{ .name = "chardetz", .module = chardetz_mod },
+            .{ .name = "c", .module = c_mod },
+        },
+    });
+    bench_mod.linkLibrary(oracle_lib);
+    const bench_exe = b.addExecutable(.{ .name = "chardetz-bench", .root_module = bench_mod });
+    const run_bench = b.addRunArtifact(bench_exe);
+    run_bench.has_side_effects = true;
+    if (b.args) |args| run_bench.addArgs(args);
+    b.step("bench", "Run the benchmark harness (chardetz vs the C++ original)").dependOn(&run_bench.step);
 }

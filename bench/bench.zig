@@ -24,10 +24,10 @@
 const std = @import("std");
 const builtin = @import("builtin");
 const cz = @import("chardetz");
-// uchardet's 6-function C ABI via translate-c (wired in build.zig under -Dwith-bench).
+// uchardet's C ABI from the test-only C++ oracle library (see bench/oracle_c.zig).
 const c = @import("c");
 
-const SingleByteCharSetProber = cz.probers.sbcs.SingleByteCharSetProber;
+const SingleByteProber = cz.internal.SingleByteProber;
 
 /// O(n) growth claim: each input doubling should ~double the time (ratio ≈ 2).
 /// Fail the build if any doubling exceeds this — that is the signature of an
@@ -107,7 +107,7 @@ fn timeChardetz(io: std.Io, buf: []const u8) u64 {
     var i: usize = 0;
     while (i < WARMUP + ITERS) : (i += 1) {
         const t0 = nowNs(io);
-        const cs = cz.detect(alloc, buf);
+        const cs = cz.detect(alloc, buf) catch unreachable;
         const t1 = nowNs(io);
         sink +%= cs.len;
         if (i >= WARMUP and t1 - t0 < best) best = t1 - t0;
@@ -139,7 +139,7 @@ fn timeSbcsKernel(io: std.Io, buf: []const u8) u64 {
     var best: u64 = std.math.maxInt(u64);
     var i: usize = 0;
     while (i < WARMUP + ITERS) : (i += 1) {
-        var p = SingleByteCharSetProber.init(&cz.tables.sbcs.russian.Win1251RussianModel);
+        var p: SingleByteProber = .{ .model = &cz.tables.lang_russian_model.Win1251RussianModel };
         const t0 = nowNs(io);
         const st = p.handleData(buf);
         const t1 = nowNs(io);
@@ -184,7 +184,7 @@ fn runScale(
             if (ratio > r.worst_ratio) r.worst_ratio = ratio;
             if (ratio >= SCALE_FAIL_RATIO) r.passed = false;
             std.debug.print("    {d:>7} KiB: {d:>10} ns   x{d:.2}{s}\n", .{
-                n / 1024, r.ns[idx], ratio,
+                n / 1024,                                                    r.ns[idx], ratio,
                 if (ratio >= SCALE_FAIL_RATIO) "  <<< SUPER-LINEAR" else "",
             });
         }
@@ -268,10 +268,9 @@ pub fn main(init: std.process.Init) !void {
             "\"ascii_cz_mbps\":{d:.2},\"sbcs_cz_mbps\":{d:.2},\"cjk_cz_mbps\":{d:.2},\"utf8_cz_mbps\":{d:.2}," ++
             "\"worst_scale_ratio\":{d:.3},\"scale_pass\":{s}}}\n",
         .{
-            agg_cz, agg_uc, agg_speedup,
-            mbps(THROUGHPUT_SIZE, cmps[0].cz_ns), mbps(THROUGHPUT_SIZE, cmps[1].cz_ns),
-            mbps(THROUGHPUT_SIZE, cmps[2].cz_ns), mbps(THROUGHPUT_SIZE, cmps[3].cz_ns),
-            worst, if (all_passed) "true" else "false",
+            agg_cz,                               agg_uc,                               agg_speedup,
+            mbps(THROUGHPUT_SIZE, cmps[0].cz_ns), mbps(THROUGHPUT_SIZE, cmps[1].cz_ns), mbps(THROUGHPUT_SIZE, cmps[2].cz_ns),
+            mbps(THROUGHPUT_SIZE, cmps[3].cz_ns), worst,                                if (all_passed) "true" else "false",
         },
     );
 

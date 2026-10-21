@@ -1,35 +1,33 @@
 # Provenance
 
-chardetz is a faithful C++→Zig translation of **uchardet**, which is itself a
-port of **Mozilla's universalchardet** character-encoding detector.
+chardetz is a C++ to Zig translation. Its detection logic and every data table derive from this lineage:
 
-## Lineage
-
-- **Original Code:** Mozilla Universal charset detector. Initial Developer:
-  Netscape Communications Corporation. © 2001 the Initial Developer. All Rights
-  Reserved.
-- **uchardet:** BYVoid \<byvoid.kcp@gmail.com\> and contributors —
-  https://github.com/BYVoid/uchardet
-- **uchardetz:** Peter Marreck's Zig-build fork —
-  https://github.com/pmarreck/uchardetz
-- **chardetz:** this project — a pure-Zig translation (no C/C++ runtime
-  dependency, cross-compilable, WASM-able).
+1. **Mozilla universalchardet** (Mozilla Communicator client code). Initial Developer: Netscape Communications Corporation; the upstream files carry copyright notices from 1998 and 2001. Licensed MPL 1.1 / GPL 2.0+ / LGPL 2.1+.
+2. **uchardet** by BYVoid and later maintainers, which wrapped universalchardet in a C API and added language models. Same tri-license.
+3. **uchardetz**, a fork of uchardet that adds a Zig build system: <https://github.com/pmarreck/uchardetz>.
 
 ## Pinned source
 
-Translated from **uchardetz @ `abacfc1fc86ef7618547d7dce7cc7501e756fa31`**
-(branch `yolo`). Every data table under `src/tables/` is mechanically generated
-from that exact commit by `tools/gen_tables/`; the pinned source manifest lives
-in `tools/gen_tables/manifest.zig` and is hash-guarded against silent drift.
+- Repository: `github:pmarreck/uchardetz`
+- Commit: `abacfc1fc86ef7618547d7dce7cc7501e756fa31`
+- Pinned in: `flake.nix` input `uchardetz-src`, locked with its content hash in `flake.lock`.
+- The same revision appears in `tools/gen_tables/manifest.txt`; `./test` fails if the two disagree.
 
-## Why the tables carry the upstream license
+The pinned tree is used three ways: as the translation source for the table generator, as the C++ differential oracle (compiled at test time only), and as the seed test corpus (`test/<language>/<encoding>.txt`).
 
-The character-mapping tables, frequency models, and state machines are the
-copyrighted intellectual property of the upstream project. A translation of
-them is a derivative work. Accordingly, both the ported logic and the generated
-tables carry the upstream tri-license; they are **not** relicensed.
+## What is derived
 
-## License
+- `src/tables/*.zig` except `types.zig`, `tables_test.zig` and `all.zig`: generated mechanically by `tools/gen_tables` from the upstream files listed in the manifest. Each reproduces its upstream file's license block and names its source file and revision.
+- `src/tables/types.zig`: hand port of `nsPkgInt.h` and the `SMModel`/`SequenceModel` record types.
+- The prober and detector modules under `src/`: hand translations of the corresponding upstream `ns*.cpp` files, each carrying the upstream license block.
+- `include/uchardet.h`: upstream's public header, byte-identical.
 
-Tri-licensed **MPL 1.1 / GPL 2.0-or-later / LGPL 2.1-or-later**, inherited from
-upstream. See `COPYING` (full license text) and `THIRD_PARTY_LICENSES`.
+Not derived from uchardet: the `PRINTABLE-BINARY` prober (`src/printable_binary_prober.zig`, `src/printable_binary_table.zig`), whose glyph map `src/printable_binary_map.txt` comes from the printable_binary project, plus the build system, generator, CLI and test harnesses. The whole repository uses the tri-license for simplicity.
+
+## History
+
+The project was first built in June 2026 and published on GitHub. An independent second translation was written in October 2026 on another machine without knowledge of the first. The two were merged by keeping the faster, better-verified engine and generator from the second and the PRINTABLE-BINARY prober, WebAssembly ABI, benchmark, fuzz edge cases and history from the first. Both histories are preserved in Git.
+
+## Changing the pin
+
+Moving to a newer upstream revision is deliberate: update the flake input and the manifest `rev`, regenerate tables with `zig build gen-tables`, re-bless the manifest hash (`./bless`), and rerun `./test`.

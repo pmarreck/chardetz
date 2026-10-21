@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Records the current hashes of the control files listed in RULES.md.
+# Run only as a deliberate act, and commit the result together with the
+# control-file change so the pair is reviewed as one diff.
+set -u
+cd "$(dirname "$0")" || exit 1
+sha256sum tools/gen_tables/manifest.txt tests/expected_divergences.json > blessed_hashes.txt
+cat blessed_hashes.txt

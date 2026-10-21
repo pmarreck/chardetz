@@ -31,7 +31,7 @@ flake.lock.bak_*
 .codescan/
 .serena/
 
-# Local dev-aid symlinks (point into Peter's vault/dotfiles; broken for other clones)
+# Local dev-aid symlinks into private notes and dotfiles (broken for other clones)
 AGENTS.md
 CLAUDE.md
 jj_cheatsheet.md

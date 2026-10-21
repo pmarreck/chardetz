@@ -1,39 +1,53 @@
 #!/usr/bin/env bash
-# Master test runner. Accumulates sub-suite failures into the exit code so a
-# single red sub-suite does not mask the others. NEVER use `set -e`/`set -o
-# pipefail` here — tests that verify error paths legitimately return nonzero.
+# chardetz complete test entry point. Every required check runs from here and
+# failures accumulate into the exit status. Re-enters the Nix dev shell unless
+# called with --no-nix (the flake check already runs inside one).
 set -u
 cd "$(dirname "$0")" || exit 1
-
-sys="$(nix eval --impure --raw --expr 'builtins.currentSystem')"
-rc=0
-
-echo "== Zig unit + generator tests (hermetic nix check) ==" >&2
-if ! nix build ".#checks.${sys}.test" -L; then
-	echo "FAIL: zig tests" >&2
-	rc=1
+if [ "${1:-}" != "--no-nix" ]; then
+	exec nix develop -c ./test --no-nix
 fi
 
-# Subsequent milestones append here (kept in run-order, each updating rc):
-echo "== MFIC control-file blessed-hash check ==" >&2
-if ! ./scripts/check-blessed-hashes; then
-	rc=1
-fi
+failures=0
+pass() { printf '\033[32m✓\033[0m %s\n' "$1"; }
+fail() { printf '\033[31m✗\033[0m %s\n%s\n' "$1" "$2"; failures=$((failures + 1)); }
 
-echo "== Phase 8: differential oracle test (links uchardetz C++) ==" >&2
-if ! ./tests/differential/run; then
-	echo "FAIL: differential oracle test" >&2
-	rc=1
-fi
-echo "== Phase 9: CLI-vs-CLI parity (oracle CLI vs corpus labels) ==" >&2
-if ! ./tests/cli/parity.sh; then
-	echo "FAIL: CLI parity" >&2
-	rc=1
-fi
+# Runs a command with output captured; shows the output only on failure.
+check() {
+	local name=$1
+	shift
+	local out
+	out=$("$@" 2>&1)
+	local rc=$?
+	if [ "$rc" -eq 0 ]; then pass "$name"; else fail "$name (exit $rc)" "$out"; fi
+}
 
-if [ "$rc" -eq 0 ]; then
-	echo "ALL TESTS PASSED" >&2
-else
-	echo "TEST SUITE FAILED (rc=$rc)" >&2
+# The manifest's upstream revision must be the one flake.lock actually fetched.
+pin_agreement() {
+	local manifest_rev lock_rev
+	manifest_rev=$(awk '$1 == "rev" { print $2 }' tools/gen_tables/manifest.txt)
+	lock_rev=$(awk '/"uchardetz-src": \{/ { inblock = 1 } inblock && /"rev":/ { gsub(/[",]/, "", $2); print $2; exit }' flake.lock)
+	if [ -z "$manifest_rev" ] || [ "$manifest_rev" != "$lock_rev" ]; then
+		echo "manifest rev '$manifest_rev' != flake.lock uchardetz-src rev '$lock_rev'"
+		return 1
+	fi
+}
+
+source_available() {
+	if [ -z "${CHARDETZ_UCHARDET_SRC:-}" ] || [ ! -d "$CHARDETZ_UCHARDET_SRC/src" ]; then
+		echo "CHARDETZ_UCHARDET_SRC is not set to the pinned uchardetz tree"
+		return 1
+	fi
+}
+
+check "pinned uchardetz source available" source_available
+check "manifest pin matches flake.lock" pin_agreement
+check "control files match blessed hashes" sha256sum --check --quiet blessed_hashes.txt
+check "zig fmt" zig fmt --check build.zig tools src
+check "zig build test (ReleaseSafe, includes table freshness)" zig build test -Doptimize=ReleaseSafe
+
+if [ "$failures" -ne 0 ]; then
+	printf '\033[31m%d check(s) failed\033[0m\n' "$failures"
+	exit 1
 fi
-exit "$rc"
+printf '\033[32mall checks passed\033[0m\n'

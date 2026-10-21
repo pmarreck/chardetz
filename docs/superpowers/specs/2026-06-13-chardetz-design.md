@@ -1,8 +1,8 @@
 # chardetz — Design Spec
 
 **Date:** 2026-06-13
-**Author:** Claude (chardetz session) with Peter Marreck
-**Source brief:** `inbox/2026-06-13-kickoff.md` (from Einstein / orchestrator)
+**Author:** Claude (chardetz session) with BDFN (Benevolent Dictator For Now)
+**Source brief:** the 2026-06-13 project kickoff brief from the fleet orchestrator (its content is carried by this spec and INTENT.md)
 **Status:** Approved design; drives the implementation plan.
 
 ---
@@ -22,7 +22,7 @@ drop its C++ uchardetz dependency and compile its charset path into WASM.
 ### Definitions
 - **uchardet** — the upstream C++ detector (BYVoid/uchardet), itself a port of
   Mozilla's universalchardet.
-- **uchardetz** — Peter's fork of uchardet that adds a Zig build system (and an
+- **uchardetz** — the BDFN's fork of uchardet that adds a Zig build system (and an
   i18n layer). It contains the C++ source we translate **and** builds a working
   CLI + `libuchardet` we use as the live oracle.
 - **chardetz** — this project: the pure-Zig translation.
@@ -66,7 +66,7 @@ Required artifacts:
 Non-derivative glue (build.zig, the C CLI shell, the WASM shim, the test
 harness, the table generator's own code) is new work; for simplicity the whole
 repo stays under the tri-license. **Do NOT relicense ported tables/logic as
-BSD/MIT.** When in doubt, ask Peter.
+BSD/MIT.** When in doubt, ask the BDFN.
 
 ## 4. Architecture (house hexagonal pattern)
 
@@ -121,7 +121,7 @@ error-prone, and the generator is itself testable.
     descriptors (`eIdxSft4bits` etc.).
   - `CharDistribution.cpp` → CJK char-distribution tables.
   - `JpCntx.cpp` → Japanese 2-char context tables.
-- **Generated output** is committed (so the build is hermetic and Garnix needs
+- **Generated output** is committed (so the build is hermetic and CI needs
   no codegen at build time). Each generated file carries the SPDX/license
   header + a `// @generated from <upstream file> @ abacfc1f — do not edit`
   provenance line.
@@ -137,11 +137,13 @@ error-prone, and the generator is itself testable.
 ## 6. Differential oracle harness (TDD — built FIRST, both mechanisms)
 
 Per the kickoff: build the harness **before** porting logic. The harness is the
-spec. Two mechanisms (Peter chose "Both"):
+spec. Two mechanisms (the BDFN chose "Both"):
 
 1. **Core gate — in-harness link (primary, high-throughput):**
-   uchardetz is added as a **test-only** Zig dependency (it is already a
-   Zig-build project with `build.zig.zon`). A Zig test feeds identical byte
+   uchardetz's C++ sources are compiled as a **test-only** static library
+   from the pinned flake input `uchardetz-src` (revised 2026-10-14: a Zig
+   package dependency would omit upstream `test/`, which its `build.zig.zon`
+   does not list, so one flake pin now serves translation, oracle and corpus). A Zig test feeds identical byte
    streams to uchardetz's C API (`uchardet_*`) and to chardetz's core, asserting
    identical `get_charset`. Runs over the full corpus + fuzzed/mutated inputs at
    high throughput. Test-time C++ toolchain is explicitly acceptable (it does
@@ -170,11 +172,10 @@ spec. Two mechanisms (Peter chose "Both"):
 - **`./test`** (Bash, accumulates sub-errors → exit code): Zig unit tests + the
   differential core gate + CLI parity tests. Runs clean (expected stderr
   captured/asserted, never printed). Leak-free via `std.testing.allocator`.
-- **`./build`** / **`./build_all`**: nix-based (`nix build`), ReleaseFast
-  default, per house Build-System rules (never `nix develop -c zig build` for
-  native).
-- **`flake.nix` + Garnix:** `packages.default` + `checks.{build,test}`; Zig
-  pinned; Garnix-green required before any push.
+- **`./build`** / **`./build-all`**: nix-based (`nix build`), ReleaseFast
+  default, per the current fleet build-architecture rules.
+- **`flake.nix` + Mechatron Prime CI:** `packages.default` + `checks.{build,test}`; Zig
+  pinned; Mechatron Prime CI green required before any push.
 - **Performance MVP gate** (throughput is the selling point — large corpora):
   - `// complexity: O(n)` declared on hot paths (the detector feed loop, prober
     step functions).
@@ -188,34 +189,34 @@ spec. Two mechanisms (Peter chose "Both"):
 
 ## 8. Tooling & conventions
 
-- **jj only** (never raw git); branch **`yolo`**; `gh` for PR/release only.
+- **git** (revised 2026-10-14; the fleet retired its jj-only policy); branch **`yolo`**; `gh` for PR/release only.
 - Scaffold via the **`scaffold-zig-project`** skill — do not hand-roll.
 - ReleaseFast default in `build.zig` (per house rule, not
   `standardOptimizeOption`).
 - Read `ZIG_RECENT_API_CHANGES.md` (symlinked) before writing Zig 0.16.
-- `dirtree note` every important file; keep `PLAN.md`, `PROJECT_OVERVIEW.md`,
+- `dirtree note` every important file; keep `PLAN.md`, `INTENT.md`,
   `RULES.md` current.
 - **No Python** anywhere (the oracle is C/Zig, so none is needed; harness is
   Bash/Zig).
-- Repo is **PUBLIC** OSS (`pmarreck/chardetz`, SSH remote, jj-colocated) — but
+- Repo is **PUBLIC** OSS (`pmarreck/chardetz`, SSH remote) — but
   created on GitHub **only after Milestone 2 is green** (first prober agreeing
-  with the oracle — "debut with substance"), and **only after Peter approves
+  with the oracle — "debut with substance"), and **only after the BDFN approves
   the name `chardetz`** (he reserved a veto window). M1 stays local-only.
 
-## 9. Milestones (stop + LLMsend Einstein at each boundary)
+## 9. Milestones (stop + report to the orchestrator at each boundary)
 
 1. **M1 (current):** scaffold (`scaffold-zig-project`) + `flake.nix` +
-   Garnix-green + **both** oracle harnesses wired + **all tables codegen'd &
+   CI-green + **both** oracle harnesses wired + **all tables codegen'd &
    committed** + license/provenance artifacts. **Done-criteria:** repo builds
-   green on Garnix; `./test` runs the differential harness (it may report "core
+   green on Mechatron Prime CI; `./test` runs the differential harness (it may report "core
    not yet implemented" for unported probers, but the harness itself works and
    the table generator's unit tests pass); all tables generated, license-headed,
    and committed; license artifacts complete. **M1 stays local-only — no public
    repo yet** (resolved: public push is deferred to M2 so the repo debuts with a
    working prober).
 2. **M2:** UTF-8 + Latin-1 + one single-byte language model at oracle parity.
-   → **First green prober milestone.** Then pause for Peter's name veto, then
-   create the **public** GitHub repo (`pmarreck/chardetz`, SSH, jj-colocated).
+   → **First green prober milestone.** Then pause for the BDFN's name veto, then
+   create the **public** GitHub repo (`pmarreck/chardetz`, SSH).
 3. **M3:** full multibyte prober set.
 4. **M4:** full single-byte language models + Hebrew + SBCS group.
 5. **M5:** C FFI + C CLI + performance gate.
@@ -232,7 +233,7 @@ spec. Two mechanisms (Peter chose "Both"):
   initializers). Mitigation: generator is tested; fall back to hand-port for any
   table the generator can't handle (lean on the gate).
 - **Name veto:** `chardetz` not yet final — public repo creation is gated on
-  Peter's approval (handled explicitly, won't auto-create).
+  the BDFN's approval (handled explicitly, won't auto-create).
 - **i18n layer:** uchardetz added an i18n layer; chardetz's core detector does
   not need it. CLI-level i18n (if any) is an M5 concern per the house i18n
   skill, not M1.

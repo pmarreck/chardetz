@@ -1,107 +1,128 @@
+// ***** BEGIN LICENSE BLOCK *****
+// Version: MPL 1.1/GPL 2.0/LGPL 2.1
+//
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1 (the "License"); you may not use this file except in compliance with
+// the License. You may obtain a copy of the License at
+// http://www.mozilla.org/MPL/
+//
+// Software distributed under the License is distributed on an "AS IS" basis,
+// WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+// for the specific language governing rights and limitations under the
+// License.
+//
+// The Original Code is Mozilla Universal charset detector code.
+//
+// The Initial Developer of the Original Code is
+// Netscape Communications Corporation.
+// Portions created by the Initial Developer are Copyright (C) 2001
+// the Initial Developer. All Rights Reserved.
+//
+// Contributor(s):
+//          Shy Shalom <shooshX@gmail.com>
+//
+// Alternatively, the contents of this file may be used under the terms of
+// either the GNU General Public License Version 2 or later (the "GPL"), or
+// the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+// in which case the provisions of the GPL or the LGPL are applicable instead
+// of those above. If you wish to allow use of your version of this file only
+// under the terms of either the GPL or the LGPL, and not to allow others to
+// use your version of this file under the terms of the MPL, indicate your
+// decision by deleting the provisions above and replace them with the notice
+// and other provisions required by the GPL or the LGPL. If you do not delete
+// the provisions above, a recipient may use your version of this file under
+// the terms of any one of the MPL, the GPL or the LGPL.
+//
+// ***** END LICENSE BLOCK *****
+//
 // SPDX-License-Identifier: MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later
-// Ported from uchardet (https://github.com/pmarreck/uchardetz @ abacfc1f),
-// derived from Mozilla universalchardet. Tri-licensed MPL 1.1 / GPL 2.0-or-later
-// / LGPL 2.1-or-later. See COPYING.
-//
-// Port of nsCharSetProber::FilterWithoutEnglishLetters / FilterWithEnglishLetters
-// (nsCharSetProber.cpp). These reduce a raw buffer to just the text segments
-// relevant to a given prober family, collapsing runs of delimiters to a single
-// space, before the SBCS group / Latin1 probers score it.
-//
-// Both allocate a new buffer (at most aLen bytes; the result is always shorter
-// or equal) which the caller frees. Returning an allocated slice (rather than
-// the upstream out-param + bool) is the idiomatic Zig shape; OOM surfaces as an
-// error the caller handles (the callers mirror upstream's graceful fallback).
+// Translated to Zig from uchardetz src/nsCharSetProber.cpp @ abacfc1f.
 
+//! uchardet's two input filters, writing into a caller-provided buffer at
+//! least as long as the input (output never exceeds input length).
 const std = @import("std");
 
-/// FilterWithoutEnglishLetters — for scripts that do NOT use English letters
-/// (every SBCS-group sub-prober). Keeps only segments that contain a high-bit
-/// (MSB-set) byte and span more than a single symbol; ASCII letters and
-/// pure-symbol/English runs are dropped, each kept segment terminated by a
-/// single space. The kept bytes are the ORIGINAL high-ASCII bytes (unchanged),
-/// which is what the language-model probers expect.
-pub fn withoutEnglishLetters(allocator: std.mem.Allocator, buf: []const u8) ![]u8 {
-    const out = try allocator.alloc(u8, buf.len);
-    errdefer allocator.free(out);
-
-    var meet_msb = false;
-    var w: usize = 0; // write index into out
-    var prev: usize = 0; // start of the current candidate segment
-    var cur: usize = 0;
-    while (cur < buf.len) : (cur += 1) {
-        const c = buf[cur];
-        if ((c & 0x80) != 0) {
-            meet_msb = true;
-        } else if (c < 'A' or (c > 'Z' and c < 'a') or c > 'z') {
-            // Symbol/punctuation → segment delimiter.
-            if (meet_msb and cur > prev) {
-                // Segment has >1 char and contains upper ASCII — keep it.
-                while (prev < cur) : (prev += 1) {
-                    out[w] = buf[prev];
-                    w += 1;
-                }
-                prev += 1; // skip the delimiter
-                out[w] = ' ';
-                w += 1;
-                meet_msb = false;
-            } else {
-                // Drop the segment (just a symbol or an English word).
-                prev = cur + 1;
-            }
-        }
-    }
-    if (meet_msb and cur > prev) {
-        while (prev < cur) : (prev += 1) {
-            out[w] = buf[prev];
-            w += 1;
-        }
-    }
-
-    return try allocator.realloc(out, w);
+/// Non-letter ASCII byte: a segment delimiter for both filters.
+inline fn isAsciiSymbol(c: u8) bool {
+    return c < 'A' or (c > 'Z' and c < 'a') or c > 'z';
 }
 
-/// FilterWithEnglishLetters — for scripts that mix English + upper ASCII
-/// (the Latin1 prober). Drops HTML-tag contents and isolated symbols, keeping
-/// text segments (collapsing delimiter runs to a single space). Unlike the
-/// other filter, it does NOT require a high-bit byte in the segment.
-pub fn withEnglishLetters(allocator: std.mem.Allocator, buf: []const u8) ![]u8 {
-    const out = try allocator.alloc(u8, buf.len);
-    errdefer allocator.free(out);
-
-    var is_in_tag = false;
-    var w: usize = 0;
+/// FilterWithoutEnglishLetters: keeps only words containing a high byte,
+/// replacing each delimiter after a kept word with one space.
+// complexity: O(n)
+pub fn withoutEnglishLetters(buf: []const u8, out: []u8) usize {
+    std.debug.assert(out.len >= buf.len);
+    var n: usize = 0;
     var prev: usize = 0;
-    var cur: usize = 0;
-    while (cur < buf.len) : (cur += 1) {
-        const c = buf[cur];
-        if (c == '>') {
-            is_in_tag = false;
-        } else if (c == '<') {
-            is_in_tag = true;
-        }
-
-        if ((c & 0x80) == 0 and (c < 'A' or (c > 'Z' and c < 'a') or c > 'z')) {
-            if (cur > prev and !is_in_tag) {
-                // Segment >1 char and not inside a tag — keep it.
-                while (prev < cur) : (prev += 1) {
-                    out[w] = buf[prev];
-                    w += 1;
-                }
-                prev += 1;
-                out[w] = ' ';
-                w += 1;
-            } else {
-                prev = cur + 1;
+    var meet_msb = false;
+    for (buf, 0..) |c, cur| {
+        if (c & 0x80 != 0) {
+            meet_msb = true;
+        } else if (isAsciiSymbol(c)) {
+            if (meet_msb and cur > prev) {
+                @memcpy(out[n..][0 .. cur - prev], buf[prev..cur]);
+                n += cur - prev;
+                out[n] = ' ';
+                n += 1;
+                meet_msb = false;
             }
+            prev = cur + 1;
         }
     }
-    if (!is_in_tag) {
-        while (prev < cur) : (prev += 1) {
-            out[w] = buf[prev];
-            w += 1;
-        }
+    if (meet_msb and buf.len > prev) {
+        @memcpy(out[n..][0 .. buf.len - prev], buf[prev..]);
+        n += buf.len - prev;
     }
+    return n;
+}
 
-    return try allocator.realloc(out, w);
+/// FilterWithEnglishLetters: drops markup between '<' and '>' and reduces
+/// each run of ASCII symbols to one space.
+// complexity: O(n)
+pub fn withEnglishLetters(buf: []const u8, out: []u8) usize {
+    std.debug.assert(out.len >= buf.len);
+    var n: usize = 0;
+    var prev: usize = 0;
+    var in_tag = false;
+    for (buf, 0..) |c, cur| {
+        if (c == '>') {
+            in_tag = false;
+        } else if (c == '<') {
+            in_tag = true;
+        }
+        if (c & 0x80 == 0 and isAsciiSymbol(c)) {
+            if (cur > prev and !in_tag) {
+                @memcpy(out[n..][0 .. cur - prev], buf[prev..cur]);
+                n += cur - prev;
+                out[n] = ' ';
+                n += 1;
+            }
+            prev = cur + 1;
+        }
+    }
+    if (!in_tag and buf.len > prev) {
+        @memcpy(out[n..][0 .. buf.len - prev], buf[prev..]);
+        n += buf.len - prev;
+    }
+    return n;
+}
+
+fn expectFilter(comptime filter: anytype, input: []const u8, expected: []const u8) !void {
+    var out: [64]u8 = undefined;
+    const n = filter(input, &out);
+    try std.testing.expectEqualSlices(u8, expected, out[0..n]);
+}
+
+test "withoutEnglishLetters keeps only words containing high bytes" {
+    try expectFilter(withoutEnglishLetters, "hello world", "");
+    try expectFilter(withoutEnglishLetters, "ab\xe9c, plain \xe0!", "ab\xe9c \xe0 ");
+    try expectFilter(withoutEnglishLetters, "x \xff\xfe", "\xff\xfe");
+    try expectFilter(withoutEnglishLetters, "", "");
+}
+
+test "withEnglishLetters drops tags and collapses symbols" {
+    try expectFilter(withEnglishLetters, "caf\xe9 au lait", "caf\xe9 au lait");
+    try expectFilter(withEnglishLetters, "a<b c>d", "c d");
+    try expectFilter(withEnglishLetters, "x, y", "x y");
+    try expectFilter(withEnglishLetters, "<open", "");
 }

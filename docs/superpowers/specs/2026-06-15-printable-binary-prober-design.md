@@ -28,7 +28,7 @@ recognize binary-data-as-text.
   - **Out of scope (v1):** `-X/--hexlike` (a different alphabet — hex runs prefixed by
     `Οχ`); `-P <chars>` (unbounded arbitrary literal passthrough).
 
-## Heuristic (Peter's spec, made concrete)
+## Heuristic (the BDFN's spec, made concrete)
 
 Over the decoded codepoints of the input:
 

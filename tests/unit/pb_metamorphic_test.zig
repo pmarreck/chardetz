@@ -10,7 +10,7 @@ const cz = @import("chardetz");
 
 fn expectPB(comptime path: []const u8) !void {
     const bytes = @embedFile(path);
-    try std.testing.expectEqualStrings("PRINTABLE-BINARY", cz.detect(std.testing.allocator, bytes));
+    try std.testing.expectEqualStrings("PRINTABLE-BINARY", try cz.detect(std.testing.allocator, bytes));
 }
 
 test "metamorphic: real PB output of a binary file → PRINTABLE-BINARY (default/-s/-w/-f)" {

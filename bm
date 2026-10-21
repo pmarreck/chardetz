@@ -19,17 +19,19 @@ cd "$(dirname "$0")" || exit 1
 TOL="${CHARDETZ_BENCH_TOL:-0.25}" # ±25% two-sided constant-factor tolerance
 
 arch="$(uname -m)"
-cpu="$(sysctl -n machdep.cpu.brand_string 2>/dev/null || uname -p)"
-machine_id="$(printf '%s|%s' "$arch" "$cpu" | shasum -a 256 | cut -c1-12)"
+cpu="$(sysctl -n machdep.cpu.brand_string 2>/dev/null || awk -F': ' '/^model name/ { print $2; exit }' /proc/cpuinfo 2>/dev/null)"
+[ -n "$cpu" ] || cpu="$(uname -p)"
+if command -v sha256sum >/dev/null; then hash() { sha256sum; }; else hash() { shasum -a 256; }; fi
+machine_id="$(printf '%s|%s' "$arch" "$cpu" | hash | cut -c1-12)"
 mkdir -p bench
 log="bench/$machine_id.ndjson"
 echo "bench machine-id: $machine_id  (log: $log)" >&2
 
 export HOME="${HOME:-$TMPDIR}"
 
-# Run the harness in the dev shell (ReleaseFast default; network available so the
-# lazy uchardetz C++ dep can be fetched/built, like ./fuzz's tuned mode).
-out="$(nix develop -c zig build bench -Dwith-bench 2>&1)"
+# Run the harness in the dev shell (ReleaseFast default). The C++ comparison
+# side is compiled from the pinned flake input, like the oracle gates.
+out="$(nix develop -c zig build bench 2>&1)"
 rc=$?
 printf '%s\n' "$out" >&2
 if [ "$rc" -ne 0 ]; then

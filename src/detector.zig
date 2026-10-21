@@ -1,324 +1,244 @@
+// ***** BEGIN LICENSE BLOCK *****
+// Version: MPL 1.1/GPL 2.0/LGPL 2.1
+//
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1 (the "License"); you may not use this file except in compliance with
+// the License. You may obtain a copy of the License at
+// http://www.mozilla.org/MPL/
+//
+// Software distributed under the License is distributed on an "AS IS" basis,
+// WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+// for the specific language governing rights and limitations under the
+// License.
+//
+// The Original Code is Mozilla Universal charset detector code.
+//
+// The Initial Developer of the Original Code is
+// Netscape Communications Corporation.
+// Portions created by the Initial Developer are Copyright (C) 2001
+// the Initial Developer. All Rights Reserved.
+//
+// Contributor(s):
+//          Shy Shalom <shooshX@gmail.com>
+//
+// Alternatively, the contents of this file may be used under the terms of
+// either the GNU General Public License Version 2 or later (the "GPL"), or
+// the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+// in which case the provisions of the GPL or the LGPL are applicable instead
+// of those above. If you wish to allow use of your version of this file only
+// under the terms of either the GPL or the LGPL, and not to allow others to
+// use your version of this file under the terms of the MPL, indicate your
+// decision by deleting the provisions above and replace them with the notice
+// and other provisions required by the GPL or the LGPL. If you do not delete
+// the provisions above, a recipient may use your version of this file under
+// the terms of any one of the MPL, the GPL or the LGPL.
+//
+// ***** END LICENSE BLOCK *****
+//
 // SPDX-License-Identifier: MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later
-// Ported from uchardet (https://github.com/pmarreck/uchardetz @ abacfc1f),
-// derived from Mozilla universalchardet. Tri-licensed MPL 1.1 / GPL 2.0-or-later
-// / LGPL 2.1-or-later. See COPYING.
-//
-// Direct port of nsUniversalDetector (.cpp/.h) — the detection dispatcher.
-// HandleData performs (in order): a one-time BOM probe, the uchardetz fork's
-// BOM-less UTF-16 NUL heuristic, per-byte input classification (pure-ASCII /
-// escape / high-byte), then feeds high-byte data to the installed prober array
-// (shortcutting on a confident prober). DataEnd reports the detected charset or
-// the argmax-confidence prober above MINIMUM_THRESHOLD.
-//
-// Pure: no I/O, no clock, no allocation in the detection path. The prober array
-// is a fixed slice of polymorphic `Prober` handles so later chunks (multibyte
-// group, SBCS group, Latin1, escape, Hebrew) plug in without touching the
-// dispatcher's control flow — only the array wiring grows.
+// Translated to Zig from uchardetz src/nsUniversalDetector.cpp @ abacfc1f.
+// Translated to Zig from uchardetz src/uchardet.cpp @ abacfc1f.
 
+//! nsUniversalDetector plus uchardet.cpp's handle semantics: a streaming
+//! detector fed with `handleData`, finished with `dataEnd`, read with
+//! `charset`. All probers live inline; the only allocation is one scratch
+//! buffer for filtered text, grown to the largest chunk seen and reused.
 const std = @import("std");
 const prober = @import("prober.zig");
-const mbcs_group_prober = @import("probers/mbcs_group.zig");
-const sbcs_group_prober = @import("probers/sbcs_group.zig");
-const latin1_prober = @import("probers/latin1.zig");
-const esc_prober = @import("probers/escape.zig");
-const pb_prober = @import("probers/printable_binary.zig");
+const MbcsGroupProber = @import("mbcs.zig").MbcsGroupProber;
+const SbcsGroupProber = @import("sbcs.zig").SbcsGroupProber;
+const Latin1Prober = @import("latin1_prober.zig").Latin1Prober;
+const EscProber = @import("esc_prober.zig").EscProber;
+const PBProber = @import("printable_binary_prober.zig").PBProber;
 
-const Prober = prober.Prober;
-const ProbingState = prober.ProbingState;
+const minimum_threshold = prober.f32FromDouble(0.20);
+const esc: u8 = 0x1b;
+const nbsp: u8 = 0xa0;
 
-/// Port of nsInputState (nsUniversalDetector.h).
-pub const InputState = enum(u32) {
-    pure_ascii = 0,
-    esc_ascii = 1,
-    high_byte = 2,
-};
+const InputState = enum { pure_ascii, esc_ascii, highbyte };
 
-/// The detection dispatcher. Holds its own concrete probers inline (so no heap
-/// is required for the current set) plus a slice of polymorphic handles the
-/// HandleData/DataEnd loops iterate over.
-pub const UniversalDetector = struct {
+pub const Detector = struct {
+    gpa: std.mem.Allocator,
+    scratch: std.ArrayList(u8) = .empty,
+
     input_state: InputState = .pure_ascii,
     nbsp_found: bool = false,
     done: bool = false,
     start: bool = true,
     got_data: bool = false,
     last_char: u8 = 0,
-    /// Internal "best detected charset so far" — mirrors nsUniversalDetector's
-    /// mDetectedCharset. NOT the externally visible answer: it is set during
-    /// HandleData (BOM/heuristic/ASCII) but only becomes the result if DataEnd
-    /// Reports it. null until a charset is decided; borrows a static string slice.
-    detected_charset: ?[]const u8 = null,
-    /// The externally visible verdict — mirrors the C ABI's m_charset, which is
-    /// populated ONLY by Report() (called solely from DataEnd). Starts "" and
-    /// stays "" for empty/undetermined input, exactly like uchardet's
-    /// get_charset (which returns m_charset ?: ""). Keeping this separate from
-    /// detected_charset is load-bearing: e.g. empty input sets detected_charset
-    /// to "ASCII" internally but DataEnd returns early (no data) so nothing is
-    /// reported → the verdict is "".
-    reported: []const u8 = "",
+    detected: ?[:0]const u8 = null,
+    /// What uchardet_get_charset returns (HandleUniversalDetector::m_charset).
+    reported: ?[:0]const u8 = null,
 
-    // ── Concrete probers owned by the detector ──────────────────────────────
-    // High-byte prober array: [PBProber, MBCSGroup, SBCSGroup, Latin1]. uchardet's
-    // is [MBCSGroup, SBCSGroup, Latin1]; chardetz prepends the PRINTABLE-BINARY
-    // prober (a uchardet EXTENSION) at slot 0 so a strong PB signal pre-empts the
-    // UTF-8 prober (PB is valid UTF-8). The escape prober lives outside this array
-    // on the eEscAscii path.
-    /// PRINTABLE-BINARY prober (chardetz extension). Slot [0]: only wins on a strong
-    /// PB signature, otherwise inert — so it never perturbs uchardet-faithful verdicts.
-    pb: pb_prober.PBProber,
-    /// The multibyte (CJK) group — UTF-8 + the 6 CJK probers. Slot [1]. The
-    /// standalone UTF-8 prober lives INSIDE here, matching uchardet's structure.
-    mbcs_group: mbcs_group_prober.MBCSGroupProber,
-    /// The single-byte charset group (35 sub-probers incl. Hebrew). Slot [2].
-    /// Allocates internally for the buffer filters.
-    sbcs_group: sbcs_group_prober.SBCSGroupProber,
-    /// The Latin-1 / WINDOWS-1252 class-model prober. Slot [3].
-    latin1: latin1_prober.Latin1Prober,
-    /// The escape-sequence prober (ISO-2022-*, HZ). Constructed/fed only on the
-    /// eEscAscii input path; not part of the high-byte prober array.
-    esc: esc_prober.EscCharSetProber,
-    /// Backing storage for the polymorphic prober array, (re)built on demand
-    /// from the concrete prober fields. Built lazily — never in init() — so the
-    /// erased `ptr`s always point at THIS struct's fields, never a stale copy
-    /// (init() returns by value, which would invalidate pointers captured into
-    /// a local). The count is fixed per detector, so the slice is stable across
-    /// a single detect() lifetime.
-    prober_storage: [MAX_PROBERS]Prober = undefined,
+    /// chardetz extension (not in uchardet): recognizes printable-binary text.
+    /// Inert unless its signal is strong, and checked first because such text
+    /// is also valid UTF-8.
+    pb: PBProber = .{},
+    mbcs: MbcsGroupProber = .{},
+    sbcs: SbcsGroupProber = .{},
+    latin1: Latin1Prober = .{},
+    /// Upstream deletes the escape prober at the first high byte and
+    /// recreates it on demand; `esc_alive` mirrors that lifetime.
+    esc: EscProber = .{},
+    esc_alive: bool = false,
 
-    const MAX_PROBERS = 8;
-    /// Number of probers wired for the high-byte path:
-    /// [PBProber, MBCSGroup, SBCSGroup, Latin1].
-    const PROBER_COUNT = 4;
-
-    pub fn init(allocator: std.mem.Allocator) UniversalDetector {
-        return UniversalDetector{
-            .pb = pb_prober.PBProber.init(),
-            .mbcs_group = mbcs_group_prober.MBCSGroupProber.init(),
-            .sbcs_group = sbcs_group_prober.SBCSGroupProber.init(allocator),
-            .latin1 = latin1_prober.Latin1Prober.init(allocator),
-            .esc = esc_prober.EscCharSetProber.init(),
-        };
+    pub fn init(gpa: std.mem.Allocator) Detector {
+        return .{ .gpa = gpa };
     }
 
-    /// (Re)build the polymorphic prober array from the concrete fields against
-    /// the CURRENT address of `self`, then return it. Order:
-    /// [PBProber, MBCSGroup, SBCSGroup, Latin1]. The escape prober is NOT in this
-    /// array (it runs on the eEscAscii path, separately). Cheap (a few pointer
-    /// writes); called per dispatch.
-    fn proberSlice(self: *UniversalDetector) []Prober {
-        self.prober_storage[0] = self.pb.asProber();
-        self.prober_storage[1] = self.mbcs_group.asProber();
-        self.prober_storage[2] = self.sbcs_group.asProber();
-        self.prober_storage[3] = self.latin1.asProber();
-        return self.prober_storage[0..PROBER_COUNT];
+    pub fn deinit(self: *Detector) void {
+        self.scratch.deinit(self.gpa);
+        self.* = undefined;
     }
 
-    pub fn reset(self: *UniversalDetector) void {
-        self.input_state = .pure_ascii;
+    pub fn reset(self: *Detector) void {
         self.nbsp_found = false;
         self.done = false;
+        self.input_state = .pure_ascii;
         self.start = true;
+        self.detected = null;
         self.got_data = false;
         self.last_char = 0;
-        self.detected_charset = null;
+        if (self.esc_alive) self.esc.reset();
+        self.pb.reset();
+        self.mbcs.reset();
+        self.sbcs.reset();
+        self.latin1.reset();
         self.reported = "";
-        for (self.proberSlice()) |p| p.reset();
-        self.esc.reset();
     }
 
-    /// nsUniversalDetector::HandleData.
-    pub fn handleData(self: *UniversalDetector, buf: []const u8) void {
+    /// Feeds the next chunk. Results can depend on chunk boundaries exactly
+    /// as uchardet's do (byte-order marks are only checked in the first
+    /// chunk, for example). Fails only if the scratch buffer cannot grow, in
+    /// which case no detector state has changed.
+    // complexity: O(n)
+    pub fn handleData(self: *Detector, buf: []const u8) error{OutOfMemory}!void {
         if (self.done) return;
-
+        try self.scratch.ensureTotalCapacity(self.gpa, buf.len);
         if (buf.len > 0) self.got_data = true;
 
-        // ── If the data starts with a BOM, we know it is UTF. ──
         if (self.start) {
             self.start = false;
-            if (buf.len > 2) {
-                switch (buf[0]) {
-                    0xEF => {
-                        // EF BB BF: UTF-8 encoded BOM.
-                        if (buf[1] == 0xBB and buf[2] == 0xBF)
-                            self.detected_charset = "UTF-8";
-                    },
-                    0xFE => {
-                        // FE FF: UTF-16, big endian BOM.
-                        if (buf[1] == 0xFF)
-                            self.detected_charset = "UTF-16";
-                    },
-                    0xFF => {
-                        if (buf[1] == 0xFE) {
-                            if (buf.len > 3 and buf[2] == 0x00 and buf[3] == 0x00) {
-                                // FF FE 00 00: UTF-32 (LE).
-                                self.detected_charset = "UTF-32";
-                            } else {
-                                // FF FE: UTF-16, little endian BOM.
-                                self.detected_charset = "UTF-16";
-                            }
-                        }
-                    },
-                    0x00 => {
-                        // 00 00 FE FF: UTF-32 (BE).
-                        if (buf.len > 3 and buf[1] == 0x00 and buf[2] == 0xFE and buf[3] == 0xFF)
-                            self.detected_charset = "UTF-32";
-                    },
-                    else => {},
-                }
-
-                if (self.detected_charset) |_| {
-                    self.done = true;
-                    return;
-                }
-
-                // ── BOM-less UTF-16 heuristic (uchardetz fork addition) ──
-                // Count NULs at even vs odd byte positions over the first
-                // min(len, 256) bytes (rounded down to even). A dominant NUL
-                // position (≥20%) with the other position nearly NUL-free
-                // (<5%) indicates BMP UTF-16: even-NUL → BE, odd-NUL → LE.
-                if (buf.len >= 8) {
-                    var check_len: usize = if (buf.len < 256) buf.len else 256;
-                    check_len &= ~@as(usize, 1); // round down to even
-                    var even_nulls: usize = 0;
-                    var odd_nulls: usize = 0;
-                    var j: usize = 0;
-                    while (j < check_len) : (j += 2) {
-                        if (buf[j] == 0x00) even_nulls += 1;
-                        if (buf[j + 1] == 0x00) odd_nulls += 1;
-                    }
-                    const half_len = check_len / 2;
-                    if (even_nulls * 5 >= half_len and odd_nulls * 20 < half_len) {
-                        // NULs at even positions → high byte is 0 → big-endian.
-                        self.detected_charset = "UTF-16BE";
-                        self.done = true;
-                        return;
-                    }
-                    if (odd_nulls * 5 >= half_len and even_nulls * 20 < half_len) {
-                        // NULs at odd positions → little-endian.
-                        self.detected_charset = "UTF-16LE";
-                        self.done = true;
-                        return;
-                    }
-                }
+            if (detectBom(buf)) |name| {
+                self.detected = name;
+                self.done = true;
+                return;
+            }
+            if (detectBomlessUtf16(buf)) |name| {
+                self.detected = name;
+                self.done = true;
+                return;
             }
         }
 
-        // ── Per-byte input classification ──
         for (buf) |c| {
-            // High-byte iff the top bit is set AND it is not 0xA0 (NBSP), which
-            // is a common near-ASCII exception we do not treat as high-byte.
-            if ((c & 0x80) != 0 and c != 0xA0) {
-                if (self.input_state != .high_byte) {
-                    self.input_state = .high_byte;
-                    // (uchardet would kill an active escape prober and lazily
-                    // construct the high-byte probers here; this chunk's probers
-                    // are preconstructed in init(), so nothing to allocate.)
+            if (c & 0x80 != 0 and c != nbsp) {
+                if (self.input_state != .highbyte) {
+                    self.input_state = .highbyte;
+                    self.esc_alive = false;
                 }
             } else {
-                // Pure ASCII or NBSP so far.
-                if (c == 0xA0) {
+                if (c == nbsp) {
                     self.nbsp_found = true;
-                } else if (self.input_state == .pure_ascii and
-                    (c == 0o33 or (c == '{' and self.last_char == '~')))
-                {
-                    // An escape character (0x1B) or HZ "~{".
+                } else if (self.input_state == .pure_ascii and (c == esc or (c == '{' and self.last_char == '~'))) {
                     self.input_state = .esc_ascii;
                 }
                 self.last_char = c;
             }
         }
 
-        // ── Dispatch on input state ──
         switch (self.input_state) {
             .esc_ascii => {
-                // nsUniversalDetector: feed the whole buffer to the escape
-                // prober. If it locks onto an escape charset, report it; else
-                // ASCII-with-ESC is still ASCII (or ISO-8859-1 if NBSP seen).
-                const st = self.esc.handleData(buf);
-                if (st == .found_it) {
+                if (!self.esc_alive) {
+                    self.esc.reset();
+                    self.esc_alive = true;
+                }
+                if (self.esc.handleData(buf) == .found_it) {
                     self.done = true;
-                    self.detected_charset = self.esc.charsetName();
+                    self.detected = self.esc.detected;
                 } else if (self.nbsp_found) {
-                    self.detected_charset = "ISO-8859-1";
+                    self.detected = "ISO-8859-1";
                 } else {
-                    self.detected_charset = "ASCII";
+                    self.detected = "ASCII";
                 }
             },
-            .high_byte => {
-                for (self.proberSlice()) |p| {
-                    const st = p.handleData(buf);
-                    if (st == .found_it) {
-                        self.done = true;
-                        self.detected_charset = p.charsetName();
-                        return;
-                    }
-                }
+            .highbyte => {
+                const scratch = self.scratch.allocatedSlice()[0..buf.len];
+                if (self.pb.handleData(buf) == .found_it) return self.found(PBProber.name);
+                if (self.mbcs.handleData(buf) == .found_it) return self.found(self.mbcs.charsetName());
+                if (self.sbcs.handleData(buf, scratch) == .found_it) return self.found(self.sbcs.charsetName());
+                if (self.latin1.handleData(buf, scratch) == .found_it) return self.found(Latin1Prober.name);
             },
-            .pure_ascii => {
-                if (self.nbsp_found) {
-                    self.detected_charset = "ISO-8859-1";
-                } else {
-                    self.detected_charset = "ASCII";
-                }
-            },
+            .pure_ascii => self.detected = if (self.nbsp_found) "ISO-8859-1" else "ASCII",
         }
     }
 
-    /// nsUniversalDetector::DataEnd.
-    pub fn dataEnd(self: *UniversalDetector) void {
-        if (!self.got_data) {
-            // No data yet — return immediately (caller may DataEnd prematurely).
-            return;
-        }
+    fn found(self: *Detector, name: [:0]const u8) void {
+        self.done = true;
+        self.detected = name;
+    }
 
-        if (self.detected_charset) |cs| {
+    pub fn dataEnd(self: *Detector) void {
+        if (!self.got_data) return;
+        if (self.detected) |name| {
             self.done = true;
-            self.report(cs);
+            self.reported = name;
             return;
         }
-
-        switch (self.input_state) {
-            .high_byte => {
-                var max_conf: f32 = 0.0;
-                var max_prober: usize = 0;
-                for (self.proberSlice(), 0..) |p, i| {
-                    const conf = p.getConfidence();
-                    if (conf > max_conf) {
-                        max_conf = conf;
-                        max_prober = i;
-                    }
-                }
-                // Do not report unless confident — a low max is a negative answer.
-                if (max_conf > prober.MINIMUM_THRESHOLD) {
-                    self.report(self.proberSlice()[max_prober].charsetName());
-                }
-            },
-            .esc_ascii => {},
-            .pure_ascii => {},
+        if (self.input_state != .highbyte) return;
+        const confidences = [4]f32{ self.pb.confidence(), self.mbcs.confidence(), self.sbcs.confidence(), self.latin1.confidence() };
+        var max_conf: f32 = 0.0;
+        var max_prober: usize = 0;
+        for (confidences, 0..) |cf, i| {
+            if (cf > max_conf) {
+                max_conf = cf;
+                max_prober = i;
+            }
         }
+        if (max_conf > minimum_threshold) self.reported = switch (max_prober) {
+            0 => PBProber.name,
+            1 => self.mbcs.charsetName(),
+            2 => self.sbcs.charsetName(),
+            else => Latin1Prober.name,
+        };
     }
 
-    /// nsUniversalDetector::Report (the C ABI override): set the externally
-    /// visible verdict. Internal-only; called from dataEnd.
-    fn report(self: *UniversalDetector, charset: []const u8) void {
-        self.reported = charset;
-    }
-
-    /// The reported charset, or "" if the detector reported nothing — mirrors
-    /// the C ABI's get_charset (returns m_charset ?: "").
-    pub fn getCharset(self: *UniversalDetector) []const u8 {
-        return self.reported;
+    /// uchardet_get_charset: "" until something has been reported.
+    pub fn charset(self: *const Detector) [:0]const u8 {
+        return self.reported orelse "";
     }
 };
 
-/// One-shot convenience: construct a detector, feed all bytes, finalize, and
-/// return the charset verdict. Mirrors uchardet's new → handle_data → data_end
-/// → get_charset usage. The returned charset name is a static string slice; the
-/// allocator is used internally by the SBCS group / Latin1 probers' buffer
-/// filters (freed before return), so nothing the caller sees is allocated.
-pub fn detect(allocator: std.mem.Allocator, bytes: []const u8) []const u8 {
-    var det = UniversalDetector.init(allocator);
-    det.handleData(bytes);
-    det.dataEnd();
-    return det.getCharset();
+/// Byte-order marks recognized in the first chunk (needs at least 3 bytes).
+fn detectBom(buf: []const u8) ?[:0]const u8 {
+    if (buf.len <= 2) return null;
+    switch (buf[0]) {
+        0xef => if (buf[1] == 0xbb and buf[2] == 0xbf) return "UTF-8",
+        0xfe => if (buf[1] == 0xff) return "UTF-16",
+        0xff => if (buf[1] == 0xfe) {
+            return if (buf.len > 3 and buf[2] == 0 and buf[3] == 0) "UTF-32" else "UTF-16";
+        },
+        0x00 => if (buf.len > 3 and buf[1] == 0 and buf[2] == 0xfe and buf[3] == 0xff) return "UTF-32",
+        else => {},
+    }
+    return null;
+}
+
+/// uchardetz's BOM-less UTF-16 heuristic over the first 256 bytes of the
+/// first chunk: >= 20% NULs in one byte position and < 5% in the other.
+fn detectBomlessUtf16(buf: []const u8) ?[:0]const u8 {
+    if (buf.len < 8) return null;
+    const check_len = @min(buf.len, 256) & ~@as(usize, 1);
+    var even_nulls: usize = 0;
+    var odd_nulls: usize = 0;
+    var j: usize = 0;
+    while (j < check_len) : (j += 2) {
+        if (buf[j] == 0) even_nulls += 1;
+        if (buf[j + 1] == 0) odd_nulls += 1;
+    }
+    const half_len = check_len / 2;
+    if (even_nulls * 5 >= half_len and odd_nulls * 20 < half_len) return "UTF-16BE";
+    if (odd_nulls * 5 >= half_len and even_nulls * 20 < half_len) return "UTF-16LE";
+    return null;
 }

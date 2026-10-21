@@ -1,17 +1,10 @@
 .{
     .name = .chardetz,
-    .version = "0.1.0",
+    .version = "0.2.0",
     .minimum_zig_version = "0.16.0",
-    .dependencies = .{
-        .uchardetz = .{
-            .url = "git+https://github.com/pmarreck/uchardetz#abacfc1fc86ef7618547d7dce7cc7501e756fa31",
-            .hash = "uchardetz-0.0.6-koAyw7pFCwAzXYaKhsirPcnwf7wfPYm8B8UCRkNc2WbD",
-            // test-only (differential oracle + fuzz). Lazy so the lib/packages/
-            // checks never fetch it — eager fetch fails in Garnix's network-isolated
-            // Linux sandbox (NameServerFailure); darwin's relaxed sandbox hid it.
-            .lazy = true,
-        },
-    },
+    // The C++ oracle and corpus come from the flake input `uchardetz-src`
+    // (see flake.nix); consumers of this package need no dependencies.
+    .dependencies = .{},
     .paths = .{
         "build.zig",
         "build.zig.zon",
@@ -20,6 +13,10 @@
         "tools",
         "cli",
         "include",
+        "bench",
+        "COPYING",
+        "PROVENANCE.md",
+        "THIRD_PARTY_LICENSES",
     },
     // Zig-computed per-package fingerprint (low bits hash the package name).
     .fingerprint = 0xc27e58ace7e24623,
