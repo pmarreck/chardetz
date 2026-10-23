@@ -3,7 +3,6 @@
 Completed items retire to `docs/PLAN_LOG.md`. Purpose: `INTENT.md`. Accuracy policy: `docs/ACCURACY.md`.
 
 ## 2026-10-21 (BDFN request): merge both translations; accuracy over bug-for-bug fidelity
-- [x] Check the original development machine for the June working copy: no unpushed code, only an uncommitted wind-down note (done 2026-10-21 14:00 EDT)
 - [x] Merge the October port and the June repo (engine and gates from October; PRINTABLE-BINARY, WASM ABI, bench, fuzz edge cases from June) (done 2026-10-21 14:20 EDT, db53518)
 - [x] Two-mode detector: compile-time Fixes; UpstreamDetector runs every oracle gate, Detector (all fixes) is the default everywhere (done 2026-10-21 14:45 EDT)
 - [x] Fix: chunk invariance by re-chunking input internally into fixed 64 KiB blocks (BOM, BOM-less UTF-16 and early-exit checks no longer depend on caller chunking) (done 2026-10-21 14:45 EDT)
@@ -20,7 +19,7 @@ Completed items retire to `docs/PLAN_LOG.md`. Purpose: `INTENT.md`. Accuracy pol
 - [x] Fix valid_utf8: valid multibyte UTF-8 is reported as UTF-8; whole-input accuracy 93.8% to 99.2% on the generated corpus (done 2026-10-23 19:05 EDT)
 - [ ] Investigate ISO-2022-CN reported as ASCII at every length (8 cases in docs/ACCURACY_REPORT.md)
 - [ ] Evaluate a fix for BOM-less UTF-16 in non-Latin scripts (16 cases)
-- [ ] Hand valid_utf8 and the accuracy corpus approach to uchardetz
+- [x] Hand valid_utf8 and the accuracy corpus approach to uchardetz (done 2026-10-23 19:20 EDT, llmsend)
 
 ## 2026-10-23 (BDFN request): conform to cross-platform-project-build-arch
 - [ ] Inventory current outputs and entrypoints (result, result-*, zig-out, no bin/) and agree target matrix, profiles and rollback before moving anything

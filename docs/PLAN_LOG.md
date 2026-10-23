@@ -32,3 +32,7 @@ Completed items retired from PLAN.md, oldest first.
 - [x] Seeded randomized differential: 20,000 generated, mutated, spliced and sliced inputs in random chunks, zero mismatches; tie-break mutant caught (done 2026-10-15 23:10 EDT)
 - [x] M3: full multibyte prober set (done 2026-10-15 23:10 EDT, with M2)
 - [x] M4: all single-byte language models, Hebrew prober, SBCS group (done 2026-10-15 23:10 EDT, with M2)
+
+## Retired 2026-10-23
+
+- [x] [2026-10-21 (BDFN request): merge both translations; accuracy over bug-for-bug fidelity] Check the original development machine for the June working copy: no unpushed code, only an uncommitted wind-down note (done 2026-10-21 14:00 EDT)
