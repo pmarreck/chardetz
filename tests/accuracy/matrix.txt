@@ -1,0 +1,53 @@
+# Accuracy corpus definition, read by tools/gen_accuracy_corpus.
+#
+# Each case is a UDHR text (pinned flake input udhr-src) cut to a length in
+# codepoints and transcoded with iconv. The ground truth is not a single label:
+# an answer is correct when decoding the case's bytes with the answered charset
+# gives back exactly the text the bytes encode. So ISO-8859-1 and ISO-8859-15
+# are both right for French text without the characters they disagree on.
+#
+# Lines:
+#   lengths   N...          prefix lengths in codepoints; "full" is the whole text
+#   candidate NAME...       charsets an answer may name (every name chardetz
+#                           reports except PRINTABLE-BINARY, and HZ-GB-2312,
+#                           which glibc iconv cannot decode)
+#   text KEY LANG ENC...    udhr_KEY.xml, ISO 639-1 language, target encodings
+#   compose KEY CHARSET     encode the text after a round trip through CHARSET
+#                           (composes combining accents; UTF-8 cases keep
+#                           the text as published)
+#   utf8-all                additionally, every UDHR text as UTF-8
+#
+# The text lines are the language/encoding pairs uchardet claims at the pinned
+# revision: its single-byte language models (SbcsGroupProber), its multibyte
+# and escape-sequence probers, and its byte-order-mark and UTF-16 handling.
+
+lengths 8 16 32 64 128 256 1024 full
+
+candidate ASCII UTF-8 UTF-16 UTF-16BE UTF-16LE UTF-32
+candidate ISO-8859-1 ISO-8859-2 ISO-8859-3 ISO-8859-5 ISO-8859-6 ISO-8859-7 ISO-8859-8 ISO-8859-9 ISO-8859-11 ISO-8859-15
+candidate WINDOWS-1250 WINDOWS-1251 WINDOWS-1252 WINDOWS-1253 WINDOWS-1255 WINDOWS-1256 WINDOWS-1258
+candidate IBM855 IBM866 KOI8-R MAC-CYRILLIC TIS-620 VISCII
+candidate EUC-JP SHIFT_JIS ISO-2022-JP EUC-KR ISO-2022-KR BIG5 EUC-TW GB18030 ISO-2022-CN
+
+text arb ar ISO-8859-6 WINDOWS-1256
+text bul bg ISO-8859-5 WINDOWS-1251
+text dan da ISO-8859-1 ISO-8859-15 WINDOWS-1252
+text deu_1996 de ISO-8859-1 WINDOWS-1252
+text ell_monotonic el ISO-8859-7 WINDOWS-1253
+text eng en ASCII
+text epo eo ISO-8859-3
+text fra fr ISO-8859-1 ISO-8859-15 WINDOWS-1252 UTF-16 UTF-16LE UTF-16BE UTF-32
+text heb he ISO-8859-8 WINDOWS-1255
+text hun hu ISO-8859-2 WINDOWS-1250
+text rus ru ISO-8859-5 WINDOWS-1251 KOI8-R IBM855 IBM866 MAC-CYRILLIC UTF-16 UTF-16LE UTF-16BE UTF-32
+text spa es ISO-8859-1 ISO-8859-15 WINDOWS-1252
+text tha th TIS-620 ISO-8859-11
+text tur tr ISO-8859-9 ISO-8859-3
+text vie vi VISCII WINDOWS-1258
+compose vie WINDOWS-1258
+text jpn ja EUC-JP SHIFT_JIS ISO-2022-JP UTF-16 UTF-16LE UTF-16BE UTF-32
+text kor ko EUC-KR ISO-2022-KR UTF-16 UTF-16LE UTF-16BE UTF-32
+text cmn_hans zh GB18030 ISO-2022-CN
+text cmn_hant zh BIG5 EUC-TW
+
+utf8-all

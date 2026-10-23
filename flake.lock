@@ -38,7 +38,8 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs",
-        "uchardetz-src": "uchardetz-src"
+        "uchardetz-src": "uchardetz-src",
+        "udhr-src": "udhr-src"
       }
     },
     "systems": {
@@ -70,6 +71,23 @@
         "owner": "pmarreck",
         "repo": "uchardetz",
         "rev": "abacfc1fc86ef7618547d7dce7cc7501e756fa31",
+        "type": "github"
+      }
+    },
+    "udhr-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1785255157,
+        "narHash": "sha256-0XNJ3i/5aqbfNfD/ZfNPHNx+5gr+ulzul+sYFdSU1QQ=",
+        "owner": "eric-muller",
+        "repo": "udhr",
+        "rev": "588b3f4b2d0467aff54842a4b926551b69d5a66a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "eric-muller",
+        "repo": "udhr",
+        "rev": "588b3f4b2d0467aff54842a4b926551b69d5a66a",
         "type": "github"
       }
     }

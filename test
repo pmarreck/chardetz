@@ -40,7 +40,15 @@ source_available() {
 	fi
 }
 
+udhr_available() {
+	if [ -z "${CHARDETZ_UDHR_SRC:-}" ] || [ ! -d "$CHARDETZ_UDHR_SRC/data/udhr" ]; then
+		echo "CHARDETZ_UDHR_SRC is not set to the pinned UDHR tree"
+		return 1
+	fi
+}
+
 check "pinned uchardetz source available" source_available
+check "pinned UDHR text available" udhr_available
 check "manifest pin matches flake.lock" pin_agreement
 check "control files match blessed hashes" sha256sum --check --quiet blessed_hashes.txt
 check "zig fmt" zig fmt --check build.zig tools src

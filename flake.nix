@@ -10,9 +10,15 @@
 			url = "github:pmarreck/uchardetz/abacfc1fc86ef7618547d7dce7cc7501e756fa31";
 			flake = false;
 		};
+		# Pinned multilingual text (the UDHR in about 500 languages, UTF-8 XML) from
+		# which the accuracy corpus is generated with iconv. See docs/ACCURACY.md.
+		udhr-src = {
+			url = "github:eric-muller/udhr/588b3f4b2d0467aff54842a4b926551b69d5a66a";
+			flake = false;
+		};
 	};
 
-	outputs = { self, nixpkgs, flake-utils, uchardetz-src }:
+	outputs = { self, nixpkgs, flake-utils, uchardetz-src, udhr-src }:
 		flake-utils.lib.eachDefaultSystem (system:
 			let
 				pkgs = nixpkgs.legacyPackages.${system};
@@ -73,6 +79,7 @@
 							export HOME=$TMPDIR
 							export ZIG_GLOBAL_CACHE_DIR=$TMPDIR/zig-cache
 							export CHARDETZ_UCHARDET_SRC=${uchardetz-src}
+							export CHARDETZ_UDHR_SRC=${udhr-src}
 							${darwinUnset}
 							patchShebangs ./test tests/cli
 							# Tests run ReleaseSafe so runtime safety checks stay compiled in;
@@ -89,6 +96,7 @@
 				devShells.default = pkgs.mkShell {
 					packages = [ zig pkgs.hyperfine pkgs.nodejs ];
 					CHARDETZ_UCHARDET_SRC = "${uchardetz-src}";
+					CHARDETZ_UDHR_SRC = "${udhr-src}";
 				};
 			});
 }

@@ -93,6 +93,13 @@ pub fn build(b: *std.Build) void {
         addCliParity(b, test_step, oracle_lib, cli, src_root, target, optimize);
         addTableDifferential(b, test_step, gen_exe, chardetz_mod, src_root, target, optimize);
         addBench(b, oracle_lib, chardetz_mod, target, optimize);
+        const udhr_src = b.option([]const u8, "udhr-src", "Path to the pinned UDHR source tree") orelse
+            b.graph.environ_map.get("CHARDETZ_UDHR_SRC");
+        if (udhr_src) |u| {
+            addAccuracy(b, test_step, u, oracle_lib, chardetz_mod, target, optimize);
+        } else {
+            test_step.dependOn(&b.addFail("UDHR source unknown: pass -Dudhr-src=PATH or run inside `nix develop`").step);
+        }
     } else {
         const fail = b.addFail("uchardetz source unknown: pass -Duchardet-src=PATH or run inside `nix develop`");
         gen_step.dependOn(&fail.step);
@@ -104,6 +111,8 @@ pub fn build(b: *std.Build) void {
     for ([_][]const u8{
         "tools/gen_tables/translate_test.zig",
         "tools/gen_tables/manifest_test.zig",
+        "tools/gen_accuracy_corpus/core_test.zig",
+        "tests/accuracy/report_test.zig",
         "src/tables/types.zig",
         "src/tables/tables_test.zig",
         "tests/oracle/differential_test.zig",
@@ -114,6 +123,18 @@ pub fn build(b: *std.Build) void {
                 .root_source_file = b.path(path),
                 .target = target,
                 .optimize = optimize,
+            }),
+        });
+        test_step.dependOn(&b.addRunArtifact(t).step);
+    }
+    // iconv adapter of the accuracy-corpus generator: real libc, real charsets.
+    {
+        const t = b.addTest(.{
+            .root_module = b.createModule(.{
+                .root_source_file = b.path("tools/gen_accuracy_corpus/iconv.zig"),
+                .target = target,
+                .optimize = optimize,
+                .link_libc = true,
             }),
         });
         test_step.dependOn(&b.addRunArtifact(t).step);
@@ -330,4 +351,73 @@ fn addBench(b: *std.Build, oracle_lib: *std.Build.Step.Compile, chardetz_mod: *s
     run_bench.has_side_effects = true;
     if (b.args) |args| run_bench.addArgs(args);
     b.step("bench", "Run the benchmark harness (chardetz vs the C++ original)").dependOn(&run_bench.step);
+}
+
+/// Accuracy corpus: UDHR texts transcoded with iconv by a build-host tool
+/// (tools/gen_accuracy_corpus), with ground truth decided by decoding.
+fn addAccuracy(b: *std.Build, test_step: *std.Build.Step, udhr_src: []const u8, oracle_lib: *std.Build.Step.Compile, chardetz_mod: *std.Build.Module, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) void {
+    const gen = b.addExecutable(.{
+        .name = "gen-accuracy-corpus",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("tools/gen_accuracy_corpus/main.zig"),
+            .target = b.graph.host,
+            .optimize = .ReleaseSafe,
+            .link_libc = true,
+        }),
+    });
+    const run = b.addRunArtifact(gen);
+    run.addFileArg(b.path("tests/accuracy/matrix.txt"));
+    run.addArg(b.fmt("{s}/data/udhr", .{udhr_src}));
+    const corpus = run.addOutputDirectoryArg("accuracy-corpus");
+    const install = b.addInstallDirectory(.{ .source_dir = corpus, .install_dir = .prefix, .install_subdir = "accuracy-corpus" });
+    b.step("accuracy-corpus", "Generate the accuracy corpus into zig-out/accuracy-corpus").dependOn(&install.step);
+    const allow_regression = b.option(bool, "accuracy-allow-regression", "Let accuracy-report record a lower accuracy") orelse false;
+    const oracle_mod = b.createModule(.{ .root_source_file = b.path("tests/oracle/oracle.zig"), .target = target, .optimize = optimize });
+    const runner_mod = b.createModule(.{
+        .root_source_file = b.path("tests/accuracy/runner.zig"),
+        .target = target,
+        .optimize = optimize,
+        .imports = &.{
+            .{ .name = "chardetz", .module = chardetz_mod },
+            .{ .name = "oracle", .module = oracle_mod },
+        },
+    });
+    runner_mod.linkLibrary(oracle_lib);
+    const runner = b.addExecutable(.{ .name = "accuracy-runner", .root_module = runner_mod });
+    const report_path = "docs/ACCURACY_REPORT.md";
+    const ledger_path = "tests/accuracy/differences.tsv";
+    const revs = [_][]const u8{ lockedRev(b, "udhr-src"), lockedRev(b, "uchardetz-src") };
+
+    const check = b.addRunArtifact(runner);
+    check.addDirectoryArg(corpus);
+    check.addArgs(&.{ b.pathFromRoot(report_path), b.pathFromRoot(ledger_path), revs[0], revs[1], "--check" });
+    // Rerun on every test: the committed files it compares against are not
+    // declared inputs (they may not exist yet).
+    check.has_side_effects = true;
+    check.expectExitCode(0);
+    b.step("accuracy-check", "Fail if the accuracy report or ledger is stale, or chardetz loses to uchardet").dependOn(&check.step);
+    test_step.dependOn(&check.step);
+
+    const write = b.addRunArtifact(runner);
+    write.addDirectoryArg(corpus);
+    write.addArgs(&.{ b.pathFromRoot(report_path), b.pathFromRoot(ledger_path), revs[0], revs[1], "--write" });
+    const new_report = write.addOutputFileArg("ACCURACY_REPORT.md");
+    const new_ledger = write.addOutputFileArg("differences.tsv");
+    if (allow_regression) write.addArg("--allow-regression");
+    write.has_side_effects = true;
+    const update = b.addUpdateSourceFiles();
+    update.addCopyFileToSource(new_report, report_path);
+    update.addCopyFileToSource(new_ledger, ledger_path);
+    b.step("accuracy-report", "Regenerate docs/ACCURACY_REPORT.md and tests/accuracy/differences.tsv").dependOn(&update.step);
+}
+
+/// The locked revision of a flake input, read from flake.lock.
+fn lockedRev(b: *std.Build, input: []const u8) []const u8 {
+    const lock = b.build_root.handle.readFileAlloc(b.graph.io, "flake.lock", b.allocator, .limited(1 << 20)) catch |e|
+        std.debug.panic("reading flake.lock: {s}", .{@errorName(e)});
+    const at = std.mem.indexOf(u8, lock, b.fmt("\"{s}\": {{", .{input})) orelse std.debug.panic("flake.lock has no {s}", .{input});
+    const key = "\"rev\": \"";
+    const start = (std.mem.indexOfPos(u8, lock, at, key) orelse std.debug.panic("flake.lock: no rev for {s}", .{input})) + key.len;
+    const end = std.mem.indexOfScalarPos(u8, lock, start, '"').?;
+    return lock[start..end];
 }

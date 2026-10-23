@@ -7,6 +7,8 @@ const std = @import("std");
 pub const Detector = @import("detector.zig").Detector;
 pub const UpstreamDetector = @import("detector.zig").UpstreamDetector;
 pub const Fixes = @import("detector.zig").Fixes;
+/// A detector with a chosen set of accuracy fixes (used to attribute differences).
+pub const DetectorWith = @import("detector.zig").DetectorWith;
 
 /// Prober verdicts (nsProbingState).
 pub const ProbingState = @import("prober.zig").State;

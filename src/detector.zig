@@ -71,8 +71,16 @@ pub const Fixes = struct {
     /// chunk is plain ASCII is reported as ASCII unless a prober becomes
     /// certain on its own.
     revisable_ascii: bool = true,
+    /// Report UTF-8 for input that is entirely valid UTF-8 and contains
+    /// multibyte characters. Upstream weighs UTF-8 by a confidence that
+    /// grows with the number of multibyte characters (0.75 for two), so a
+    /// single-byte language model often wins on short text. Text in a
+    /// single-byte charset almost never forms valid multibyte UTF-8 by
+    /// accident. Never overrides a byte-order mark, an escape-sequence or
+    /// other certain verdict, or PRINTABLE-BINARY.
+    valid_utf8: bool = true,
 
-    pub const none: Fixes = .{ .fixed_blocks = false, .revisable_ascii = false };
+    pub const none: Fixes = .{ .fixed_blocks = false, .revisable_ascii = false, .valid_utf8 = false };
 };
 
 /// Block size for `Fixes.fixed_blocks`: the size uchardet's own command-line
@@ -114,6 +122,8 @@ pub fn DetectorWith(comptime fixes: Fixes) type {
         /// recreates it on demand; `esc_alive` mirrors that lifetime.
         esc: EscProber = .{},
         esc_alive: bool = false,
+        /// `Fixes.valid_utf8` only.
+        utf8: Utf8Validator = .{},
 
         pub fn init(gpa: std.mem.Allocator) Self {
             return .{ .gpa = gpa };
@@ -133,6 +143,7 @@ pub fn DetectorWith(comptime fixes: Fixes) type {
             self.detected = null;
             self.got_data = false;
             self.last_char = 0;
+            self.utf8 = .{};
             self.pending.clearRetainingCapacity();
             if (self.esc_alive) self.esc.reset();
             self.pb.reset();
@@ -176,6 +187,7 @@ pub fn DetectorWith(comptime fixes: Fixes) type {
         fn process(self: *Self, buf: []const u8) void {
             if (self.done) return;
             if (buf.len > 0) self.got_data = true;
+            if (fixes.valid_utf8) self.utf8.feed(buf);
 
             if (self.start) {
                 self.start = false;
@@ -260,6 +272,10 @@ pub fn DetectorWith(comptime fixes: Fixes) type {
                     max_prober = i;
                 }
             }
+            if (fixes.valid_utf8 and self.utf8.multibyteText() and !(max_prober == 0 and max_conf > minimum_threshold)) {
+                self.reported = "UTF-8";
+                return;
+            }
             if (max_conf > minimum_threshold) self.reported = switch (max_prober) {
                 0 => PBProber.name,
                 1 => self.mbcs.charsetName(),
@@ -274,6 +290,57 @@ pub fn DetectorWith(comptime fixes: Fixes) type {
         }
     };
 }
+
+/// Strict streaming UTF-8 validation (RFC 3629: no overlong forms, surrogates
+/// or codepoints past U+10FFFF) across chunk boundaries, counting complete
+/// multibyte sequences. Backs `Fixes.valid_utf8`.
+const Utf8Validator = struct {
+    valid: bool = true,
+    /// Continuation bytes still expected in the current sequence.
+    need: u2 = 0,
+    /// Allowed range of the next continuation byte (narrower after E0, ED, F0, F4).
+    lo: u8 = 0x80,
+    hi: u8 = 0xBF,
+    multibyte: usize = 0,
+
+    fn feed(v: *Utf8Validator, buf: []const u8) void {
+        if (!v.valid) return;
+        for (buf) |b| {
+            if (v.need > 0) {
+                if (b < v.lo or b > v.hi) {
+                    v.valid = false;
+                    return;
+                }
+                v.lo = 0x80;
+                v.hi = 0xBF;
+                v.need -= 1;
+                if (v.need == 0) v.multibyte += 1;
+            } else switch (b) {
+                0x00...0x7F => {},
+                0xC2...0xDF => v.need = 1,
+                0xE0...0xEF => {
+                    v.need = 2;
+                    if (b == 0xE0) v.lo = 0xA0;
+                    if (b == 0xED) v.hi = 0x9F;
+                },
+                0xF0...0xF4 => {
+                    v.need = 3;
+                    if (b == 0xF0) v.lo = 0x90;
+                    if (b == 0xF4) v.hi = 0x8F;
+                },
+                else => {
+                    v.valid = false;
+                    return;
+                },
+            }
+        }
+    }
+
+    /// Everything so far is complete, valid UTF-8 with at least one multibyte character.
+    fn multibyteText(v: *const Utf8Validator) bool {
+        return v.valid and v.need == 0 and v.multibyte > 0;
+    }
+};
 
 /// Byte-order marks recognized in the first chunk (needs at least 3 bytes).
 fn detectBom(buf: []const u8) ?[:0]const u8 {
@@ -355,4 +422,52 @@ test "handleData leaves the detector unchanged when a buffer cannot grow" {
     try d.handleData(text);
     d.dataEnd();
     try std.testing.expectEqualStrings("UTF-8", d.charset());
+}
+
+test "valid UTF-8 with multibyte characters is reported as UTF-8" {
+    const bytes = "\xC4\xB0nsan haklar\xC4\xB1 evrensel beyannamesi"; // Turkish, two multibyte letters
+    // Upstream's UTF-8 confidence for two multibyte characters (0.75) loses
+    // to a single-byte language model.
+    try std.testing.expect(!std.mem.eql(u8, "UTF-8", try detectInChunks(UpstreamDetector, bytes, bytes.len)));
+    try std.testing.expectEqualStrings("UTF-8", try detectInChunks(Detector, bytes, bytes.len));
+    try std.testing.expectEqualStrings("UTF-8", try detectInChunks(Detector, bytes, 1));
+}
+
+test "input that is not valid UTF-8 is not forced to UTF-8" {
+    const latin1 = "Le caf\xE9 est tr\xE8s bon, merci beaucoup pour tout";
+    const truncated = "\xC4\xB0nsan haklar\xC4"; // ends inside a sequence
+    for ([_][]const u8{ latin1, truncated }) |bytes| {
+        try std.testing.expectEqualStrings(
+            try detectInChunks(UpstreamDetector, bytes, bytes.len),
+            try detectInChunks(Detector, bytes, bytes.len),
+        );
+    }
+    try std.testing.expectEqualStrings("ASCII", try detectInChunks(Detector, "plain ascii", 64));
+}
+
+test "Utf8Validator agrees with std.unicode on random inputs split at random points" {
+    var prng = std.Random.DefaultPrng.init(0x75746638);
+    const r = prng.random();
+    // Bytes biased toward the interesting UTF-8 boundaries.
+    const alphabet = [_]u8{ 'a', 0x7F, 0x80, 0x8F, 0x90, 0x9F, 0xA0, 0xBF, 0xC0, 0xC1, 0xC2, 0xDF, 0xE0, 0xED, 0xEF, 0xF0, 0xF4, 0xF5, 0xFF };
+    var buf: [12]u8 = undefined;
+    for (0..200_000) |_| {
+        const n = r.uintAtMost(usize, buf.len);
+        for (buf[0..n]) |*b| b.* = alphabet[r.uintLessThan(usize, alphabet.len)];
+        const s = buf[0..n];
+        var v: Utf8Validator = .{};
+        const cut = r.uintAtMost(usize, n);
+        v.feed(s[0..cut]);
+        v.feed(s[cut..]);
+        const want = std.unicode.utf8ValidateSlice(s);
+        try std.testing.expectEqual(want, v.valid and v.need == 0);
+        if (want) {
+            var multibyte: usize = 0;
+            var it = std.unicode.Utf8View.initUnchecked(s).iterator();
+            while (it.nextCodepointSlice()) |cp| {
+                if (cp.len > 1) multibyte += 1;
+            }
+            try std.testing.expectEqual(multibyte, v.multibyte);
+        }
+    }
 }

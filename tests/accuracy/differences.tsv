@@ -1,0 +1,2283 @@
+# feeding	case	uchardet	uchardet_correct	chardetz	chardetz_correct	fix
+ascii-prefix	007/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	007/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	007/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	008/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	008/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	008/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	008/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	008/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	008/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	010/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	010/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	011/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	016/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	016/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	017/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	017/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	027/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	027/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	027/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	028/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	032/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	032/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	032/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	041/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	041/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	042/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	042/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	042/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	043/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	043/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	043/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	043/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	044/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	044/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	044/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	044/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	045/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	045/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	045/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	046/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	047/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	052/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	053/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	053/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	053/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	054/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	054/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	054/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	054/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	054/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	056/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	056/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	056/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	057/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	057/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	059/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	059/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	059/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	060/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	060/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	060/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	061/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	061/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	062/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	062/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	062/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	062/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	064/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	068/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	068/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	068/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	069/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	071/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	071/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	071/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	072/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	072/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	aar/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	aar/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ace/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	acu/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	acu_1/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	acu_1/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ada/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ada/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	afr/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ajg/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ajg/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	aka_akuapem/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	aka_akuapem/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	aka_asante/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	aka_asante/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	aka_fante/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	als/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	als/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	als/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	als/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	amc/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ame/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ame/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	amr/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	arb/ISO-8859-6/1024	ASCII	no	ISO-8859-6	yes	revisable_ascii
+ascii-prefix	arb/ISO-8859-6/128	ASCII	no	ISO-8859-6	yes	revisable_ascii
+ascii-prefix	arb/ISO-8859-6/16	ASCII	no	ISO-8859-6	yes	revisable_ascii
+ascii-prefix	arb/ISO-8859-6/256	ASCII	no	ISO-8859-6	yes	revisable_ascii
+ascii-prefix	arb/ISO-8859-6/32	ASCII	no	ISO-8859-6	yes	revisable_ascii
+ascii-prefix	arb/ISO-8859-6/64	ASCII	no	ISO-8859-6	yes	revisable_ascii
+ascii-prefix	arb/ISO-8859-6/8	ASCII	no	ISO-8859-6	yes	revisable_ascii
+ascii-prefix	arb/ISO-8859-6/full	ASCII	no	ISO-8859-6	yes	revisable_ascii
+ascii-prefix	arb/WINDOWS-1256/1024	ASCII	no	WINDOWS-1256	yes	revisable_ascii
+ascii-prefix	arb/WINDOWS-1256/128	ASCII	no	WINDOWS-1256	yes	revisable_ascii
+ascii-prefix	arb/WINDOWS-1256/16	ASCII	no	WINDOWS-1256	yes	revisable_ascii
+ascii-prefix	arb/WINDOWS-1256/256	ASCII	no	WINDOWS-1256	yes	revisable_ascii
+ascii-prefix	arb/WINDOWS-1256/32	ASCII	no	WINDOWS-1256	yes	revisable_ascii
+ascii-prefix	arb/WINDOWS-1256/64	ASCII	no	WINDOWS-1256	yes	revisable_ascii
+ascii-prefix	arb/WINDOWS-1256/8	ASCII	no	WINDOWS-1256	yes	revisable_ascii
+ascii-prefix	arb/WINDOWS-1256/full	ASCII	no	WINDOWS-1256	yes	revisable_ascii
+ascii-prefix	arl/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	arn/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	arn/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	arn/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ast/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ast/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ast/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ast/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	auc/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	auc/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	auc/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	auc/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	auv/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	auv/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ayo/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ayo/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ayo/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ayo/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ayo/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ayo/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ayr/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ayr/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ayr/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	azj_latn/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	azj_latn/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	azj_latn/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bam/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	bax/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bax/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bba/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bba/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bba/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bci/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bfa/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bfa/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bfa/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bfa/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bin/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	boa/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	boa/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bos_latn/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bos_latn/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bos_latn/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bos_latn/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bre/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	btb/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	btb/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	btb/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	buc/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	buc/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	buc/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bul/ISO-8859-5/1024	ASCII	no	ISO-8859-5	yes	revisable_ascii
+ascii-prefix	bul/ISO-8859-5/128	ASCII	no	ISO-8859-5	yes	revisable_ascii
+ascii-prefix	bul/ISO-8859-5/16	ASCII	no	WINDOWS-1252	no	revisable_ascii
+ascii-prefix	bul/ISO-8859-5/256	ASCII	no	ISO-8859-5	yes	revisable_ascii
+ascii-prefix	bul/ISO-8859-5/32	ASCII	no	WINDOWS-1252	no	revisable_ascii
+ascii-prefix	bul/ISO-8859-5/64	ASCII	no		no	revisable_ascii
+ascii-prefix	bul/ISO-8859-5/8	ASCII	no	WINDOWS-1252	no	revisable_ascii
+ascii-prefix	bul/ISO-8859-5/full	ASCII	no	ISO-8859-5	yes	revisable_ascii
+ascii-prefix	bul/WINDOWS-1251/1024	ASCII	no	WINDOWS-1251	yes	revisable_ascii
+ascii-prefix	bul/WINDOWS-1251/128	ASCII	no	WINDOWS-1251	yes	revisable_ascii
+ascii-prefix	bul/WINDOWS-1251/16	ASCII	no	ISO-8859-7	no	revisable_ascii
+ascii-prefix	bul/WINDOWS-1251/256	ASCII	no	WINDOWS-1251	yes	revisable_ascii
+ascii-prefix	bul/WINDOWS-1251/32	ASCII	no		no	revisable_ascii
+ascii-prefix	bul/WINDOWS-1251/64	ASCII	no		no	revisable_ascii
+ascii-prefix	bul/WINDOWS-1251/8	ASCII	no	ISO-8859-7	no	revisable_ascii
+ascii-prefix	bul/WINDOWS-1251/full	ASCII	no	WINDOWS-1251	yes	revisable_ascii
+ascii-prefix	bvi/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	bvi/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cab/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cab/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	cab/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	cak/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cak/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cak/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cas/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cas/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cas/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cas/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	cat/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cat/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cat/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cat/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	cbi/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cbi/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cbr/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	cbr/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	cbr/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cbr/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	cbs/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cbs/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cbs/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cbs/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cbs/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cbt/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	cbt/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cbu/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	cbu/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ccp/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ccp/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ccp/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ccp/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ccp/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ccp/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ccp/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ccp/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ccx/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ces/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ces/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ces/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	cha/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	chj/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	chj/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	cic/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cic/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cic/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cjk_AO/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ckb/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ckb/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cmn_hans/GB18030/1024	ASCII	no	GB18030	yes	revisable_ascii
+ascii-prefix	cmn_hans/GB18030/128	ASCII	no	GB18030	yes	revisable_ascii
+ascii-prefix	cmn_hans/GB18030/16	ASCII	no	GB18030	yes	revisable_ascii
+ascii-prefix	cmn_hans/GB18030/256	ASCII	no	GB18030	yes	revisable_ascii
+ascii-prefix	cmn_hans/GB18030/32	ASCII	no	GB18030	yes	revisable_ascii
+ascii-prefix	cmn_hans/GB18030/64	ASCII	no	GB18030	yes	revisable_ascii
+ascii-prefix	cmn_hans/GB18030/8	ASCII	no	GB18030	yes	revisable_ascii
+ascii-prefix	cmn_hant/BIG5/1024	ASCII	no	BIG5	yes	revisable_ascii
+ascii-prefix	cmn_hant/BIG5/128	ASCII	no	BIG5	yes	revisable_ascii
+ascii-prefix	cmn_hant/BIG5/16	ASCII	no	BIG5	yes	revisable_ascii
+ascii-prefix	cmn_hant/BIG5/256	ASCII	no	BIG5	yes	revisable_ascii
+ascii-prefix	cmn_hant/BIG5/32	ASCII	no	BIG5	yes	revisable_ascii
+ascii-prefix	cmn_hant/BIG5/64	ASCII	no	BIG5	yes	revisable_ascii
+ascii-prefix	cmn_hant/BIG5/8	ASCII	no	BIG5	yes	revisable_ascii
+ascii-prefix	cmn_hant/EUC-TW/1024	ASCII	no	EUC-TW	yes	revisable_ascii
+ascii-prefix	cmn_hant/EUC-TW/128	ASCII	no	EUC-TW	yes	revisable_ascii
+ascii-prefix	cmn_hant/EUC-TW/16	ASCII	no	EUC-TW	yes	revisable_ascii
+ascii-prefix	cmn_hant/EUC-TW/256	ASCII	no	EUC-TW	yes	revisable_ascii
+ascii-prefix	cmn_hant/EUC-TW/32	ASCII	no	EUC-TW	yes	revisable_ascii
+ascii-prefix	cmn_hant/EUC-TW/64	ASCII	no	EUC-TW	yes	revisable_ascii
+ascii-prefix	cmn_hant/EUC-TW/8	ASCII	no	EUC-TW	yes	revisable_ascii
+ascii-prefix	cmn_hant/EUC-TW/full	ASCII	no	EUC-TW	yes	revisable_ascii
+ascii-prefix	cni/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cnr/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	cof/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cof/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cof/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cof/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cos/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cos/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cot/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cpu/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	crh/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	crh/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	crh/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	crs/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	csa/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	csa/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ctd/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ctd/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ctd/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ctd/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ctd/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	cym/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	cym/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	cym/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	dag/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	dag/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	dan/ISO-8859-1/1024	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	dan/ISO-8859-1/128	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	dan/ISO-8859-1/256	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	dan/ISO-8859-1/full	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	dan/ISO-8859-15/1024	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	dan/ISO-8859-15/128	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	dan/ISO-8859-15/256	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	dan/ISO-8859-15/full	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	dan/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	dan/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	dan/WINDOWS-1252/1024	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	dan/WINDOWS-1252/128	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	dan/WINDOWS-1252/256	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	dan/WINDOWS-1252/full	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	ddn/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ddn/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ddn/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ddn/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	deu_1901/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	deu_1901/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	deu_1901/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	deu_1996/ISO-8859-1/1024	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	deu_1996/ISO-8859-1/128	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	deu_1996/ISO-8859-1/256	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	deu_1996/ISO-8859-1/32	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	deu_1996/ISO-8859-1/64	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	deu_1996/ISO-8859-1/full	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	deu_1996/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	deu_1996/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	deu_1996/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	deu_1996/WINDOWS-1252/1024	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	deu_1996/WINDOWS-1252/128	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	deu_1996/WINDOWS-1252/256	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	deu_1996/WINDOWS-1252/32	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	deu_1996/WINDOWS-1252/64	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	deu_1996/WINDOWS-1252/full	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	dga/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	dip/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	dip/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	dip/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	dyo/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	dyo/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	dyu/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	dyu/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ell_monotonic/ISO-8859-7/1024	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/ISO-8859-7/128	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/ISO-8859-7/16	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/ISO-8859-7/256	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/ISO-8859-7/32	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/ISO-8859-7/64	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/ISO-8859-7/8	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/ISO-8859-7/full	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/WINDOWS-1253/1024	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/WINDOWS-1253/128	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/WINDOWS-1253/16	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/WINDOWS-1253/256	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/WINDOWS-1253/32	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/WINDOWS-1253/64	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/WINDOWS-1253/8	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	ell_monotonic/WINDOWS-1253/full	ASCII	no	ISO-8859-7	yes	revisable_ascii
+ascii-prefix	emk/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	emk/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	emk/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	emk/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	eml/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	epo/ISO-8859-3/1024	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	epo/ISO-8859-3/128	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	epo/ISO-8859-3/256	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	epo/ISO-8859-3/full	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	epo/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	epo/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ese/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ese/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ese/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ese/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ese/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	est/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	est/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	est/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	est/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ewe/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ewe/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fao/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fao/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	fij/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	fij/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fij/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fin/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	fin/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	fkv/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	fon/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-1/1024	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-1/128	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-1/16	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-1/256	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-1/32	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-1/64	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-1/8	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-1/full	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-15/1024	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-15/128	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-15/16	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-15/256	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-15/32	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-15/64	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-15/8	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/ISO-8859-15/full	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fra/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fra/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	fra/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fra/WINDOWS-1252/1024	ASCII	no	WINDOWS-1252	yes	revisable_ascii
+ascii-prefix	fra/WINDOWS-1252/128	ASCII	no	WINDOWS-1252	yes	revisable_ascii
+ascii-prefix	fra/WINDOWS-1252/16	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/WINDOWS-1252/256	ASCII	no	WINDOWS-1252	yes	revisable_ascii
+ascii-prefix	fra/WINDOWS-1252/32	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/WINDOWS-1252/64	ASCII	no	WINDOWS-1252	yes	revisable_ascii
+ascii-prefix	fra/WINDOWS-1252/8	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fra/WINDOWS-1252/full	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	fuf_adlm/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fuf_adlm/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fuf_adlm/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fuf_adlm/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fuf_adlm/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fuf_adlm/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fuf_adlm/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fuf_adlm/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fur/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	fur/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fur/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	fuv/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	fuv2/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	fuv2/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	fuv2/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gaa/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gaa/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gag/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	gag/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gag/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gjn/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gjn/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gjn/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	gkp/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gla/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gle/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	gle/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	gle/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gle/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	glg/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	glg/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	glg/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	glg/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	glv/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gnw/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gnw/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	gnw/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gnw/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gnw/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	gsw1/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gsw1/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gsw1/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	guc/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	guc/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	guc/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	guc/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	guc/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	guu/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	guu/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	guu/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gyr/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	gyr/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hat_kreyol/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hat_kreyol/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hat_popular/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hat_popular/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hat_popular/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hau_3/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hau_3/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hau_3/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	hau_3/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hau_NE/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hau_NE/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hau_NE/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	hau_NG/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hau_NG/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hau_NG/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hau_NG/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	haw/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	haw/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	haw/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	heb/ISO-8859-8/1024	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/ISO-8859-8/128	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/ISO-8859-8/16	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/ISO-8859-8/256	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/ISO-8859-8/32	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/ISO-8859-8/64	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/ISO-8859-8/8	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/ISO-8859-8/full	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/WINDOWS-1255/1024	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/WINDOWS-1255/128	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/WINDOWS-1255/16	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/WINDOWS-1255/256	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/WINDOWS-1255/32	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/WINDOWS-1255/64	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/WINDOWS-1255/8	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	heb/WINDOWS-1255/full	ASCII	no	WINDOWS-1255	yes	revisable_ascii
+ascii-prefix	hna/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hni/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hni/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hrv/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hrv/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hrv/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hrv/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hsb/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	hsb/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hsb/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	hsf/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hun/ISO-8859-2/1024	ASCII	no	ISO-8859-2	yes	revisable_ascii
+ascii-prefix	hun/ISO-8859-2/128	ASCII	no	ISO-8859-2	yes	revisable_ascii
+ascii-prefix	hun/ISO-8859-2/256	ASCII	no	ISO-8859-2	yes	revisable_ascii
+ascii-prefix	hun/ISO-8859-2/64	ASCII	no	ISO-8859-2	yes	revisable_ascii
+ascii-prefix	hun/ISO-8859-2/full	ASCII	no	ISO-8859-2	yes	revisable_ascii
+ascii-prefix	hun/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	hun/WINDOWS-1250/1024	ASCII	no	ISO-8859-2	yes	revisable_ascii
+ascii-prefix	hun/WINDOWS-1250/128	ASCII	no	ISO-8859-2	yes	revisable_ascii
+ascii-prefix	hun/WINDOWS-1250/256	ASCII	no	ISO-8859-2	yes	revisable_ascii
+ascii-prefix	hun/WINDOWS-1250/64	ASCII	no	ISO-8859-2	yes	revisable_ascii
+ascii-prefix	hun/WINDOWS-1250/full	ASCII	no	ISO-8859-2	yes	revisable_ascii
+ascii-prefix	huu/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	huu/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	huu/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hva/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hva/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hva/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hva/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	hva/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ibb/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ibo/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ibo/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	idu/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ijs/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ijs/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ijs/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	isl/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	isl/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	isl/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ita/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ita/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	jiv/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	jpn/EUC-JP/128	ASCII	no	EUC-JP	yes	revisable_ascii
+ascii-prefix	jpn/EUC-JP/16	ASCII	no	EUC-JP	yes	revisable_ascii
+ascii-prefix	jpn/EUC-JP/256	ASCII	no	EUC-JP	yes	revisable_ascii
+ascii-prefix	jpn/EUC-JP/32	ASCII	no	EUC-JP	yes	revisable_ascii
+ascii-prefix	jpn/EUC-JP/64	ASCII	no	EUC-JP	yes	revisable_ascii
+ascii-prefix	jpn/EUC-JP/8	ASCII	no	EUC-JP	yes	revisable_ascii
+ascii-prefix	jpn/SHIFT_JIS/128	ASCII	no	SHIFT_JIS	yes	revisable_ascii
+ascii-prefix	jpn/SHIFT_JIS/16	ASCII	no	SHIFT_JIS	yes	revisable_ascii
+ascii-prefix	jpn/SHIFT_JIS/256	ASCII	no	SHIFT_JIS	yes	revisable_ascii
+ascii-prefix	jpn/SHIFT_JIS/32	ASCII	no	SHIFT_JIS	yes	revisable_ascii
+ascii-prefix	jpn/SHIFT_JIS/64	ASCII	no	SHIFT_JIS	yes	revisable_ascii
+ascii-prefix	jpn/SHIFT_JIS/8	ASCII	no	SHIFT_JIS	yes	revisable_ascii
+ascii-prefix	kbp/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kbp/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kde/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kea/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kea/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	kea/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kea/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kea/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	kha/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kha/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kha/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kha/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kha/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kmb/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kmr/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kmr/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	knc/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kor/EUC-KR/1024	ASCII	no	EUC-KR	yes	revisable_ascii
+ascii-prefix	kor/EUC-KR/128	ASCII	no	EUC-KR	yes	revisable_ascii
+ascii-prefix	kor/EUC-KR/16	ASCII	no	EUC-KR	yes	revisable_ascii
+ascii-prefix	kor/EUC-KR/256	ASCII	no	EUC-KR	yes	revisable_ascii
+ascii-prefix	kor/EUC-KR/32	ASCII	no	EUC-KR	yes	revisable_ascii
+ascii-prefix	kor/EUC-KR/64	ASCII	no	EUC-KR	yes	revisable_ascii
+ascii-prefix	kor/EUC-KR/8	ASCII	no		no	revisable_ascii
+ascii-prefix	kor/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kri/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kri/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	kri/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	krl/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	krl/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	krl/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	lad/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lav/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lav/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lia/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lia/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lia/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lij/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	lij/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	lij/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	lij/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	lin/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lin/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lin_tones/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	lit/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lit/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lld/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lld/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lld/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lnc/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	lnc/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lns/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lns/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lns/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lob/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ltz/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	lus/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	lus/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	maz/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	maz/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	maz/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mcf/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mcf/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mcf/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	men/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	men/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mfq/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mfq/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	mfq/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mic/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	mic/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mic/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	min/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	miq/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	mlt/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mly_latn/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	mor/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mos/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mos/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mri/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mto/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mto/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mto/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mtp/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	mtp/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	mtp/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mtp/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	mxi/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	mxi/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	mxi/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	mxv/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mxv/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mxv/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mzi/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mzi/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	mzi/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	nav/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	nba/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	nds/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	nds/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	nhn/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	niu/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	niu/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	njo/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	njo/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	nku/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	nld/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	nno/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	nno/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	nno/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	nob/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	nob/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	not/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	not/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	nso/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	nso/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	nso/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	nso/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	nym/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	nym/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	nzi/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	oci_1/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	oci_1/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	oci_1/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	oci_2/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	oci_2/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	oci_3/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	oci_3/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	oci_4/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	oci_4/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ote/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ote/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	pbb/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	pbb/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	pcd/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	pcd/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	pcd/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	pol/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	pol/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	por_BR/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	por_BR/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	por_BR/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	por_BR/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	por_PT/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	por_PT/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	por_PT/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	por_PT/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	por_PT/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	pov/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	pov/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	prv/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	prv/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qud/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qug/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qug/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qug/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qug/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qug/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qul/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	quy/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	quy/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	quy/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qva/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qva/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qva/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	qvc/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qvh/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qvh/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qvh/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qvm/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qvm/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qvm/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qvm/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qvm/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qvm/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qwh/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qxa/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	qxn/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	qxu/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	rar/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	rmn/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	rmn/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	rmn/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	rmn_1/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	rmn_1/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	rmn_1/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	rmy/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	rmy/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	roh/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	roh/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	roh_puter/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	roh_puter/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	roh_sutsilv/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	roh_sutsilv/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	roh_sutsilv/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	roh_sutsilv/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	roh_sutsilv/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	roh_vallader/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	roh_vallader/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ron_1953/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ron_1953/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ron_1953/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ron_1953/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ron_1993/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ron_1993/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ron_1993/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ron_1993/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ron_2006/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ron_2006/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ron_2006/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ron_2006/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	rus/IBM855/1024	ASCII	no	IBM855	yes	revisable_ascii
+ascii-prefix	rus/IBM855/128	ASCII	no	IBM855	yes	revisable_ascii
+ascii-prefix	rus/IBM855/16	ASCII	no	IBM855	yes	revisable_ascii
+ascii-prefix	rus/IBM855/256	ASCII	no	IBM855	yes	revisable_ascii
+ascii-prefix	rus/IBM855/32	ASCII	no	IBM855	yes	revisable_ascii
+ascii-prefix	rus/IBM855/64	ASCII	no	IBM855	yes	revisable_ascii
+ascii-prefix	rus/IBM855/8	ASCII	no	IBM855	yes	revisable_ascii
+ascii-prefix	rus/IBM855/full	ASCII	no	IBM855	yes	revisable_ascii
+ascii-prefix	rus/IBM866/1024	ASCII	no	IBM866	yes	revisable_ascii
+ascii-prefix	rus/IBM866/128	ASCII	no	IBM866	yes	revisable_ascii
+ascii-prefix	rus/IBM866/16	ASCII	no	IBM866	yes	revisable_ascii
+ascii-prefix	rus/IBM866/256	ASCII	no	IBM866	yes	revisable_ascii
+ascii-prefix	rus/IBM866/32	ASCII	no	IBM866	yes	revisable_ascii
+ascii-prefix	rus/IBM866/64	ASCII	no	IBM866	yes	revisable_ascii
+ascii-prefix	rus/IBM866/8	ASCII	no	IBM866	yes	revisable_ascii
+ascii-prefix	rus/IBM866/full	ASCII	no	IBM866	yes	revisable_ascii
+ascii-prefix	rus/ISO-8859-5/1024	ASCII	no	ISO-8859-5	yes	revisable_ascii
+ascii-prefix	rus/ISO-8859-5/128	ASCII	no	ISO-8859-5	yes	revisable_ascii
+ascii-prefix	rus/ISO-8859-5/16	ASCII	no	ISO-8859-5	yes	revisable_ascii
+ascii-prefix	rus/ISO-8859-5/256	ASCII	no	ISO-8859-5	yes	revisable_ascii
+ascii-prefix	rus/ISO-8859-5/32	ASCII	no	ISO-8859-5	yes	revisable_ascii
+ascii-prefix	rus/ISO-8859-5/64	ASCII	no	ISO-8859-5	yes	revisable_ascii
+ascii-prefix	rus/ISO-8859-5/8	ASCII	no	ISO-8859-5	yes	revisable_ascii
+ascii-prefix	rus/ISO-8859-5/full	ASCII	no	ISO-8859-5	yes	revisable_ascii
+ascii-prefix	rus/KOI8-R/1024	ASCII	no	KOI8-R	yes	revisable_ascii
+ascii-prefix	rus/KOI8-R/128	ASCII	no	KOI8-R	yes	revisable_ascii
+ascii-prefix	rus/KOI8-R/16	ASCII	no	KOI8-R	yes	revisable_ascii
+ascii-prefix	rus/KOI8-R/256	ASCII	no	KOI8-R	yes	revisable_ascii
+ascii-prefix	rus/KOI8-R/32	ASCII	no	KOI8-R	yes	revisable_ascii
+ascii-prefix	rus/KOI8-R/64	ASCII	no	KOI8-R	yes	revisable_ascii
+ascii-prefix	rus/KOI8-R/8	ASCII	no	KOI8-R	yes	revisable_ascii
+ascii-prefix	rus/KOI8-R/full	ASCII	no	KOI8-R	yes	revisable_ascii
+ascii-prefix	rus/MAC-CYRILLIC/1024	ASCII	no	MAC-CYRILLIC	yes	revisable_ascii
+ascii-prefix	rus/MAC-CYRILLIC/128	ASCII	no	MAC-CYRILLIC	yes	revisable_ascii
+ascii-prefix	rus/MAC-CYRILLIC/16	ASCII	no	MAC-CYRILLIC	yes	revisable_ascii
+ascii-prefix	rus/MAC-CYRILLIC/256	ASCII	no	MAC-CYRILLIC	yes	revisable_ascii
+ascii-prefix	rus/MAC-CYRILLIC/32	ASCII	no	MAC-CYRILLIC	yes	revisable_ascii
+ascii-prefix	rus/MAC-CYRILLIC/64	ASCII	no	MAC-CYRILLIC	yes	revisable_ascii
+ascii-prefix	rus/MAC-CYRILLIC/8	ASCII	no	MAC-CYRILLIC	yes	revisable_ascii
+ascii-prefix	rus/MAC-CYRILLIC/full	ASCII	no	MAC-CYRILLIC	yes	revisable_ascii
+ascii-prefix	rus/WINDOWS-1251/1024	ASCII	no	WINDOWS-1251	yes	revisable_ascii
+ascii-prefix	rus/WINDOWS-1251/128	ASCII	no	WINDOWS-1251	yes	revisable_ascii
+ascii-prefix	rus/WINDOWS-1251/16	ASCII	no	WINDOWS-1251	yes	revisable_ascii
+ascii-prefix	rus/WINDOWS-1251/256	ASCII	no	WINDOWS-1251	yes	revisable_ascii
+ascii-prefix	rus/WINDOWS-1251/32	ASCII	no	WINDOWS-1251	yes	revisable_ascii
+ascii-prefix	rus/WINDOWS-1251/64	ASCII	no	WINDOWS-1251	yes	revisable_ascii
+ascii-prefix	rus/WINDOWS-1251/8	ASCII	no	WINDOWS-1251	yes	revisable_ascii
+ascii-prefix	rus/WINDOWS-1251/full	ASCII	no	WINDOWS-1251	yes	revisable_ascii
+ascii-prefix	sag/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	san_gran/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	san_gran/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	san_gran/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	san_gran/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	san_gran/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	san_gran/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	san_gran/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	san_gran/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	sco/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	sco/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	sey/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	sey/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	sey/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	sey/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	shk/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	shk/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	shp/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	shp/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	shp/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	shp/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	slk/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	slk/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	slr/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	slr/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	slr/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	slv/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	slv/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	slv/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	slv/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	sme/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	sme/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	sme/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	smo/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	smo/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	smo/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	snk/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	snn/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	snn/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	spa/ISO-8859-1/1024	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	spa/ISO-8859-1/128	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	spa/ISO-8859-1/16	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	spa/ISO-8859-1/256	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	spa/ISO-8859-1/32	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	spa/ISO-8859-1/64	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	spa/ISO-8859-1/full	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	spa/ISO-8859-15/1024	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	spa/ISO-8859-15/128	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	spa/ISO-8859-15/16	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	spa/ISO-8859-15/256	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	spa/ISO-8859-15/32	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	spa/ISO-8859-15/64	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	spa/ISO-8859-15/full	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	spa/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	spa/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	spa/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	spa/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	spa/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	spa/WINDOWS-1252/1024	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	spa/WINDOWS-1252/128	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	spa/WINDOWS-1252/16	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	spa/WINDOWS-1252/256	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	spa/WINDOWS-1252/32	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	spa/WINDOWS-1252/64	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	spa/WINDOWS-1252/full	ASCII	no	ISO-8859-1	yes	revisable_ascii
+ascii-prefix	src/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	src/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	src/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	srp_latn/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	srp_latn/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	srp_latn/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	srp_latn/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	srq/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	srq/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	srq/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	srq/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	srr/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	srr/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ssw/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ssw/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ssw/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	suk/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	suk/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	sus/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	swb/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	swb/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	swe/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	swe/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	swe/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	swe/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	tah/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tca/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tem/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tem/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tha/ISO-8859-11/1024	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/ISO-8859-11/128	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/ISO-8859-11/16	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/ISO-8859-11/256	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/ISO-8859-11/32	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/ISO-8859-11/64	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/ISO-8859-11/8	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/ISO-8859-11/full	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/TIS-620/1024	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/TIS-620/128	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/TIS-620/16	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/TIS-620/256	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/TIS-620/32	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/TIS-620/64	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/TIS-620/8	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tha/TIS-620/full	ASCII	no	TIS-620	yes	revisable_ascii
+ascii-prefix	tiv/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tiv/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tly/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tly/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	tna/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tna/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	tna/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tna/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	tna/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tna/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	tob/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tob/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tob/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	toj/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	toj/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ton/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ton/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tpi/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	trn/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	trn/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	trn/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	trn/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	tsn/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	tsn/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	tsn/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	tsn/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	tso_MZ/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tso_ZW/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tso_ZW/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tsz/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	tsz/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tuk_latn/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-3/1024	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-3/128	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-3/16	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-3/256	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-3/32	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-3/64	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-3/8	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-3/full	ASCII	no	ISO-8859-3	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-9/1024	ASCII	no	ISO-8859-9	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-9/128	ASCII	no	ISO-8859-9	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-9/16	ASCII	no	ISO-8859-9	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-9/256	ASCII	no	ISO-8859-9	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-9/32	ASCII	no	ISO-8859-9	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-9/64	ASCII	no	ISO-8859-9	yes	revisable_ascii
+ascii-prefix	tur/ISO-8859-9/8	ASCII	no	WINDOWS-1258	no	revisable_ascii
+ascii-prefix	tur/ISO-8859-9/full	ASCII	no	ISO-8859-9	yes	revisable_ascii
+ascii-prefix	tur/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	tur/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	tur/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	tzc/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tzc/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tzc/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tzc/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tzh/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tzh/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tzh/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tzh/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tzm/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tzm/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tzm/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tzm/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tzm/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	tzm/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	udu/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	udu/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	udu/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	udu/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	uig_latn/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	uig_latn/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	umb/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	umb/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ura/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ura/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	vec/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	vec/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ven/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ven/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ven/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ven2/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	ven2/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	vep/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	vep/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	vie/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	vie/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	vie/VISCII/1024	ASCII	no	VISCII	yes	revisable_ascii
+ascii-prefix	vie/VISCII/128	ASCII	no	VISCII	yes	revisable_ascii
+ascii-prefix	vie/VISCII/16	ASCII	no	VISCII	yes	revisable_ascii
+ascii-prefix	vie/VISCII/256	ASCII	no	VISCII	yes	revisable_ascii
+ascii-prefix	vie/VISCII/32	ASCII	no	VISCII	yes	revisable_ascii
+ascii-prefix	vie/VISCII/64	ASCII	no	VISCII	yes	revisable_ascii
+ascii-prefix	vie/VISCII/8	ASCII	no	VISCII	yes	revisable_ascii
+ascii-prefix	vie/VISCII/full	ASCII	no	VISCII	yes	revisable_ascii
+ascii-prefix	vie/WINDOWS-1258/1024	ASCII	no	WINDOWS-1258	yes	revisable_ascii
+ascii-prefix	vie/WINDOWS-1258/128	ASCII	no	WINDOWS-1258	yes	revisable_ascii
+ascii-prefix	vie/WINDOWS-1258/16	ASCII	no	VISCII	yes	revisable_ascii
+ascii-prefix	vie/WINDOWS-1258/256	ASCII	no	WINDOWS-1258	yes	revisable_ascii
+ascii-prefix	vie/WINDOWS-1258/32	ASCII	no	WINDOWS-1258	yes	revisable_ascii
+ascii-prefix	vie/WINDOWS-1258/64	ASCII	no	WINDOWS-1258	yes	revisable_ascii
+ascii-prefix	vie/WINDOWS-1258/8	ASCII	no	VISCII	yes	revisable_ascii
+ascii-prefix	vie/WINDOWS-1258/full	ASCII	no	WINDOWS-1258	yes	revisable_ascii
+ascii-prefix	vmw/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	vmw/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	wln/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	wln/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	wol/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	wwa/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	wwa/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	xho/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	xho/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	xho/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	xho/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	xho/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	xho/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	xho/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	xsm/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	xsm/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	xsm/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	xsm/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	yad/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	yap/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	yap/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	yap/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	yap/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	yap/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	yor/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	yua/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	yua/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	yua/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	yuz/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	yuz/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	yuz/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+ascii-prefix	zam/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ztu/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	ztu/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+ascii-prefix	zul/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	007/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	007/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	007/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	008/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	008/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	008/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	008/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	008/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	008/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	010/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	010/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	011/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	016/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	016/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	017/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	017/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	027/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	027/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	027/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	028/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	032/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	032/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	032/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	041/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	041/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	042/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	042/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	042/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	043/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	043/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	043/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	043/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	044/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	044/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	044/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	044/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	045/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	045/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	045/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	046/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	047/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	052/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	053/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	053/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	053/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	054/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	054/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	054/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	054/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	054/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	056/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	056/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	056/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	057/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	057/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	059/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	059/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	059/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	060/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	060/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	060/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	061/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	061/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	062/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	062/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	062/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	062/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	064/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	068/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	068/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	068/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	069/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	071/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	071/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	071/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	072/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	072/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	aar/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	aar/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	ace/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	acu/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	acu_1/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	acu_1/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	ada/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ada/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	afr/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ajg/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ajg/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	aka_akuapem/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	aka_akuapem/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	aka_asante/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	aka_asante/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	aka_fante/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	als/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	als/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	als/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	als/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	amc/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	ame/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ame/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	amr/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	arl/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	arn/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	arn/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	arn/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ast/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ast/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	ast/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	ast/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	auc/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	auc/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	auc/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	auc/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	auv/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	auv/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ayo/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ayo/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ayo/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ayo/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ayo/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ayo/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ayr/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ayr/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ayr/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bam/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	bax/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bax/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bba/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bba/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bba/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bci/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bfa/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bfa/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bfa/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bfa/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bin/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	boa/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	boa/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	bos_latn/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bos_latn/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bos_latn/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bos_latn/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bre/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	btb/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	btb/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	btb/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	buc/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	buc/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	buc/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bvi/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	bvi/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cab/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cab/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	cab/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	cak/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cak/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cak/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cas/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cas/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cas/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cas/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	cat/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cat/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cat/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cat/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	cbi/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cbi/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cbr/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	cbr/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	cbr/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cbr/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	cbs/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cbs/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cbs/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cbs/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cbs/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cbt/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	cbt/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cbu/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	cbu/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ccp/UTF-8/1024		no	UTF-8	yes	valid_utf8
+bytewise	ccp/UTF-8/128		no	UTF-8	yes	valid_utf8
+bytewise	ccp/UTF-8/16		no	UTF-8	yes	valid_utf8
+bytewise	ccp/UTF-8/256		no	UTF-8	yes	valid_utf8
+bytewise	ccp/UTF-8/32		no	UTF-8	yes	valid_utf8
+bytewise	ccp/UTF-8/64		no	UTF-8	yes	valid_utf8
+bytewise	ccp/UTF-8/8	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+bytewise	ccp/UTF-8/full		no	UTF-8	yes	valid_utf8
+bytewise	ccx/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ces/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ces/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ces/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	cha/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	chj/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	chj/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	cic/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cic/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cic/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cjk_AO/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	ckb/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ckb/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cni/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cnr/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	cof/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cof/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cof/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cof/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cos/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cos/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cot/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	cpu/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	crs/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	csa/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	csa/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ctd/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ctd/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ctd/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ctd/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ctd/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	cym/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	cym/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	cym/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	dag/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	dag/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	dan/ISO-8859-1/1024	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	dan/ISO-8859-1/128	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	dan/ISO-8859-1/256	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	dan/ISO-8859-1/full	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	dan/ISO-8859-15/1024	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	dan/ISO-8859-15/128	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	dan/ISO-8859-15/256	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	dan/ISO-8859-15/full	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	dan/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	dan/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	dan/WINDOWS-1252/1024	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	dan/WINDOWS-1252/128	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	dan/WINDOWS-1252/256	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	dan/WINDOWS-1252/full	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	deu_1901/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	deu_1901/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	deu_1901/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	deu_1996/ISO-8859-1/1024	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	deu_1996/ISO-8859-1/128	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	deu_1996/ISO-8859-1/256	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	deu_1996/ISO-8859-1/32	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	deu_1996/ISO-8859-1/64	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	deu_1996/ISO-8859-1/full	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	deu_1996/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	deu_1996/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	deu_1996/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	deu_1996/WINDOWS-1252/1024	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	deu_1996/WINDOWS-1252/128	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	deu_1996/WINDOWS-1252/256	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	deu_1996/WINDOWS-1252/32	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	deu_1996/WINDOWS-1252/64	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	deu_1996/WINDOWS-1252/full	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	dga/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	dip/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	dip/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	dip/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	dyo/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	dyo/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	dyu/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	dyu/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	emk/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	emk/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	emk/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	emk/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	eml/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	epo/ISO-8859-3/1024	ASCII	no	ISO-8859-3	yes	fixed_blocks
+bytewise	epo/ISO-8859-3/128	ASCII	no	ISO-8859-3	yes	fixed_blocks
+bytewise	epo/ISO-8859-3/256	ASCII	no	ISO-8859-3	yes	fixed_blocks
+bytewise	epo/ISO-8859-3/full	ASCII	no	ISO-8859-3	yes	fixed_blocks
+bytewise	epo/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	epo/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ese/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ese/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ese/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ese/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ese/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	est/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	est/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	est/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	est/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	ewe/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ewe/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	fao/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	fao/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	fij/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	fij/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	fij/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	fin/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	fin/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	fkv/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	fon/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	fra/ISO-8859-1/1024	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-1/128	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-1/16	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-1/256	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-1/32	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-1/64	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-1/8	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-1/full	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-15/1024	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-15/128	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-15/16	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-15/256	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-15/32	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-15/64	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-15/8	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/ISO-8859-15/full	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/UTF-16/1024	WINDOWS-1252	no	UTF-16	yes	fixed_blocks
+bytewise	fra/UTF-16/128	WINDOWS-1252	no	UTF-16	yes	fixed_blocks
+bytewise	fra/UTF-16/16		no	UTF-16	yes	fixed_blocks
+bytewise	fra/UTF-16/256	WINDOWS-1252	no	UTF-16	yes	fixed_blocks
+bytewise	fra/UTF-16/32		no	UTF-16	yes	fixed_blocks
+bytewise	fra/UTF-16/64	WINDOWS-1252	no	UTF-16	yes	fixed_blocks
+bytewise	fra/UTF-16/8		no	UTF-16	yes	fixed_blocks
+bytewise	fra/UTF-16/full	WINDOWS-1252	no	UTF-16	yes	fixed_blocks
+bytewise	fra/UTF-16BE/1024	ASCII	no	UTF-16BE	yes	fixed_blocks
+bytewise	fra/UTF-16BE/128	ASCII	no	UTF-16BE	yes	fixed_blocks
+bytewise	fra/UTF-16BE/16	ASCII	no	UTF-16BE	yes	fixed_blocks
+bytewise	fra/UTF-16BE/256	ASCII	no	UTF-16BE	yes	fixed_blocks
+bytewise	fra/UTF-16BE/32	ASCII	no	UTF-16BE	yes	fixed_blocks
+bytewise	fra/UTF-16BE/64	ASCII	no	UTF-16BE	yes	fixed_blocks
+bytewise	fra/UTF-16BE/8	ASCII	no	UTF-16BE	yes	fixed_blocks
+bytewise	fra/UTF-16BE/full	ASCII	no	UTF-16BE	yes	fixed_blocks
+bytewise	fra/UTF-16LE/1024	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	fra/UTF-16LE/128	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	fra/UTF-16LE/16	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	fra/UTF-16LE/256	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	fra/UTF-16LE/32	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	fra/UTF-16LE/64	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	fra/UTF-16LE/8	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	fra/UTF-16LE/full	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	fra/UTF-32/1024	WINDOWS-1252	no	UTF-32	yes	fixed_blocks
+bytewise	fra/UTF-32/128	WINDOWS-1252	no	UTF-32	yes	fixed_blocks
+bytewise	fra/UTF-32/16		no	UTF-32	yes	fixed_blocks
+bytewise	fra/UTF-32/256	WINDOWS-1252	no	UTF-32	yes	fixed_blocks
+bytewise	fra/UTF-32/32		no	UTF-32	yes	fixed_blocks
+bytewise	fra/UTF-32/64	WINDOWS-1252	no	UTF-32	yes	fixed_blocks
+bytewise	fra/UTF-32/8		no	UTF-32	yes	fixed_blocks
+bytewise	fra/UTF-32/full	WINDOWS-1252	no	UTF-32	yes	fixed_blocks
+bytewise	fra/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	fra/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	fra/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	fra/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	fra/WINDOWS-1252/1024	ASCII	no	WINDOWS-1252	yes	fixed_blocks or revisable_ascii
+bytewise	fra/WINDOWS-1252/128	ASCII	no	WINDOWS-1252	yes	fixed_blocks or revisable_ascii
+bytewise	fra/WINDOWS-1252/16	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/WINDOWS-1252/256	ASCII	no	WINDOWS-1252	yes	fixed_blocks
+bytewise	fra/WINDOWS-1252/32	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/WINDOWS-1252/64	ASCII	no	WINDOWS-1252	yes	fixed_blocks or revisable_ascii
+bytewise	fra/WINDOWS-1252/8	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fra/WINDOWS-1252/full	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	fuf_adlm/UTF-8/1024		no	UTF-8	yes	valid_utf8
+bytewise	fuf_adlm/UTF-8/128		no	UTF-8	yes	valid_utf8
+bytewise	fuf_adlm/UTF-8/16	BIG5	no	UTF-8	yes	valid_utf8
+bytewise	fuf_adlm/UTF-8/256		no	UTF-8	yes	valid_utf8
+bytewise	fuf_adlm/UTF-8/32		no	UTF-8	yes	valid_utf8
+bytewise	fuf_adlm/UTF-8/64	ISO-8859-7	no	UTF-8	yes	valid_utf8
+bytewise	fuf_adlm/UTF-8/8		no	UTF-8	yes	valid_utf8
+bytewise	fuf_adlm/UTF-8/full		no	UTF-8	yes	valid_utf8
+bytewise	fur/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	fur/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	fur/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	fuv/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	fuv2/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	fuv2/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	fuv2/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gaa/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gaa/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gag/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	gag/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gag/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gjn/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gjn/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gjn/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	gkp/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gla/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gle/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	gle/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	gle/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gle/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	glg/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	glg/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	glg/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	glg/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	glv/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gnw/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gnw/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	gnw/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gnw/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gnw/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	guc/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	guc/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	guc/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	guc/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	guc/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	guu/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	guu/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	guu/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gyr/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	gyr/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hat_kreyol/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	hat_kreyol/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	hat_popular/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	hat_popular/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	hat_popular/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	hau_3/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hau_3/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hau_3/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	hau_3/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hau_NE/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hau_NE/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hau_NE/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	hau_NG/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hau_NG/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hau_NG/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hau_NG/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	haw/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	haw/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	haw/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hna/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hni/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hni/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hrv/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hrv/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hrv/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hrv/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hsb/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	hsb/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hsb/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	hsf/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hun/ISO-8859-2/1024	ASCII	no	ISO-8859-2	yes	fixed_blocks
+bytewise	hun/ISO-8859-2/128	ASCII	no	ISO-8859-2	yes	fixed_blocks
+bytewise	hun/ISO-8859-2/256	ASCII	no	ISO-8859-2	yes	fixed_blocks
+bytewise	hun/ISO-8859-2/64	ASCII	no	ISO-8859-2	yes	fixed_blocks
+bytewise	hun/ISO-8859-2/full	ASCII	no	ISO-8859-2	yes	fixed_blocks
+bytewise	hun/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	hun/WINDOWS-1250/1024	ASCII	no	ISO-8859-2	yes	fixed_blocks
+bytewise	hun/WINDOWS-1250/128	ASCII	no	ISO-8859-2	yes	fixed_blocks
+bytewise	hun/WINDOWS-1250/256	ASCII	no	ISO-8859-2	yes	fixed_blocks
+bytewise	hun/WINDOWS-1250/64	ASCII	no	ISO-8859-2	yes	fixed_blocks
+bytewise	hun/WINDOWS-1250/full	ASCII	no	ISO-8859-2	yes	fixed_blocks
+bytewise	huu/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	huu/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	huu/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	hva/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hva/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hva/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hva/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	hva/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ibb/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ibo/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ibo/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	idu/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ijs/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ijs/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ijs/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	isl/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	isl/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	isl/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ita/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ita/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	jiv/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	jpn/UTF-16/1024	ISO-8859-9	no	UTF-16	yes	fixed_blocks
+bytewise	jpn/UTF-16/128	ISO-8859-9	no	UTF-16	yes	fixed_blocks
+bytewise	jpn/UTF-16/16		no	UTF-16	yes	fixed_blocks
+bytewise	jpn/UTF-16/256	ISO-8859-9	no	UTF-16	yes	fixed_blocks
+bytewise	jpn/UTF-16/32		no	UTF-16	yes	fixed_blocks
+bytewise	jpn/UTF-16/64		no	UTF-16	yes	fixed_blocks
+bytewise	jpn/UTF-16/8		no	UTF-16	yes	fixed_blocks
+bytewise	jpn/UTF-16/full	ISO-8859-9	no	UTF-16	yes	fixed_blocks
+bytewise	jpn/UTF-16BE/1024	ASCII	no		no	fixed_blocks
+bytewise	jpn/UTF-16BE/128	ASCII	no		no	fixed_blocks
+bytewise	jpn/UTF-16BE/16	ASCII	no	WINDOWS-1252	no	fixed_blocks or revisable_ascii
+bytewise	jpn/UTF-16BE/256	ASCII	no		no	fixed_blocks
+bytewise	jpn/UTF-16BE/32	ASCII	no	UTF-16BE	yes	fixed_blocks
+bytewise	jpn/UTF-16BE/64	ASCII	no	UTF-16BE	yes	fixed_blocks
+bytewise	jpn/UTF-16BE/8	ASCII	no	WINDOWS-1252	no	fixed_blocks or revisable_ascii
+bytewise	jpn/UTF-16BE/full	ASCII	no		no	fixed_blocks
+bytewise	jpn/UTF-16LE/1024	ASCII	no		no	fixed_blocks
+bytewise	jpn/UTF-16LE/128	ASCII	no		no	fixed_blocks
+bytewise	jpn/UTF-16LE/16	ASCII	no	WINDOWS-1252	no	fixed_blocks or revisable_ascii
+bytewise	jpn/UTF-16LE/256	ASCII	no		no	fixed_blocks
+bytewise	jpn/UTF-16LE/32	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	jpn/UTF-16LE/64	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	jpn/UTF-16LE/8	ASCII	no	WINDOWS-1252	no	fixed_blocks or revisable_ascii
+bytewise	jpn/UTF-16LE/full	ASCII	no		no	fixed_blocks
+bytewise	jpn/UTF-32/1024	ISO-8859-9	no	UTF-32	yes	fixed_blocks
+bytewise	jpn/UTF-32/128	ISO-8859-9	no	UTF-32	yes	fixed_blocks
+bytewise	jpn/UTF-32/16		no	UTF-32	yes	fixed_blocks
+bytewise	jpn/UTF-32/256	ISO-8859-9	no	UTF-32	yes	fixed_blocks
+bytewise	jpn/UTF-32/32		no	UTF-32	yes	fixed_blocks
+bytewise	jpn/UTF-32/64		no	UTF-32	yes	fixed_blocks
+bytewise	jpn/UTF-32/8		no	UTF-32	yes	fixed_blocks
+bytewise	jpn/UTF-32/full	ISO-8859-9	no	UTF-32	yes	fixed_blocks
+bytewise	kbp/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kbp/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kde/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kea/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kea/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	kea/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kea/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kea/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	kha/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kha/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kha/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kha/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kha/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kmb/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kmr/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kmr/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	knc/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kor/UTF-16/1024		no	UTF-16	yes	fixed_blocks
+bytewise	kor/UTF-16/128		no	UTF-16	yes	fixed_blocks
+bytewise	kor/UTF-16/16		no	UTF-16	yes	fixed_blocks
+bytewise	kor/UTF-16/256		no	UTF-16	yes	fixed_blocks
+bytewise	kor/UTF-16/32		no	UTF-16	yes	fixed_blocks
+bytewise	kor/UTF-16/64		no	UTF-16	yes	fixed_blocks
+bytewise	kor/UTF-16/8		no	UTF-16	yes	fixed_blocks
+bytewise	kor/UTF-16/full		no	UTF-16	yes	fixed_blocks
+bytewise	kor/UTF-16BE/1024		no	UTF-16BE	yes	fixed_blocks
+bytewise	kor/UTF-16BE/128		no	UTF-16BE	yes	fixed_blocks
+bytewise	kor/UTF-16BE/16	ISO-8859-7	no	UTF-16BE	yes	fixed_blocks
+bytewise	kor/UTF-16BE/256		no	UTF-16BE	yes	fixed_blocks
+bytewise	kor/UTF-16BE/32	ISO-8859-7	no	UTF-16BE	yes	fixed_blocks
+bytewise	kor/UTF-16BE/64	ISO-8859-7	no	UTF-16BE	yes	fixed_blocks
+bytewise	kor/UTF-16BE/8	WINDOWS-1252	no	UTF-16BE	yes	fixed_blocks
+bytewise	kor/UTF-16BE/full		no	UTF-16BE	yes	fixed_blocks
+bytewise	kor/UTF-16LE/1024	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	kor/UTF-16LE/128	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	kor/UTF-16LE/16	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	kor/UTF-16LE/256	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	kor/UTF-16LE/32	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	kor/UTF-16LE/64	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	kor/UTF-16LE/8	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	kor/UTF-16LE/full	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	kor/UTF-32/1024		no	UTF-32	yes	fixed_blocks
+bytewise	kor/UTF-32/128		no	UTF-32	yes	fixed_blocks
+bytewise	kor/UTF-32/16		no	UTF-32	yes	fixed_blocks
+bytewise	kor/UTF-32/256		no	UTF-32	yes	fixed_blocks
+bytewise	kor/UTF-32/32		no	UTF-32	yes	fixed_blocks
+bytewise	kor/UTF-32/64		no	UTF-32	yes	fixed_blocks
+bytewise	kor/UTF-32/8		no	UTF-32	yes	fixed_blocks
+bytewise	kor/UTF-32/full		no	UTF-32	yes	fixed_blocks
+bytewise	kri/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kri/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	kri/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	krl/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	krl/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	krl/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	lad/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lav/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lav/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lia/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lia/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lia/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lij/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	lij/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	lij/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	lij/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	lin/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lin/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lin_tones/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	lit/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lit/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lld/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lld/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lld/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lnc/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	lnc/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lns/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lns/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lns/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lob/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ltz/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	lus/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	lus/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	maz/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	maz/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	maz/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mcf/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mcf/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mcf/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	men/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	men/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mfq/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mfq/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	mfq/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mic/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	mic/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mic/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	min/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	miq/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	mlt/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mly_latn/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	mos/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mos/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mri/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mto/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mto/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mto/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mtp/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	mtp/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	mtp/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mtp/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	mxi/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	mxi/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	mxi/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	mxv/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mxv/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mxv/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mzi/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	mzi/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	mzi/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	nav/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	nba/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	nds/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	nds/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	nhn/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	niu/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	niu/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	njo/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	njo/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	nld/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	nno/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	nno/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	nno/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	nob/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	nob/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	not/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	not/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	nso/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	nso/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	nso/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	nso/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	nym/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	nym/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	nzi/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	oci_1/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	oci_1/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	oci_1/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	oci_2/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	oci_2/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	oci_3/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	oci_3/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	oci_4/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	oci_4/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	ote/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ote/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	pbb/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	pbb/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	pcd/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	pcd/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	pcd/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	pol/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	pol/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	por_BR/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	por_BR/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	por_BR/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	por_BR/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	por_PT/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	por_PT/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	por_PT/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	por_PT/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	por_PT/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	pov/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	pov/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	prv/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	prv/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	qud/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qug/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qug/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qug/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qug/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qug/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qul/UTF-8/256	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	quy/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	quy/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	quy/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qva/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qva/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qva/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	qvc/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qvh/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qvh/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qvh/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qvm/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qvm/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qvm/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qvm/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qvm/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qvm/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qwh/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qxa/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	qxn/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	qxu/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	rar/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	rmn/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	rmn/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	rmn/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	rmn_1/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	rmn_1/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	rmn_1/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	rmy/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	rmy/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	roh/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	roh/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	roh_puter/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	roh_puter/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	roh_sutsilv/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	roh_sutsilv/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	roh_sutsilv/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	roh_sutsilv/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	roh_sutsilv/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	roh_vallader/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	roh_vallader/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ron_1953/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ron_1953/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ron_1953/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ron_1953/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ron_1993/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ron_1993/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ron_1993/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ron_1993/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ron_2006/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ron_2006/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ron_2006/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ron_2006/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	rus/UTF-16/1024	WINDOWS-1252	no	UTF-16	yes	fixed_blocks
+bytewise	rus/UTF-16/128		no	UTF-16	yes	fixed_blocks
+bytewise	rus/UTF-16/16		no	UTF-16	yes	fixed_blocks
+bytewise	rus/UTF-16/256	WINDOWS-1252	no	UTF-16	yes	fixed_blocks
+bytewise	rus/UTF-16/32		no	UTF-16	yes	fixed_blocks
+bytewise	rus/UTF-16/64		no	UTF-16	yes	fixed_blocks
+bytewise	rus/UTF-16/8		no	UTF-16	yes	fixed_blocks
+bytewise	rus/UTF-16/full	WINDOWS-1252	no	UTF-16	yes	fixed_blocks
+bytewise	rus/UTF-16BE/1024	ASCII	no	UTF-16BE	yes	fixed_blocks
+bytewise	rus/UTF-16BE/128	ASCII	no	UTF-16BE	yes	fixed_blocks
+bytewise	rus/UTF-16BE/256	ASCII	no	UTF-16BE	yes	fixed_blocks
+bytewise	rus/UTF-16BE/full	ASCII	no	UTF-16BE	yes	fixed_blocks
+bytewise	rus/UTF-16LE/1024	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	rus/UTF-16LE/128	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	rus/UTF-16LE/256	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	rus/UTF-16LE/full	ASCII	no	UTF-16LE	yes	fixed_blocks
+bytewise	rus/UTF-32/1024	WINDOWS-1252	no	UTF-32	yes	fixed_blocks
+bytewise	rus/UTF-32/128		no	UTF-32	yes	fixed_blocks
+bytewise	rus/UTF-32/16		no	UTF-32	yes	fixed_blocks
+bytewise	rus/UTF-32/256	WINDOWS-1252	no	UTF-32	yes	fixed_blocks
+bytewise	rus/UTF-32/32		no	UTF-32	yes	fixed_blocks
+bytewise	rus/UTF-32/64		no	UTF-32	yes	fixed_blocks
+bytewise	rus/UTF-32/8		no	UTF-32	yes	fixed_blocks
+bytewise	rus/UTF-32/full	WINDOWS-1252	no	UTF-32	yes	fixed_blocks
+bytewise	sag/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	san_gran/UTF-8/1024		no	UTF-8	yes	valid_utf8
+bytewise	san_gran/UTF-8/128		no	UTF-8	yes	valid_utf8
+bytewise	san_gran/UTF-8/16	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+bytewise	san_gran/UTF-8/256		no	UTF-8	yes	valid_utf8
+bytewise	san_gran/UTF-8/32		no	UTF-8	yes	valid_utf8
+bytewise	san_gran/UTF-8/64		no	UTF-8	yes	valid_utf8
+bytewise	san_gran/UTF-8/8	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+bytewise	san_gran/UTF-8/full		no	UTF-8	yes	valid_utf8
+bytewise	sco/UTF-8/1024	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	sco/UTF-8/full	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	sey/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	sey/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	sey/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	sey/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	shk/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	shk/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	shp/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	shp/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	shp/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	shp/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	slk/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	slk/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	slr/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	slr/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	slr/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	slv/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	slv/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	slv/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	slv/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	sme/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	sme/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	sme/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	smo/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	smo/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	smo/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	snk/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	snn/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	snn/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	spa/ISO-8859-1/1024	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	spa/ISO-8859-1/128	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	spa/ISO-8859-1/16	ASCII	no	ISO-8859-3	yes	fixed_blocks
+bytewise	spa/ISO-8859-1/256	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	spa/ISO-8859-1/32	ASCII	no	ISO-8859-3	yes	fixed_blocks
+bytewise	spa/ISO-8859-1/64	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	spa/ISO-8859-1/full	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	spa/ISO-8859-15/1024	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	spa/ISO-8859-15/128	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	spa/ISO-8859-15/16	ASCII	no	ISO-8859-3	yes	fixed_blocks
+bytewise	spa/ISO-8859-15/256	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	spa/ISO-8859-15/32	ASCII	no	ISO-8859-3	yes	fixed_blocks
+bytewise	spa/ISO-8859-15/64	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	spa/ISO-8859-15/full	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	spa/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	spa/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	spa/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	spa/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	spa/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	spa/WINDOWS-1252/1024	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	spa/WINDOWS-1252/128	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	spa/WINDOWS-1252/16	ASCII	no	ISO-8859-3	yes	fixed_blocks
+bytewise	spa/WINDOWS-1252/256	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	spa/WINDOWS-1252/32	ASCII	no	ISO-8859-3	yes	fixed_blocks
+bytewise	spa/WINDOWS-1252/64	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	spa/WINDOWS-1252/full	ASCII	no	ISO-8859-1	yes	fixed_blocks
+bytewise	src/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	src/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	src/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	srp_latn/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	srp_latn/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	srp_latn/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	srp_latn/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	srq/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	srq/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	srq/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	srq/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	srr/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	srr/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ssw/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ssw/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ssw/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	suk/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	suk/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	sus/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	swb/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	swb/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	swe/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	swe/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	swe/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	swe/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	tah/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tca/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tem/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tem/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tiv/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	tiv/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	tna/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tna/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	tna/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tna/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	tna/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tna/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	tob/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tob/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tob/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	toj/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	toj/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ton/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ton/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tpi/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	trn/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	trn/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	trn/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	trn/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	tsn/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	tsn/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	tsn/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	tsn/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	tso_MZ/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tso_ZW/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tso_ZW/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tsz/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	tsz/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tuk_latn/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tur/ISO-8859-3/1024	WINDOWS-1252	no	ISO-8859-3	yes	fixed_blocks
+bytewise	tur/ISO-8859-3/128	WINDOWS-1252	no	ISO-8859-3	yes	fixed_blocks
+bytewise	tur/ISO-8859-3/16	WINDOWS-1252	no	ISO-8859-3	yes	fixed_blocks
+bytewise	tur/ISO-8859-3/256	WINDOWS-1252	no	ISO-8859-3	yes	fixed_blocks
+bytewise	tur/ISO-8859-3/32	WINDOWS-1252	no	ISO-8859-3	yes	fixed_blocks
+bytewise	tur/ISO-8859-3/64	WINDOWS-1252	no	ISO-8859-3	yes	fixed_blocks
+bytewise	tur/ISO-8859-3/8	WINDOWS-1252	no	ISO-8859-3	yes	fixed_blocks
+bytewise	tur/ISO-8859-3/full	WINDOWS-1252	no	ISO-8859-3	yes	fixed_blocks
+bytewise	tur/ISO-8859-9/1024	WINDOWS-1252	no	ISO-8859-9	yes	fixed_blocks
+bytewise	tur/ISO-8859-9/128	WINDOWS-1252	no	ISO-8859-9	yes	fixed_blocks
+bytewise	tur/ISO-8859-9/16	WINDOWS-1252	no	ISO-8859-9	yes	fixed_blocks
+bytewise	tur/ISO-8859-9/256	WINDOWS-1252	no	ISO-8859-9	yes	fixed_blocks
+bytewise	tur/ISO-8859-9/32	WINDOWS-1252	no	ISO-8859-9	yes	fixed_blocks
+bytewise	tur/ISO-8859-9/64		no	ISO-8859-9	yes	fixed_blocks
+bytewise	tur/ISO-8859-9/8	WINDOWS-1252	no	WINDOWS-1258	no	fixed_blocks
+bytewise	tur/ISO-8859-9/full	WINDOWS-1252	no	ISO-8859-9	yes	fixed_blocks
+bytewise	tzc/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tzc/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tzc/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tzc/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tzh/UTF-8/16	TIS-620	no	UTF-8	yes	fixed_blocks or valid_utf8
+bytewise	tzh/UTF-8/32	TIS-620	no	UTF-8	yes	fixed_blocks or valid_utf8
+bytewise	tzh/UTF-8/64	TIS-620	no	UTF-8	yes	fixed_blocks or valid_utf8
+bytewise	tzh/UTF-8/8	TIS-620	no	UTF-8	yes	fixed_blocks or valid_utf8
+bytewise	tzm/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tzm/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tzm/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tzm/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tzm/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	tzm/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	uig_latn/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	uig_latn/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	umb/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	umb/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ura/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	ura/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	vec/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	vec/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ven/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ven/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ven/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ven2/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	ven2/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	vep/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	vep/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	vie/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	vie/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	vie/VISCII/1024	ASCII	no	VISCII	yes	fixed_blocks
+bytewise	vie/VISCII/128	ASCII	no	VISCII	yes	fixed_blocks
+bytewise	vie/VISCII/16	ASCII	no	VISCII	yes	fixed_blocks
+bytewise	vie/VISCII/256	ASCII	no	VISCII	yes	fixed_blocks
+bytewise	vie/VISCII/32	ASCII	no	VISCII	yes	fixed_blocks
+bytewise	vie/VISCII/64	ASCII	no	VISCII	yes	fixed_blocks
+bytewise	vie/VISCII/8	ASCII	no	VISCII	yes	fixed_blocks
+bytewise	vie/VISCII/full	ASCII	no	VISCII	yes	fixed_blocks
+bytewise	vie/WINDOWS-1258/1024	ASCII	no	WINDOWS-1258	yes	fixed_blocks
+bytewise	vie/WINDOWS-1258/128	ASCII	no	WINDOWS-1258	yes	fixed_blocks
+bytewise	vie/WINDOWS-1258/16	ASCII	no	VISCII	yes	fixed_blocks
+bytewise	vie/WINDOWS-1258/256	ASCII	no	WINDOWS-1258	yes	fixed_blocks
+bytewise	vie/WINDOWS-1258/32	ASCII	no	WINDOWS-1258	yes	fixed_blocks
+bytewise	vie/WINDOWS-1258/64	ASCII	no	WINDOWS-1258	yes	fixed_blocks
+bytewise	vie/WINDOWS-1258/8	ASCII	no	VISCII	yes	fixed_blocks
+bytewise	vie/WINDOWS-1258/full	ASCII	no	WINDOWS-1258	yes	fixed_blocks
+bytewise	vmw/UTF-8/128	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	vmw/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	wln/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	wln/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	wol/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	wwa/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	wwa/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	xho/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	xho/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	xho/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	xho/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	xho/UTF-8/32	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	xho/UTF-8/64	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	xho/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	xsm/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	xsm/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	xsm/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	xsm/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	yad/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	yap/UTF-8/128	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	yap/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	yap/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	yap/UTF-8/64	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	yap/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks+revisable_ascii+valid_utf8
+bytewise	yua/UTF-8/16	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	yua/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	yua/UTF-8/8	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	yuz/UTF-8/16	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	yuz/UTF-8/32	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	yuz/UTF-8/8	ASCII	no	UTF-8	yes	revisable_ascii
+bytewise	zam/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks
+bytewise	ztu/UTF-8/1024	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	ztu/UTF-8/256	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+bytewise	zul/UTF-8/full	ASCII	no	UTF-8	yes	fixed_blocks or revisable_ascii
+whole	007/UTF-8/8	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	008/UTF-8/16	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	008/UTF-8/32	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	008/UTF-8/64	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	008/UTF-8/8	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	011/UTF-8/256	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	032/UTF-8/16	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	032/UTF-8/32	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	032/UTF-8/8	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	042/UTF-8/128	ISO-8859-2	no	UTF-8	yes	valid_utf8
+whole	042/UTF-8/64	ISO-8859-2	no	UTF-8	yes	valid_utf8
+whole	044/UTF-8/16	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	044/UTF-8/32	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	052/UTF-8/full	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	053/UTF-8/32	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	054/UTF-8/16	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	054/UTF-8/32	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	054/UTF-8/64	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	056/UTF-8/16	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	057/UTF-8/1024	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	057/UTF-8/256	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	059/UTF-8/16	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	059/UTF-8/8	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	060/UTF-8/8	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	061/UTF-8/8	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	064/UTF-8/full	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	072/UTF-8/128	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	aar/UTF-8/256	ISO-8859-2	no	UTF-8	yes	valid_utf8
+whole	ace/UTF-8/256	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	ada/UTF-8/16	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	ajg/UTF-8/8	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	aka_asante/UTF-8/32	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	aka_fante/UTF-8/32	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	amc/UTF-8/full	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	ame/UTF-8/32	ISO-8859-2	no	UTF-8	yes	valid_utf8
+whole	ast/UTF-8/16	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	ast/UTF-8/32	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	auc/UTF-8/64	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	ayo/UTF-8/16	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	ayo/UTF-8/32	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	ayo/UTF-8/64	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	ayo/UTF-8/8	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	ayr/UTF-8/32	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	bam/UTF-8/32	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	buc/UTF-8/32	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	cab/UTF-8/32	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	cab/UTF-8/64	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	cas/UTF-8/8	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	cat/UTF-8/64	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	cbr/UTF-8/16	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	cbr/UTF-8/32	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	cbr/UTF-8/8	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	cbt/UTF-8/128	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	cbu/UTF-8/128	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	ccp/UTF-8/1024		no	UTF-8	yes	valid_utf8
+whole	ccp/UTF-8/128		no	UTF-8	yes	valid_utf8
+whole	ccp/UTF-8/16		no	UTF-8	yes	valid_utf8
+whole	ccp/UTF-8/256		no	UTF-8	yes	valid_utf8
+whole	ccp/UTF-8/32		no	UTF-8	yes	valid_utf8
+whole	ccp/UTF-8/64		no	UTF-8	yes	valid_utf8
+whole	ccp/UTF-8/8	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	ccp/UTF-8/full		no	UTF-8	yes	valid_utf8
+whole	ccx/UTF-8/full	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	ces/UTF-8/8	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	cha/UTF-8/full	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	chj/UTF-8/16	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	chj/UTF-8/32	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	cnr/UTF-8/128	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	cpu/UTF-8/256	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	crh/UTF-8/8	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	ctd/UTF-8/128	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	ctd/UTF-8/256	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	ctd/UTF-8/32	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	ctd/UTF-8/64	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	cym/UTF-8/128	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	cym/UTF-8/256	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	dan/UTF-8/256	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	ddn/UTF-8/8	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	deu_1901/UTF-8/32	ISO-8859-2	no	UTF-8	yes	valid_utf8
+whole	deu_1901/UTF-8/64	ISO-8859-2	no	UTF-8	yes	valid_utf8
+whole	deu_1996/UTF-8/32	ISO-8859-2	no	UTF-8	yes	valid_utf8
+whole	deu_1996/UTF-8/64	ISO-8859-2	no	UTF-8	yes	valid_utf8
+whole	dyu/UTF-8/8	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	emk/UTF-8/8	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	eml/UTF-8/64	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	epo/UTF-8/128	ISO-8859-7	no	UTF-8	yes	valid_utf8
+whole	ese/UTF-8/8	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	est/UTF-8/8	VISCII	no	UTF-8	yes	valid_utf8
+whole	ewe/UTF-8/8	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	fao/UTF-8/16	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	fij/UTF-8/128	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	fij/UTF-8/256	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	fra/UTF-8/16	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	fra/UTF-8/32	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	fra/UTF-8/8	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	fuf_adlm/UTF-8/1024		no	UTF-8	yes	valid_utf8
+whole	fuf_adlm/UTF-8/128		no	UTF-8	yes	valid_utf8
+whole	fuf_adlm/UTF-8/16	BIG5	no	UTF-8	yes	valid_utf8
+whole	fuf_adlm/UTF-8/256		no	UTF-8	yes	valid_utf8
+whole	fuf_adlm/UTF-8/32		no	UTF-8	yes	valid_utf8
+whole	fuf_adlm/UTF-8/64	ISO-8859-7	no	UTF-8	yes	valid_utf8
+whole	fuf_adlm/UTF-8/8		no	UTF-8	yes	valid_utf8
+whole	fuf_adlm/UTF-8/full		no	UTF-8	yes	valid_utf8
+whole	fur/UTF-8/32	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	fur/UTF-8/64	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	gag/UTF-8/16	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	gjn/UTF-8/8	ISO-8859-2	no	UTF-8	yes	valid_utf8
+whole	gle/UTF-8/16	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	gle/UTF-8/32	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	gle/UTF-8/8	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	glg/UTF-8/16	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	glg/UTF-8/32	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	gnw/UTF-8/16	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	gnw/UTF-8/8	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	gsw1/UTF-8/8	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	guu/UTF-8/16	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	hau_3/UTF-8/32	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	hau_NE/UTF-8/64	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	hau_NG/UTF-8/64	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	hsb/UTF-8/16	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	hsb/UTF-8/8	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	hun/UTF-8/64	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	ijs/UTF-8/16	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	isl/UTF-8/16	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	isl/UTF-8/8	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	kea/UTF-8/16	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	kea/UTF-8/8	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	krl/UTF-8/64	ISO-8859-15	no	UTF-8	yes	valid_utf8
+whole	lij/UTF-8/16	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	lij/UTF-8/32	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	lij/UTF-8/64	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	lij/UTF-8/8	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	lin_tones/UTF-8/16	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	lnc/UTF-8/128	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	lus/UTF-8/128	ISO-8859-2	no	UTF-8	yes	valid_utf8
+whole	mcf/UTF-8/64	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	men/UTF-8/32	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	mfq/UTF-8/32	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	mic/UTF-8/16	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	mic/UTF-8/8	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	miq/UTF-8/1024	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	mly_latn/UTF-8/full	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	mtp/UTF-8/16	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	mtp/UTF-8/32	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	mtp/UTF-8/8	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	mxi/UTF-8/128	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	mxi/UTF-8/256	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	mxi/UTF-8/64	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	nba/UTF-8/full	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	nds/UTF-8/64	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	niu/UTF-8/1024	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	njo/UTF-8/128	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	njo/UTF-8/256	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	nku/UTF-8/8	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	nld/UTF-8/full	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	nno/UTF-8/32	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	nob/UTF-8/128	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	nob/UTF-8/256	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	not/UTF-8/128	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	nso/UTF-8/16	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	nso/UTF-8/32	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	nym/UTF-8/256	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	oci_1/UTF-8/16	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	oci_1/UTF-8/8	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	oci_2/UTF-8/16	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	oci_2/UTF-8/8	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	oci_4/UTF-8/16	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	oci_4/UTF-8/8	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	por_BR/UTF-8/8	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	por_PT/UTF-8/8	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	pov/UTF-8/1024	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	pov/UTF-8/256	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	qul/UTF-8/256	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	quy/UTF-8/128	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	qva/UTF-8/64	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	qxn/UTF-8/1024	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	rmn/UTF-8/32	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	rmn/UTF-8/64	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	rmy/UTF-8/32	ISO-8859-2	no	UTF-8	yes	valid_utf8
+whole	roh/UTF-8/128	ISO-8859-2	no	UTF-8	yes	valid_utf8
+whole	roh_puter/UTF-8/128	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	roh_sutsilv/UTF-8/16	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	roh_sutsilv/UTF-8/32	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	roh_sutsilv/UTF-8/64	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	roh_vallader/UTF-8/128	ISO-8859-2	no	UTF-8	yes	valid_utf8
+whole	ron_1953/UTF-8/16	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	ron_1953/UTF-8/8	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	ron_1993/UTF-8/16	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	ron_1993/UTF-8/8	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	ron_2006/UTF-8/16	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	ron_2006/UTF-8/8	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	san_gran/UTF-8/1024		no	UTF-8	yes	valid_utf8
+whole	san_gran/UTF-8/128		no	UTF-8	yes	valid_utf8
+whole	san_gran/UTF-8/16	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	san_gran/UTF-8/256		no	UTF-8	yes	valid_utf8
+whole	san_gran/UTF-8/32		no	UTF-8	yes	valid_utf8
+whole	san_gran/UTF-8/64		no	UTF-8	yes	valid_utf8
+whole	san_gran/UTF-8/8	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	san_gran/UTF-8/full		no	UTF-8	yes	valid_utf8
+whole	sco/UTF-8/1024	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	sco/UTF-8/full	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	sey/UTF-8/16	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	sey/UTF-8/8	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	slr/UTF-8/128	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	slr/UTF-8/64	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	sme/UTF-8/16	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	sme/UTF-8/8	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	spa/UTF-8/16	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	spa/UTF-8/32	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	src/UTF-8/128	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	src/UTF-8/64	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	srp_latn/UTF-8/16	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	srp_latn/UTF-8/8	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	srq/UTF-8/16	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	srq/UTF-8/32	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	srq/UTF-8/8	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	srr/UTF-8/128	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	srr/UTF-8/64	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	swe/UTF-8/16	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	swe/UTF-8/8	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	tly/UTF-8/8	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	tna/UTF-8/16	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	tna/UTF-8/32	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	tna/UTF-8/8	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	ton/UTF-8/32	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	trn/UTF-8/16	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	trn/UTF-8/8	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	tsn/UTF-8/128	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	tsn/UTF-8/256	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	tsn/UTF-8/32	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	tsn/UTF-8/64	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	tsz/UTF-8/128	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	tur/UTF-8/16	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	tur/UTF-8/32	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	tur/UTF-8/8	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	tzm/UTF-8/8	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	umb/UTF-8/128	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	ura/UTF-8/1024	ISO-8859-9	no	UTF-8	yes	valid_utf8
+whole	vec/UTF-8/32	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	ven/UTF-8/16	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	ven/UTF-8/32	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	ven2/UTF-8/32	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	vep/UTF-8/32	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	vep/UTF-8/64	WINDOWS-1252	no	UTF-8	yes	valid_utf8
+whole	vmw/UTF-8/128	WINDOWS-1250	no	UTF-8	yes	valid_utf8
+whole	xho/UTF-8/16	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	xho/UTF-8/32	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	xho/UTF-8/64	ISO-8859-3	no	UTF-8	yes	valid_utf8
+whole	yap/UTF-8/128	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	yap/UTF-8/16	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	yap/UTF-8/32	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	yap/UTF-8/64	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	yap/UTF-8/8	ISO-8859-1	no	UTF-8	yes	valid_utf8
+whole	yuz/UTF-8/16	WINDOWS-1258	no	UTF-8	yes	valid_utf8
+whole	yuz/UTF-8/8	WINDOWS-1258	no	UTF-8	yes	valid_utf8
