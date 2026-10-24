@@ -3,7 +3,6 @@
 Completed items retire to `docs/PLAN_LOG.md`. Purpose: `INTENT.md`. Accuracy policy: `docs/ACCURACY.md`.
 
 ## 2026-10-21 (BDFN request): merge both translations; accuracy over bug-for-bug fidelity
-- [x] Merge the October port and the June repo (engine and gates from October; PRINTABLE-BINARY, WASM ABI, bench, fuzz edge cases from June) (done 2026-10-21 14:20 EDT, db53518)
 - [x] Two-mode detector: compile-time Fixes; UpstreamDetector runs every oracle gate, Detector (all fixes) is the default everywhere (done 2026-10-21 14:45 EDT)
 - [x] Fix: chunk invariance by re-chunking input internally into fixed 64 KiB blocks (BOM, BOM-less UTF-16 and early-exit checks no longer depend on caller chunking) (done 2026-10-21 14:45 EDT)
 - [x] Fix: an ASCII verdict from early all-ASCII input must not survive later high bytes (done 2026-10-21 14:45 EDT)
@@ -17,7 +16,8 @@ Completed items retire to `docs/PLAN_LOG.md`. Purpose: `INTENT.md`. Accuracy pol
 ## 2026-10-23 (BDFN request): larger accuracy suite
 - [x] Larger labeled test corpus: 4,737 iconv-generated UDHR cases, ground truth by decoding, three feeding modes; differences ledger, generated report, never-worse-than-uchardet rule and ratchet in ./test (done 2026-10-23 19:05 EDT)
 - [x] Fix valid_utf8: valid multibyte UTF-8 is reported as UTF-8; whole-input accuracy 93.8% to 99.2% on the generated corpus (done 2026-10-23 19:05 EDT)
-- [ ] Commit the generated accuracy corpus as tests/accuracy/corpus.tar.zst (2.1 MB, read in memory) so ./test needs no iconv; regenerate-and-compare freshness check on Linux and in a cached Nix check
+- [x] Commit the generated accuracy corpus as tests/accuracy/corpus.tar.zst (2.1 MB, read in memory in 0.3 s) so ./test needs no iconv; regenerate-and-compare freshness check on Linux and in a cached Nix check (done 2026-10-24 00:35 EDT)
+- [ ] Speed up corpus generation (about 80 s, mostly repeated iconv decodes for the acceptable sets); only the freshness check pays it now
 - [ ] Investigate ISO-2022-CN reported as ASCII at every length (8 cases in docs/ACCURACY_REPORT.md)
 - [ ] Evaluate a fix for BOM-less UTF-16 in non-Latin scripts (16 cases)
 - [x] Hand valid_utf8 and the accuracy corpus approach to uchardetz (done 2026-10-23 19:20 EDT, llmsend)

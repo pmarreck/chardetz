@@ -3,7 +3,7 @@
 //! attributes each difference to an accuracy fix, and then either checks the
 //! committed report and ledger or writes fresh ones.
 //!
-//! Usage: accuracy-runner CORPUS_DIR REPORT LEDGER UDHR_REV UCHARDET_REV
+//! Usage: accuracy-runner CORPUS_TAR_ZST REPORT LEDGER UDHR_REV UCHARDET_REV
 //!            (--check | --write OUT_REPORT OUT_LEDGER [--allow-regression])
 //!
 //! Fails when chardetz is wrong on a case where uchardet is right, when a
@@ -13,8 +13,10 @@ const std = @import("std");
 const cz = @import("chardetz");
 const oracle = @import("oracle");
 const report = @import("report.zig");
+const archive = @import("archive");
 
 const max_file_bytes = 16 << 20;
+const max_archive_bytes = 64 << 20;
 const block = 65536;
 
 pub fn main(init: std.process.Init) !u8 {
@@ -33,14 +35,18 @@ pub fn main(init: std.process.Init) !u8 {
     const write = (args.len == 9 or args.len == 10) and std.mem.eql(u8, args[6], "--write");
     const allow_regression = args.len == 10 and std.mem.eql(u8, args[9], "--allow-regression");
     if (!check and !write) {
-        try stderr.writeAll("usage: accuracy-runner CORPUS_DIR REPORT LEDGER UDHR_REV UCHARDET_REV (--check | --write OUT_REPORT OUT_LEDGER [--allow-regression])\n");
+        try stderr.writeAll("usage: accuracy-runner CORPUS_TAR_ZST REPORT LEDGER UDHR_REV UCHARDET_REV (--check | --write OUT_REPORT OUT_LEDGER [--allow-regression])\n");
         return 2;
     }
     const cwd = std.Io.Dir.cwd();
-    var corpus = try cwd.openDir(io, args[1], .{});
-    defer corpus.close(io);
+    const corpus = try archive.unpack(arena, try cwd.readFileAlloc(io, args[1], arena, .limited(max_archive_bytes)));
+    const member = struct {
+        fn get(files: archive.Files, name: []const u8) error{MissingMember}![]const u8 {
+            return files.get(name) orelse error.MissingMember;
+        }
+    }.get;
 
-    const summary = try corpus.readFileAlloc(io, "summary.txt", arena, .limited(4096));
+    const summary = try member(corpus, "summary.txt");
     const meta: report.Meta = .{
         .udhr_rev = args[4],
         .uchardet_rev = args[5],
@@ -48,8 +54,8 @@ pub fn main(init: std.process.Init) !u8 {
         .normalized = summaryValue(summary, "normalized"),
         .lossy = summaryValue(summary, "lossy"),
     };
-    const prefix = try corpus.readFileAlloc(io, "prefix.txt", arena, .limited(max_file_bytes));
-    const manifest = try corpus.readFileAlloc(io, "cases.tsv", arena, .limited(max_file_bytes));
+    const prefix = try member(corpus, "prefix.txt");
+    const manifest = try member(corpus, "cases.tsv");
 
     var rows: std.ArrayList(report.Row) = .empty;
     var lines = std.mem.splitScalar(u8, manifest, '\n');
@@ -64,7 +70,7 @@ pub fn main(init: std.process.Init) !u8 {
         const prefixed_ok = cols.next().?;
         const fidelity = cols.next().?;
         const file = try std.fmt.allocPrint(arena, "{s}.bin", .{id});
-        const bytes = try corpus.readFileAlloc(io, file, arena, .limited(max_file_bytes));
+        const bytes = try member(corpus, file);
         const base: report.Row = .{ .id = id, .language = language, .encoding = encoding, .length = length, .fidelity = fidelity, .mode = .whole, .acceptable = ok, .upstream = "", .chardetz = "", .fix = "" };
 
         try rows.append(arena, try run(arena, base, .whole, bytes, @max(bytes.len, 1)));

@@ -9,7 +9,9 @@ if [ "${1:-}" != "--no-nix" ]; then
 fi
 
 failures=0
+skipped=0
 pass() { printf '\033[32m✓\033[0m %s\n' "$1"; }
+skip() { printf '\033[33m↷\033[0m %s\n' "$1"; skipped=$((skipped + 1)); }
 fail() { printf '\033[31m✗\033[0m %s\n%s\n' "$1" "$2"; failures=$((failures + 1)); }
 
 # Runs a command with output captured; shows the output only on failure.
@@ -48,14 +50,29 @@ udhr_available() {
 }
 
 check "pinned uchardetz source available" source_available
-check "pinned UDHR text available" udhr_available
 check "manifest pin matches flake.lock" pin_agreement
 check "control files match blessed hashes" sha256sum --check --quiet blessed_hashes.txt
 check "zig fmt" zig fmt --check build.zig tools src
 check "zig build test (ReleaseSafe, includes table freshness)" zig build test -Doptimize=ReleaseSafe
 
+# The committed accuracy corpus must equal a fresh generation. That needs the
+# UDHR and the glibc iconv it was generated with, so it runs on Linux; the
+# Nix test check leaves it to the separate, cached accuracy-corpus check.
+if [ "${CHARDETZ_CORPUS_FRESHNESS:-}" = nix-check ]; then
+	skip "accuracy corpus freshness: run by the Nix check accuracy-corpus"
+elif [ "$(uname -s)" != Linux ]; then
+	skip "accuracy corpus freshness: Linux only (the corpus is generated with glibc iconv)"
+else
+	check "pinned UDHR text available" udhr_available
+	check "accuracy corpus matches a fresh generation" zig build accuracy-corpus-check -Doptimize=ReleaseSafe
+fi
+
 if [ "$failures" -ne 0 ]; then
 	printf '\033[31m%d check(s) failed\033[0m\n' "$failures"
 	exit 1
 fi
-printf '\033[32mall checks passed\033[0m\n'
+if [ "$skipped" -ne 0 ]; then
+	printf '\033[32mall checks passed\033[0m (%d skipped, listed above)\n' "$skipped"
+else
+	printf '\033[32mall checks passed\033[0m\n'
+fi

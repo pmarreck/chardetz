@@ -1,13 +1,15 @@
 //! gen-accuracy-corpus: I/O shell around core.zig.
-//! Usage: gen-accuracy-corpus MATRIX UDHR_DATA_DIR OUT_DIR
-//! Writes OUT_DIR/<id>.bin for every case, OUT_DIR/prefix.txt (the 64 KiB
-//! ASCII prefix) and OUT_DIR/cases.tsv, one line per case:
+//! Usage: gen-accuracy-corpus MATRIX UDHR_DATA_DIR OUT_TAR
+//! Writes one deterministic tar (see archive.zig) holding <id>.bin for every
+//! case, prefix.txt (the 64 KiB ASCII prefix), summary.txt (counts) and
+//! cases.tsv, one line per case:
 //!   id  language  encoding  length  acceptable  prefixed_acceptable  normalized
 //! where the acceptable columns are comma-separated charset names ("-" when
 //! the prefixed variant does not apply) and length is codepoints or "full".
 const std = @import("std");
 const core = @import("core.zig");
 const iconv = @import("iconv.zig");
+const archive = @import("archive.zig");
 
 const max_xml_bytes = 4 << 20;
 /// The ASCII prefix fills exactly one of uchardet's 64 KiB reads.
@@ -23,7 +25,7 @@ pub fn main(init: std.process.Init) !u8 {
     const stderr = &err_w.interface;
     defer stderr.flush() catch {};
     if (args.len != 4) {
-        try stderr.writeAll("usage: gen-accuracy-corpus MATRIX UDHR_DATA_DIR OUT_DIR\n");
+        try stderr.writeAll("usage: gen-accuracy-corpus MATRIX UDHR_DATA_DIR OUT_TAR\n");
         return 2;
     }
     const cwd = std.Io.Dir.cwd();
@@ -33,16 +35,16 @@ pub fn main(init: std.process.Init) !u8 {
     defer matrix.deinit(gpa);
     var udhr = try cwd.openDir(io, args[2], .{ .iterate = true });
     defer udhr.close(io);
-    var out_dir = try cwd.createDirPathOpen(io, args[3], .{});
-    defer out_dir.close(io);
+    var out_arena = std.heap.ArenaAllocator.init(gpa);
+    defer out_arena.deinit();
 
-    var gen: Generator = .{ .gpa = gpa, .io = io, .udhr = udhr, .out = out_dir, .matrix = &matrix, .t = iconv.transcoder() };
+    var gen: Generator = .{ .gpa = gpa, .io = io, .udhr = udhr, .arena = out_arena.allocator(), .matrix = &matrix, .t = iconv.transcoder() };
     defer gen.deinit();
 
     const eng = try gen.text(prefix_source_key);
     defer gpa.free(eng);
     gen.prefix = try core.asciiPrefix(gpa, eng, prefix_len);
-    try out_dir.writeFile(io, .{ .sub_path = "prefix.txt", .data = gen.prefix });
+    try gen.put("prefix.txt", gen.prefix);
 
     for (matrix.texts) |t| for (t.encodings) |e| try gen.cases(t.key, t.language, e);
     if (matrix.utf8_all) {
@@ -53,10 +55,12 @@ pub fn main(init: std.process.Init) !u8 {
         }
         for (keys) |k| try gen.cases(k, k, "UTF-8");
     }
-    try out_dir.writeFile(io, .{ .sub_path = "cases.tsv", .data = gen.manifest.items });
+    try gen.put("cases.tsv", gen.manifest.items);
     const summary = try std.fmt.allocPrint(gpa, "cases {d}\nnormalized {d}\nlossy {d}\nskipped {d}\n", .{ gen.count, gen.normalized, gen.lossy, gen.skipped });
     defer gpa.free(summary);
-    try out_dir.writeFile(io, .{ .sub_path = "summary.txt", .data = summary });
+    try gen.put("summary.txt", summary);
+    const tar = try archive.pack(gen.arena, gen.files);
+    try cwd.writeFile(io, .{ .sub_path = args[3], .data = tar });
     return 0;
 }
 
@@ -85,7 +89,9 @@ const Generator = struct {
     gpa: std.mem.Allocator,
     io: std.Io,
     udhr: std.Io.Dir,
-    out: std.Io.Dir,
+    /// Owns every archive member's name and bytes.
+    arena: std.mem.Allocator,
+    files: archive.Files = .empty,
     matrix: *const core.Matrix,
     t: core.Transcoder,
     prefix: []u8 = &.{},
@@ -98,6 +104,10 @@ const Generator = struct {
     fn deinit(g: *Generator) void {
         g.gpa.free(g.prefix);
         g.manifest.deinit(g.gpa);
+    }
+
+    fn put(g: *Generator, name: []const u8, bytes: []const u8) !void {
+        try g.files.put(g.arena, try g.arena.dupe(u8, name), try g.arena.dupe(u8, bytes));
     }
 
     fn text(g: *Generator, key: []const u8) ![]u8 {
@@ -139,8 +149,7 @@ const Generator = struct {
             defer g.gpa.free(id);
             const file = try std.fmt.allocPrint(g.gpa, "{s}.bin", .{id});
             defer g.gpa.free(file);
-            if (std.fs.path.dirname(file)) |d| try g.out.createDirPath(g.io, d);
-            try g.out.writeFile(g.io, .{ .sub_path = file, .data = c.bytes });
+            try g.put(file, c.bytes);
 
             const ok = try core.acceptable(g.gpa, g.t, c.bytes, c.truth, g.matrix.candidates);
             defer g.gpa.free(ok);

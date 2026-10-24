@@ -36,3 +36,7 @@ Completed items retired from PLAN.md, oldest first.
 ## Retired 2026-10-23
 
 - [x] [2026-10-21 (BDFN request): merge both translations; accuracy over bug-for-bug fidelity] Check the original development machine for the June working copy: no unpushed code, only an uncommitted wind-down note (done 2026-10-21 14:00 EDT)
+
+## Retired 2026-10-24
+
+- [x] [2026-10-21 (BDFN request): merge both translations; accuracy over bug-for-bug fidelity] Merge the October port and the June repo (engine and gates from October; PRINTABLE-BINARY, WASM ABI, bench, fuzz edge cases from June) (done 2026-10-21 14:20 EDT, db53518)

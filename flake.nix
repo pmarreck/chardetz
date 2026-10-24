@@ -11,7 +11,8 @@
 			flake = false;
 		};
 		# Pinned multilingual text (the UDHR in about 500 languages, UTF-8 XML) from
-		# which the accuracy corpus is generated with iconv. See docs/ACCURACY.md.
+		# which the committed accuracy corpus is generated with iconv. Only the
+		# freshness check needs it. See docs/ACCURACY.md.
 		udhr-src = {
 			url = "github:eric-muller/udhr/588b3f4b2d0467aff54842a4b926551b69d5a66a";
 			flake = false;
@@ -79,7 +80,7 @@
 							export HOME=$TMPDIR
 							export ZIG_GLOBAL_CACHE_DIR=$TMPDIR/zig-cache
 							export CHARDETZ_UCHARDET_SRC=${uchardetz-src}
-							export CHARDETZ_UDHR_SRC=${udhr-src}
+							export CHARDETZ_CORPUS_FRESHNESS=nix-check
 							${darwinUnset}
 							patchShebangs ./test tests/cli
 							# Tests run ReleaseSafe so runtime safety checks stay compiled in;
@@ -91,10 +92,44 @@
 							echo "tests passed" > $out/result
 						'';
 					};
+				} // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+					# Freshness of tests/accuracy/corpus.tar.zst: regenerate it with glibc
+					# iconv and compare contents. The source is only the generator, the
+					# matrix and the archive, so Nix reuses the result until one of them
+					# (or the UDHR pin) changes. Mirrors build.zig's accuracy-corpus-check,
+					# compiled directly so that the rest of the tree is not an input.
+					accuracy-corpus = pkgs.stdenvNoCC.mkDerivation {
+						pname = "${pname}-accuracy-corpus";
+						inherit version;
+						src = pkgs.lib.fileset.toSource {
+							root = ./.;
+							fileset = pkgs.lib.fileset.unions [
+								./tools/gen_accuracy_corpus
+								./tests/accuracy/matrix.txt
+								./tests/accuracy/corpus.tar.zst
+							];
+						};
+						nativeBuildInputs = [ zig ];
+						dontConfigure = true;
+						dontFixup = true;
+						buildPhase = ''
+							export HOME=$TMPDIR
+							export ZIG_GLOBAL_CACHE_DIR=$TMPDIR/zig-cache
+							export ZIG_LOCAL_CACHE_DIR=$TMPDIR/zig-local
+							zig build-exe -OReleaseSafe -lc --name gen-accuracy-corpus tools/gen_accuracy_corpus/main.zig
+							zig build-exe -OReleaseSafe --name corpus-compare tools/gen_accuracy_corpus/compare.zig
+							./gen-accuracy-corpus tests/accuracy/matrix.txt ${udhr-src}/data/udhr $TMPDIR/corpus.tar
+							./corpus-compare $TMPDIR/corpus.tar tests/accuracy/corpus.tar.zst
+						'';
+						installPhase = ''
+							mkdir -p $out
+							echo "corpus fresh" > $out/result
+						'';
+					};
 				};
 
 				devShells.default = pkgs.mkShell {
-					packages = [ zig pkgs.hyperfine pkgs.nodejs ];
+					packages = [ zig pkgs.hyperfine pkgs.nodejs pkgs.zstd ];
 					CHARDETZ_UCHARDET_SRC = "${uchardetz-src}";
 					CHARDETZ_UDHR_SRC = "${udhr-src}";
 				};

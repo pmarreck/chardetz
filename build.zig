@@ -95,11 +95,7 @@ pub fn build(b: *std.Build) void {
         addBench(b, oracle_lib, chardetz_mod, target, optimize);
         const udhr_src = b.option([]const u8, "udhr-src", "Path to the pinned UDHR source tree") orelse
             b.graph.environ_map.get("CHARDETZ_UDHR_SRC");
-        if (udhr_src) |u| {
-            addAccuracy(b, test_step, u, oracle_lib, chardetz_mod, target, optimize);
-        } else {
-            test_step.dependOn(&b.addFail("UDHR source unknown: pass -Dudhr-src=PATH or run inside `nix develop`").step);
-        }
+        addAccuracy(b, test_step, udhr_src, oracle_lib, chardetz_mod, target, optimize);
     } else {
         const fail = b.addFail("uchardetz source unknown: pass -Duchardet-src=PATH or run inside `nix develop`");
         gen_step.dependOn(&fail.step);
@@ -112,6 +108,7 @@ pub fn build(b: *std.Build) void {
         "tools/gen_tables/translate_test.zig",
         "tools/gen_tables/manifest_test.zig",
         "tools/gen_accuracy_corpus/core_test.zig",
+        "tools/gen_accuracy_corpus/archive_test.zig",
         "tests/accuracy/report_test.zig",
         "src/tables/types.zig",
         "src/tables/tables_test.zig",
@@ -353,24 +350,17 @@ fn addBench(b: *std.Build, oracle_lib: *std.Build.Step.Compile, chardetz_mod: *s
     b.step("bench", "Run the benchmark harness (chardetz vs the C++ original)").dependOn(&run_bench.step);
 }
 
-/// Accuracy corpus: UDHR texts transcoded with iconv by a build-host tool
-/// (tools/gen_accuracy_corpus), with ground truth decided by decoding.
-fn addAccuracy(b: *std.Build, test_step: *std.Build.Step, udhr_src: []const u8, oracle_lib: *std.Build.Step.Compile, chardetz_mod: *std.Build.Module, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) void {
-    const gen = b.addExecutable(.{
-        .name = "gen-accuracy-corpus",
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("tools/gen_accuracy_corpus/main.zig"),
-            .target = b.graph.host,
-            .optimize = .ReleaseSafe,
-            .link_libc = true,
-        }),
-    });
-    const run = b.addRunArtifact(gen);
-    run.addFileArg(b.path("tests/accuracy/matrix.txt"));
-    run.addArg(b.fmt("{s}/data/udhr", .{udhr_src}));
-    const corpus = run.addOutputDirectoryArg("accuracy-corpus");
-    const install = b.addInstallDirectory(.{ .source_dir = corpus, .install_dir = .prefix, .install_subdir = "accuracy-corpus" });
-    b.step("accuracy-corpus", "Generate the accuracy corpus into zig-out/accuracy-corpus").dependOn(&install.step);
+/// Accuracy suite. The corpus (UDHR texts transcoded with iconv by
+/// tools/gen_accuracy_corpus, ground truth decided by decoding) is committed
+/// as tests/accuracy/corpus.tar.zst, so checking accuracy needs neither iconv
+/// nor the UDHR. Regenerating it does; the freshness check compares a fresh
+/// generation against the committed archive.
+fn addAccuracy(b: *std.Build, test_step: *std.Build.Step, udhr_src: ?[]const u8, oracle_lib: *std.Build.Step.Compile, chardetz_mod: *std.Build.Module, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) void {
+    const corpus_path = "tests/accuracy/corpus.tar.zst";
+    const corpus = b.path(corpus_path);
+    const archive_mod = b.createModule(.{ .root_source_file = b.path("tools/gen_accuracy_corpus/archive.zig"), .target = target, .optimize = optimize });
+    addCorpusGeneration(b, udhr_src, corpus, corpus_path);
+
     const allow_regression = b.option(bool, "accuracy-allow-regression", "Let accuracy-report record a lower accuracy") orelse false;
     const oracle_mod = b.createModule(.{ .root_source_file = b.path("tests/oracle/oracle.zig"), .target = target, .optimize = optimize });
     const runner_mod = b.createModule(.{
@@ -380,6 +370,7 @@ fn addAccuracy(b: *std.Build, test_step: *std.Build.Step, udhr_src: []const u8, 
         .imports = &.{
             .{ .name = "chardetz", .module = chardetz_mod },
             .{ .name = "oracle", .module = oracle_mod },
+            .{ .name = "archive", .module = archive_mod },
         },
     });
     runner_mod.linkLibrary(oracle_lib);
@@ -389,7 +380,7 @@ fn addAccuracy(b: *std.Build, test_step: *std.Build.Step, udhr_src: []const u8, 
     const revs = [_][]const u8{ lockedRev(b, "udhr-src"), lockedRev(b, "uchardetz-src") };
 
     const check = b.addRunArtifact(runner);
-    check.addDirectoryArg(corpus);
+    check.addFileArg(corpus);
     check.addArgs(&.{ b.pathFromRoot(report_path), b.pathFromRoot(ledger_path), revs[0], revs[1], "--check" });
     // Rerun on every test: the committed files it compares against are not
     // declared inputs (they may not exist yet).
@@ -399,7 +390,7 @@ fn addAccuracy(b: *std.Build, test_step: *std.Build.Step, udhr_src: []const u8, 
     test_step.dependOn(&check.step);
 
     const write = b.addRunArtifact(runner);
-    write.addDirectoryArg(corpus);
+    write.addFileArg(corpus);
     write.addArgs(&.{ b.pathFromRoot(report_path), b.pathFromRoot(ledger_path), revs[0], revs[1], "--write" });
     const new_report = write.addOutputFileArg("ACCURACY_REPORT.md");
     const new_ledger = write.addOutputFileArg("differences.tsv");
@@ -409,6 +400,45 @@ fn addAccuracy(b: *std.Build, test_step: *std.Build.Step, udhr_src: []const u8, 
     update.addCopyFileToSource(new_report, report_path);
     update.addCopyFileToSource(new_ledger, ledger_path);
     b.step("accuracy-report", "Regenerate docs/ACCURACY_REPORT.md and tests/accuracy/differences.tsv").dependOn(&update.step);
+}
+
+/// Steps that run the generator (they need host iconv and the UDHR):
+/// accuracy-corpus, accuracy-corpus-check (freshness) and
+/// accuracy-corpus-update (recompresses with the zstd CLI).
+fn addCorpusGeneration(b: *std.Build, udhr_src: ?[]const u8, corpus: std.Build.LazyPath, corpus_path: []const u8) void {
+    const gen_step = b.step("accuracy-corpus", "Generate the accuracy corpus into zig-out/accuracy-corpus.tar");
+    const fresh_step = b.step("accuracy-corpus-check", "Fail if tests/accuracy/corpus.tar.zst differs from a fresh generation");
+    const update_step = b.step("accuracy-corpus-update", "Regenerate tests/accuracy/corpus.tar.zst");
+    const u = udhr_src orelse {
+        const fail = b.addFail("UDHR source unknown: pass -Dudhr-src=PATH or run inside `nix develop`");
+        for ([_]*std.Build.Step{ gen_step, fresh_step, update_step }) |s| s.dependOn(&fail.step);
+        return;
+    };
+    const host_mod = struct {
+        fn make(bb: *std.Build, path: []const u8) *std.Build.Module {
+            return bb.createModule(.{ .root_source_file = bb.path(path), .target = bb.graph.host, .optimize = .ReleaseSafe, .link_libc = true });
+        }
+    }.make;
+    const gen = b.addExecutable(.{ .name = "gen-accuracy-corpus", .root_module = host_mod(b, "tools/gen_accuracy_corpus/main.zig") });
+    const run = b.addRunArtifact(gen);
+    run.addFileArg(b.path("tests/accuracy/matrix.txt"));
+    run.addArg(b.fmt("{s}/data/udhr", .{u}));
+    const tar = run.addOutputFileArg("accuracy-corpus.tar");
+    gen_step.dependOn(&b.addInstallFile(tar, "accuracy-corpus.tar").step);
+
+    const compare = b.addExecutable(.{ .name = "corpus-compare", .root_module = host_mod(b, "tools/gen_accuracy_corpus/compare.zig") });
+    const fresh = b.addRunArtifact(compare);
+    fresh.addFileArg(tar);
+    fresh.addFileArg(corpus);
+    fresh.expectExitCode(0);
+    fresh_step.dependOn(&fresh.step);
+
+    const zstd = b.addSystemCommand(&.{ "zstd", "-19", "-q", "--no-progress", "-f", "-o" });
+    const compressed = zstd.addOutputFileArg("corpus.tar.zst");
+    zstd.addFileArg(tar);
+    const update = b.addUpdateSourceFiles();
+    update.addCopyFileToSource(compressed, corpus_path);
+    update_step.dependOn(&update.step);
 }
 
 /// The locked revision of a flake input, read from flake.lock.
