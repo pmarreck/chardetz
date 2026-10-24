@@ -17,6 +17,7 @@ Completed items retire to `docs/PLAN_LOG.md`. Purpose: `INTENT.md`. Accuracy pol
 ## 2026-10-23 (BDFN request): larger accuracy suite
 - [x] Larger labeled test corpus: 4,737 iconv-generated UDHR cases, ground truth by decoding, three feeding modes; differences ledger, generated report, never-worse-than-uchardet rule and ratchet in ./test (done 2026-10-23 19:05 EDT)
 - [x] Fix valid_utf8: valid multibyte UTF-8 is reported as UTF-8; whole-input accuracy 93.8% to 99.2% on the generated corpus (done 2026-10-23 19:05 EDT)
+- [ ] Commit the generated accuracy corpus as tests/accuracy/corpus.tar.zst (2.1 MB, read in memory) so ./test needs no iconv; regenerate-and-compare freshness check on Linux and in a cached Nix check
 - [ ] Investigate ISO-2022-CN reported as ASCII at every length (8 cases in docs/ACCURACY_REPORT.md)
 - [ ] Evaluate a fix for BOM-less UTF-16 in non-Latin scripts (16 cases)
 - [x] Hand valid_utf8 and the accuracy corpus approach to uchardetz (done 2026-10-23 19:20 EDT, llmsend)
